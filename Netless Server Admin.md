@@ -1375,8 +1375,8 @@ local function ServerAdmin()
         	if TARGET ~= nil then
         		if TARGET.Parent:FindFirstChildOfClass("Humanoid") then
         			local HUM = TARGET.Parent:FindFirstChildOfClass("Humanoid")
-        			local ROOT = HUM.Parent:FindFirstChild("Torso") --HUM.Parent:FindFirstChild("HumanoidRootPart") or 
-        			if ROOT and HUM.Health > 0 then
+        			local ROOT = HUM.Parent:FindFirstChild("Torso") or HUM.Parent:FindFirstChild("UpperTorso") --HUM.Parent:FindFirstChild("HumanoidRootPart") or 
+        			if ROOT then -- and HUM.Health > 0
         				local FOE = ROOT.Parent
         				ATTACK = true
         				Rooted = false
@@ -1878,8 +1878,8 @@ local function Information(title, description, scaled)
     Description.Parent = DescriptionFrame
     Description.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Description.BackgroundTransparency = 1.000
-    Description.Position = UDim2.new(0.0174135845, 0, 0.0263643079, 0)
-    Description.Size = UDim2.new(0, 230, 0, 149)
+    Description.Position = UDim2.new(0.0170000009, 0, 0.016, 0)
+    Description.Size = UDim2.new(0, 233, 0, 154)
     Description.Font = Enum.Font.SourceSans
     Description.Text = description
     Description.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -1975,11 +1975,15 @@ end
 
 --Reanimation Functions--
 local function PermaDeath()
+    --Destroying The GUI
+    NetlessServerAdmin:Destroy()
+    
     --Variables
     local player = game:GetService("Players").LocalPlayer
     local character = player.Character
     local hrp = character.HumanoidRootPart
     local torso = character.Torso
+    permaDeath = true
     
     local camera = workspace.CurrentCamera
     
@@ -2220,7 +2224,12 @@ local function Bot()
     
     local glassesList = "VarietyShades02", "e"
     
-    if character:FindFirstChild("Robloxclassicred") and character:FindFirstChild("MeshPartAccessory") and character:FindFirstChild("Hat1") and character:FindFirstChild("Pal Hair") and character:FindFirstChild("Kate Hair") and character:FindFirstChild("Pink Hair") and character:FindFirstChild("LavanderHair") then
+    if character:FindFirstChild("Robloxclassicred") and (character:FindFirstChild("MediHood") or character:FindFirstChild("MeshPartAccessory")) and character:FindFirstChild("Hat1") and character:FindFirstChild("Pal Hair") and character:FindFirstChild("Kate Hair") and character:FindFirstChild("Pink Hair") and character:FindFirstChild("LavanderHair") then
+        --Destroying The GUI
+        NetlessServerAdmin:Destroy()
+        
+        bot = true
+        
         local camera = workspace.CurrentCamera
         
         local reanimFolder = Instance.new("Folder", character)
@@ -2282,14 +2291,14 @@ local function Bot()
         --Attachments and Alignments (Hat Character) [Function]
         local function HatAlignment(ACCESSORY)
             if ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh") and ACCESSORY.Name ~= "Head" and ACCESSORY.Name ~= glassesList then
-                ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh"):Destroy()
-            end
-            if ACCESSORY.Handle:FindFirstChildWhichIsA("Weld") then
-                ACCESSORY.Handle:FindFirstChildWhichIsA("Weld"):Destroy()
-            end
-            if ACCESSORY.Handle:FindFirstChildWhichIsA("Attachment") then
-                ACCESSORY.Handle:FindFirstChildWhichIsA("Attachment"):Destroy()
-            end
+                    ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh"):Destroy()
+                end
+                if ACCESSORY.Handle:FindFirstChildWhichIsA("Weld") then
+                    ACCESSORY.Handle:FindFirstChildWhichIsA("Weld"):Destroy()
+                end
+                if ACCESSORY.Handle:FindFirstChildWhichIsA("Attachment") then
+                    ACCESSORY.Handle:FindFirstChildWhichIsA("Attachment"):Destroy()
+                end
             
             local alignPosition = Instance.new("AlignPosition")
                 
@@ -2301,7 +2310,9 @@ local function Bot()
             if reanimation:FindFirstChild(ACCESSORY.Name) then
                 alignPosition.Attachment1 = reanimation:FindFirstChild(ACCESSORY.Name).posAtt2
                 if ACCESSORY.Name == "Head" then
-                    --posAtt1.Position = Vector3.new(0, 0, -0.23)
+                    if ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh").TextureId == "rbxassetid://617406825" then
+                        posAtt1.Position = Vector3.new(0, 0, -0.23)
+                    end
                 end
             else
                 if ACCESSORY.Name == "Torso1" then
@@ -2388,7 +2399,11 @@ local function Bot()
                     v.Name = "Left Arm"
                 end
                 
-                if v.Name == "MeshPartAccessory" then
+                if v.Name == "MediHood" then
+                    v.Name = "Head"
+                end
+
+                if v.Name == "MeshPartAccessory" and v.Handle.Size == Vector3.new(1.2, 1.2, 1.2) then
                     v.Name = "Head"
                 end
                 
@@ -2725,7 +2740,7 @@ end)
 BotReanimation.MouseMoved:Connect(function()
     if not MainFrame:FindFirstChild("Information") then
         Information("Bot", [[- Same thing as perma death, but uses hats instead of your body parts.
-- Hats Needed: Medieval Hood of Mystery, Red Roblox Cap, ROBLOX Girl - Hair, Chestnut Bun, Lavender Updo, Pal Hair, and Brown Hair.]], true)
+- Hats Needed: (Medieval Hood of Mystery or Shadowed Head or both), Red Roblox Cap, ROBLOX Girl - Hair, Chestnut Bun, Lavender Updo, Pal Hair, and Brown Hair.]], true)
     end
 end)
 
@@ -2752,16 +2767,12 @@ end)
 --Reanimating--
 PermanentReanimation.MouseButton1Click:Connect(function()
     if permaDeath == false and bot == false then
-        permaDeath = true
-        NetlessServerAdmin:Destroy()
         PermaDeath()
     end
 end)
 
 BotReanimation.MouseButton1Click:Connect(function()
     if permaDeath == false and bot == false then
-        bot = true
-        NetlessServerAdmin:Destroy()
         Bot()
     end
 end)
