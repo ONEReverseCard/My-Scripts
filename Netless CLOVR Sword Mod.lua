@@ -37,31 +37,194 @@ local rGrip1 = nil
 local lGrip1 = nil
 local hrp  = character1.HumanoidRootPart
 
+local StarterGUI = game:GetService("StarterGui")
+
+--Checking
+if not character1:FindFirstChild("Dark Matter Sword") and not character1:FindFirstChild("Russo's Sword") and not character1:FindFirstChild("MeshPartAccessory") then
+    local errorSound = Instance.new("Sound")
+    errorSound.SoundId = "rbxassetid://3041205264"
+    errorSound.PlaybackSpeed = 1
+    errorSound.Looped = false
+    errorSound.RollOffMaxDistance = 1000
+    errorSound.RollOffMinDistance = 0
+    errorSound.Volume = 1
+    errorSound.Parent = game.Workspace
+    errorSound.Name = "Error"
+    errorSound:Play()
+    
+    StarterGUI:SetCore("SendNotification",
+        {
+            Title = "Sword Needed",
+            Text = "You need one of the supported swords to use this script."
+        }
+    )
+    
+    wait(1.4)
+    errorSound:Destroy()
+    error("You don't have a sword")
+end
+
 local userInputService = game:GetService("UserInputService")
 
 hrp.Transparency = 0.5
 
+--Folder
+local folder = Instance.new("Folder", character1)
+folder.Name = "Replacement Parts"
+
+--Head
+local r6Head = character1.Head:Clone()
+r6Head.Parent = folder
+for i,v in pairs(r6Head:GetChildren()) do
+    v:Destroy()
+end
+r6Head.Anchored = true
+r6Head.CanCollide = false
+r6Head.Name = "Replacement Head"
+r6Head.Transparency = 1
+
+--Torso
+local r6Torso = Instance.new("Part")
+r6Torso.Size = Vector3.new(2, 2, 1)
+r6Torso.Parent = folder
+r6Torso.CanCollide = false
+if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+    r6Torso.Position = character1.UpperTorso.Position
+    r6Torso.Orientation = character1.UpperTorso.Orientation
+    r6Torso.BrickColor = character1.UpperTorso.BrickColor
+else
+    r6Torso.Position = character1.Torso.Position
+    r6Torso.Orientation = character1.Torso.Orientation
+    r6Torso.BrickColor = character1.Torso.BrickColor
+end
+r6Torso.Name = "Replacement Torso"
+r6Torso.Anchored = true
+r6Torso.Transparency = 1
+
+--Right Arm
+local r6RArm = Instance.new("Part")
+r6RArm.Size = Vector3.new(1, 2, 1)
+r6RArm.Parent = folder
+r6RArm.CanCollide = false
+if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+    r6RArm.Position = character1.RightUpperArm.Position
+    r6RArm.Orientation = character1.RightUpperArm.Orientation
+    r6RArm.BrickColor = character1.RightUpperArm.BrickColor
+else
+    r6RArm.Position = character1["Right Arm"].Position
+    r6RArm.Orientation = character1["Right Arm"].Orientation
+    r6RArm.BrickColor = character1["Right Arm"].BrickColor
+end
+r6RArm.Name = "Replacement Right Arm"
+r6RArm.Anchored = true
+r6RArm.Transparency = 1
+
+--Left Arm
+local r6LArm = Instance.new("Part")
+r6LArm.Size = Vector3.new(1, 2, 1)
+r6LArm.Parent = folder
+r6LArm.CanCollide = false
+if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+    r6LArm.Position = character1.LeftUpperArm.Position
+    r6LArm.Orientation = character1.LeftUpperArm.Orientation
+    r6LArm.BrickColor = character1.LeftUpperArm.BrickColor
+else
+    r6LArm.Position = character1["Left Arm"].Position
+    r6LArm.Orientation = character1["Left Arm"].Orientation
+    r6LArm.BrickColor = character1["Left Arm"].BrickColor
+end
+r6LArm.Name = "Replacement Left Arm"
+r6LArm.Anchored = true
+r6LArm.Transparency = 1
+
+--Right Leg
+local r6RLeg = Instance.new("Part")
+r6RLeg.Size = Vector3.new(1, 2, 1)
+r6RLeg.Parent = folder
+r6RLeg.CanCollide = false
+if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+    r6RLeg.Position = character1.RightUpperLeg.Position
+    r6RLeg.Orientation = character1.RightUpperLeg.Orientation
+    r6RLeg.BrickColor = character1.RightUpperLeg.BrickColor
+else
+    r6RLeg.Position = character1["Right Leg"].Position
+    r6RLeg.Orientation = character1["Right Leg"].Orientation
+    r6RLeg.BrickColor = character1["Right Leg"].BrickColor
+end
+r6RLeg.Name = "Replacement Right Leg"
+r6RLeg.Anchored = true
+r6RLeg.Transparency = 1
+
+--Left Leg
+local r6LLeg = Instance.new("Part")
+r6LLeg.Size = Vector3.new(1, 2, 1)
+r6LLeg.Parent = folder
+r6LLeg.CanCollide = false
+if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+    r6LLeg.Position = character1.LeftUpperLeg.Position
+    r6LLeg.Orientation = character1.LeftUpperLeg.Orientation
+    r6LLeg.BrickColor = character1.LeftUpperLeg.BrickColor
+else
+    r6LLeg.Position = character1["Left Leg"].Position
+    r6LLeg.Orientation = character1["Left Leg"].Orientation
+    r6LLeg.BrickColor = character1["Left Leg"].BrickColor
+end
+r6LLeg.Name = "Replacement Left Leg"
+r6LLeg.Anchored = true
+r6LLeg.Transparency = 1
+
 --Replacement for the HumanoidRootPart--
-local hrpReplacement = hrp:Clone()
-hrpReplacement.Parent = character1
-hrpReplacement.Name = "hrpReplacement"
-hrpReplacement.Size = hrp.Size
+local hrpReplacement = character1.HumanoidRootPart:Clone()
+hrpReplacement.Parent = folder
+hrpReplacement.Name = "Replacement HumanoidRootPart"
+hrpReplacement.Size = character1.HumanoidRootPart.Size
 hrpReplacement.Transparency = 1
 hrpReplacement.Anchored = true
-hrpReplacement.Position = hrp.Position
+hrpReplacement.Position = character1.HumanoidRootPart.Position
+--hrpReplacement:FindFirstChild("Root"):Destroy()
+for i,v in pairs(hrpReplacement:GetChildren()) do
+    v:Destroy()
+end
+
+local flinger = Instance.new("BodyAngularVelocity", hrp)
+flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+flinger.P = 1000000000000000000000000000
+flinger.AngularVelocity = Vector3.new(0, 0, 0)
+
+--Cloning Hats (For Netless)
+for i,v in pairs(character1:GetChildren()) do
+    if v:IsA("Accessory") then
+        local clone = v:Clone()
+        clone.Handle:FindFirstChildWhichIsA("Weld"):Destroy()
+        local weld = v.Handle:FindFirstChildWhichIsA("Weld")
+        local weldPart1 = weld.Part1
+        local newWeld = Instance.new("Weld", clone.Handle)
+        local CFrame0 = v.Handle.AccessoryWeld.C0
+        local CFrame1 = v.Handle.AccessoryWeld.C1
+        
+        clone.Parent = folder
+        --clone.Handle.Anchored = true
+        newWeld.Name = "AccessoryWeld"
+        newWeld.C0 = CFrame0
+        newWeld.C1 = CFrame1
+        newWeld.Part0 = clone.Handle
+        newWeld.Part1 = folder:FindFirstChild("Replacement "..weldPart1.Name)
+        clone.Handle.Transparency = 1
+    end
+end
 ----------------------------------------
 
 --------------Getting what sword you are using--------------
-if character1:FindFirstChild("Dark Matter Sword") then
-    sword = character1["Dark Matter Sword"].Handle
+if folder:FindFirstChild("Dark Matter Sword") then
+    sword = folder["Dark Matter Sword"].Handle
 end
 
-if character1:FindFirstChild("MeshPartAccessory") then
-    sword = character1.MeshPartAccessory.Handle
+if folder:FindFirstChild("MeshPartAccessory") then
+    sword = folder.MeshPartAccessory.Handle
 end
 
-if character1:FindFirstChild("Russo's Sword") then
-    sword = character1["Russo's Sword"].Handle
+if folder:FindFirstChild("Russo's Sword") then
+    sword = folder["Russo's Sword"].Handle
 end
 ------------------------------------------------------------
 
@@ -75,198 +238,29 @@ end
 
 local function Hats()
     --From CLOVR (Modified)------------------------------------------------
-    for _, Accessory in next, character1:GetChildren() do
-        if Accessory:IsA("Accessory") and Accessory:FindFirstChild("Handle") then
-            local Attachment1 = Accessory.Handle:FindFirstChildWhichIsA("Attachment")
-            local Attachment0 = character1:FindFirstChild(tostring(Attachment1), true)
-            local Orientation = Instance.new("AlignOrientation")
-            local Position = Instance.new("AlignPosition")
-            if character1.Head:FindFirstChild("AlignOrientation") and character1.Head:FindFirstChild("AlignPosition") then
-                character1.Head.AlignOrientation:Destroy()
-                character1.Head.AlignPosition:Destroy()
-            end
-            
-            Orientation.Attachment0 = Attachment1
-            Orientation.Attachment1 = Attachment0
-            Orientation.RigidityEnabled = true
-            Orientation.ReactionTorqueEnabled = true
-            Orientation.MaxTorque = 20000
-            Orientation.Responsiveness = 200
-            Orientation.Parent = character1.Head
-            
-            Position.Attachment0 = Attachment1
-            Position.Attachment1 = Attachment0
-            Position.RigidityEnabled = true
-            Position.ReactionForceEnabled = true
-            Position.MaxForce = 40000
-            Position.Responsiveness = 200
-            Position.Parent = character1.Head
-        end
-    end
+    local Attachment1 = sword:FindFirstChildWhichIsA("Attachment")
+    local Attachment0 = character1:FindFirstChild(tostring(Attachment1), true)
+    local Orientation = folder["Replacement Head"]:FindFirstChild(sword.Parent.Name.."'s AlignRot")
+    local Position = folder["Replacement Head"]:FindFirstChild(sword.Parent.Name.."'s AlignPos")
+    
+    local clone = Attachment0:Clone()
+    clone.Parent = folder:FindFirstChild("Replacement "..Attachment0.Parent.Name)
+    Attachment0 = clone
+    
+    Position.Attachment1:Destroy()
+    
+    Orientation.Attachment1 = Attachment0
+    Position.Attachment1 = Attachment0
     -----------------------------------------------------------------------
 end
-
---Sizes
-sword.Size = Vector3.new(1, 1, 1)
 
 
 -----------------------------If your rig type is R15-----------------------------
 if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
     print("Nice. You jointy boi.")
-
-    --Torso
-    local r6Torso = Instance.new("Part")
-    r6Torso.Size = Vector3.new(2, 2, 1)
-    r6Torso.Parent = character1
-    r6Torso.CanCollide = false
-    r6Torso.Position = character1.UpperTorso.Position
-    r6Torso.Orientation = character1.UpperTorso.Orientation
-    r6Torso.BrickColor = character1.UpperTorso.BrickColor
-    r6Torso.Name = "Torso"
-    r6Torso.Anchored = false
-    r6Torso.Transparency = 1
     
-    --Attachments
-    local upperTorsoAtt = Instance.new("Attachment")
-    upperTorsoAtt.Parent = r6Torso
-    upperTorsoAtt.Position = Vector3.new(0, 0.3, 0)
-    
-    local lowerTorsoAtt = Instance.new("Attachment")
-    lowerTorsoAtt.Parent = r6Torso
-    lowerTorsoAtt.Position = Vector3.new(0, -0.7, 0)
-    
-    --BodyBackAttachment
-    local bodyBackAtt = Instance.new("Attachment")
-    bodyBackAtt.Parent = r6Torso
-    bodyBackAtt.Name = "BodyBackAttachment"
-    
-    --Right Arm
-    local r6RArm = Instance.new("Part")
-    r6RArm.Size = Vector3.new(1, 2, 1)
-    r6RArm.Parent = character1
-    r6RArm.CanCollide = false
-    r6RArm.Position = character1.RightUpperArm.Position
-    r6RArm.Orientation = character1.RightUpperArm.Orientation
-    r6RArm.BrickColor = character1.RightUpperArm.BrickColor
-    r6RArm.Name = "Right Arm"
-    r6RArm.Anchored = false
-    r6RArm.Transparency = 1
-    
-    --Attachments
-    local upperRArmAtt = Instance.new("Attachment")
-    upperRArmAtt.Parent = r6RArm
-    upperRArmAtt.Position = Vector3.new(0, 0.3, 0)
-    
-    local lowerRArmAtt = Instance.new("Attachment")
-    lowerRArmAtt.Parent = r6RArm
-    lowerRArmAtt.Position = Vector3.new(0, -0.29, 0)
-    
-    local rHandAtt = Instance.new("Attachment")
-    rHandAtt.Parent = r6RArm
-    rHandAtt.Position = Vector3.new(0, -0.87, 0)
-    
-    --RightGripAttachment
-    local rGripAtt = Instance.new("Attachment")
-    rGripAtt.Parent = r6RArm
-    rGripAtt.Name = "RightGripAttachment"
-    rGripAtt.Position = Vector3.new(0, -1, 0)
-    
-    --RightHand RightGripAttachment
-    character1.RightHand.RightGripAttachment.Orientation = Vector3.new(0, 0, 0)
-    character1.RightHand.RightGripAttachment.Position = Vector3.new(0, 0, 0)
-    
-    --Variables
-    rArm1 = character1["Right Arm"]
-    rGrip1 = rArm1.RightGripAttachment
-    
-    --Left Arm
-    local r6LArm = Instance.new("Part")
-    r6LArm.Size = Vector3.new(1, 2, 1)
-    r6LArm.Parent = character1
-    r6LArm.CanCollide = false
-    r6LArm.Position = character1.LeftUpperArm.Position
-    r6LArm.Orientation = character1.LeftUpperArm.Orientation
-    r6LArm.BrickColor = character1.LeftUpperArm.BrickColor
-    r6LArm.Name = "Left Arm"
-    r6LArm.Anchored = false
-    r6LArm.Transparency = 1
-    
-    --Attachments
-    local upperLArmAtt = Instance.new("Attachment")
-    upperLArmAtt.Parent = r6LArm
-    upperLArmAtt.Position = Vector3.new(0, 0.3, 0)
-    
-    local lowerLArmAtt = Instance.new("Attachment")
-    lowerLArmAtt.Parent = r6LArm
-    lowerLArmAtt.Position = Vector3.new(0, -0.29, 0)
-    
-    local lHandAtt = Instance.new("Attachment")
-    lHandAtt.Parent = r6LArm
-    lHandAtt.Position = Vector3.new(0, -0.87, 0)
-    
-    --LeftGripAttachment
-    local lGripAtt = Instance.new("Attachment")
-    lGripAtt.Parent = r6LArm
-    lGripAtt.Name = "LeftGripAttachment"
-    lGripAtt.Position = Vector3.new(0, -1, 0)
-    
-    --LeftHand LeftGripAttachment
-    character1.LeftHand.LeftGripAttachment.Orientation = Vector3.new(0, 0, 0)
-    character1.LeftHand.LeftGripAttachment.Position = Vector3.new(0, 0, 0)
-    
-    --Variables
-    lArm1 = character1["Left Arm"]
-    lGrip1 = lArm1.LeftGripAttachment
-    
-    --Right Leg
-    local r6RLeg = Instance.new("Part")
-    r6RLeg.Size = Vector3.new(1, 2, 1)
-    r6RLeg.Parent = character1
-    r6RLeg.CanCollide = false
-    r6RLeg.Position = character1.RightUpperLeg.Position
-    r6RLeg.Orientation = character1.RightUpperLeg.Orientation
-    r6RLeg.BrickColor = character1.RightUpperLeg.BrickColor
-    r6RLeg.Name = "Right Leg"
-    r6RLeg.Anchored = false
-    r6RLeg.Transparency = 1
-    
-    --Attachments
-    local upperRLegAtt = Instance.new("Attachment")
-    upperRLegAtt.Parent = r6RLeg
-    upperRLegAtt.Position = Vector3.new(0, 0.3, 0)
-    
-    local lowerRLegAtt = Instance.new("Attachment")
-    lowerRLegAtt.Parent = r6RLeg
-    lowerRLegAtt.Position = Vector3.new(0, -0.49, 0)
-    
-    local rFootAtt = Instance.new("Attachment")
-    rFootAtt.Parent = r6RLeg
-    rFootAtt.Position = Vector3.new(0, -1.08, 0)
-    
-    --Left Leg
-    local r6LLeg = Instance.new("Part")
-    r6LLeg.Size = Vector3.new(1, 2, 1)
-    r6LLeg.Parent = character1
-    r6LLeg.CanCollide = false
-    r6LLeg.Position = character1.LeftUpperLeg.Position
-    r6LLeg.Orientation = character1.LeftUpperLeg.Orientation
-    r6LLeg.BrickColor = character1.LeftUpperLeg.BrickColor
-    r6LLeg.Name = "Left Leg"
-    r6LLeg.Anchored = false
-    r6LLeg.Transparency = 1
-    
-    --Attachments
-    local upperLLegAtt = Instance.new("Attachment")
-    upperLLegAtt.Parent = r6LLeg
-    upperLLegAtt.Position = Vector3.new(0, 0.3, 0)
-    
-    local lowerLLegAtt = Instance.new("Attachment")
-    lowerLLegAtt.Parent = r6LLeg
-    lowerLLegAtt.Position = Vector3.new(0, -0.49, 0)
-    
-    local lFootAtt = Instance.new("Attachment")
-    lFootAtt.Parent = r6LLeg
-    lFootAtt.Position = Vector3.new(0, -1.08, 0)
+    --Sizes
+    sword.Size = Vector3.new(1, 1, 1)
     
     --R15 Body
     for i, v in pairs(character1:GetChildren()) do
@@ -280,18 +274,18 @@ if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
             
             Orientation.Attachment0 = attachment0
             Orientation.Attachment1 = attachment1
-            Orientation.RigidityEnabled = true
+            Orientation.RigidityEnabled = false
             Orientation.ReactionTorqueEnabled = true
             Orientation.MaxTorque = 20000
-            Orientation.Responsiveness = 200
+            Orientation.Responsiveness = 40
             Orientation.Parent = v
             
             Position.Attachment0 = attachment0
             Position.Attachment1 = Attachment
-            Position.RigidityEnabled = true
+            Position.RigidityEnabled = false
             Position.ReactionForceEnabled = true
             Position.MaxForce = 40000
-            Position.Responsiveness = 200
+            Position.Responsiveness = 40
             Position.Parent = v 
             ------------------------------------------------------
         end
@@ -421,13 +415,6 @@ userInputService.InputBegan:Connect(function(key)
             Hats()
             
             --Fling Stuff
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger = Instance.new("BodyAngularVelocity", hrp)
-            flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger.P = 1000000000000000000000000000
             flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
             
             flinging = true
@@ -468,13 +455,7 @@ userInputService.InputBegan:Connect(function(key)
             
             Hats()
             
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger = Instance.new("BodyAngularVelocity", hrp)
-            flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger.P = 1000000000000000000000000000
+            --Fling Stuff
             flinger.AngularVelocity = Vector3.new(0, 0, 0)
             
             flinging = false
@@ -485,7 +466,7 @@ userInputService.InputBegan:Connect(function(key)
     --VR----------------------------------------------------------------------------------
     --Right Hand
     if key.KeyCode == Enum.KeyCode.ButtonR1 and scriptLoaded == true then
-        if flinging == false and autoEquip == false and leftHand == false then
+        if flinging == false and leftHand == false then
             --Start Flinging
             sword.BodyBackAttachment.Name = rGrip1.Name
             
@@ -514,101 +495,46 @@ userInputService.InputBegan:Connect(function(key)
             Hats()
             
             --Fling Stuff
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger = Instance.new("BodyAngularVelocity", hrp)
-            flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger.P = 1000000000000000000000000000
             flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
             
             flinging = true
         else
-            if flinging == false and autoEquip == true and leftHand == false then
-            --Start Flinging
-            sword.BodyBackAttachment.Name = rGrip1.Name
-            
-            local hatGrip = sword.RightGripAttachment
-            
-            --Orientation
-            if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
-                hatGrip.Orientation = Vector3.new(-100, -90, 0)
-            end
-            if character1:FindFirstChild("Russo's Sword") then
-                hatGrip.Orientation = Vector3.new(45, -90, -180)
-            end            
-            
-            --Position
-            if character1:FindFirstChild("Dark Matter Sword") then
-                hatGrip.Position = rGrip1.Position + Vector3.new(1.2, 2.4, 0)
-            end
-            if character1:FindFirstChild("MeshPartAccessory") then
-                hatGrip.Position = lGrip1.Position + Vector3.new(1.7, 2.6, 0)
-            end
-            if character1:FindFirstChild("Russo's Sword") then
-                hatGrip.Position = rGrip1.Position + Vector3.new(-0.1, -0.7, 0)
-            end
-            
-            --Function
-            Hats()
-            
-            --Fling Stuff
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger = Instance.new("BodyAngularVelocity", hrp)
-            flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger.P = 1000000000000000000000000000
-            flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
-            
-            flinging = true
-            else
-                if flinging == true and autoEquip == true and leftHand == false then
-                    --Stop Flinging
-                    sword.RightGripAttachment.Name = "BodyBackAttachment"
-                    
-                    local hatGrip = sword.BodyBackAttachment
-                    
-                    --Orientation
-                    if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
-                        hatGrip.Orientation = Vector3.new(0, 0, 0)
-                    end
-                    if character1:FindFirstChild("Russo's Sword") then
-                        hatGrip.Orientation = Vector3.new(-0, 180, 215.002)
-                    end
-                    
-                    --Position
-                    if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
-                        hatGrip.Position = Vector3.new(0, 0, -0.25)
-                    end
-                    if character1:FindFirstChild("Russo's Sword") then
-                        hatGrip.Position = Vector3.new(0, 0, 0.25)
-                    end
-                    
-                    --Function
-                    Hats()
-                    
-                    --Fling Stuff
-                    if hrp:FindFirstChild("BodyAngularVelocity") then
-                        hrp.BodyAngularVelocity:Destroy()
-                    end
-                    
-                    local flinger = Instance.new("BodyAngularVelocity", hrp)
-                    flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-                    flinger.P = 1000000000000000000000000000
-                    flinger.AngularVelocity = Vector3.new(0, 0, 0)
-                    
-                    flinging = false
+            if flinging == true and autoEquip == true and leftHand == false then
+                --Stop Flinging
+                sword.RightGripAttachment.Name = "BodyBackAttachment"
+                
+                local hatGrip = sword.BodyBackAttachment
+                
+                --Orientation
+                if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
+                    hatGrip.Orientation = Vector3.new(0, 0, 0)
                 end
+                if character1:FindFirstChild("Russo's Sword") then
+                    hatGrip.Orientation = Vector3.new(-0, 180, 215.002)
+                end
+                
+                --Position
+                if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
+                    hatGrip.Position = Vector3.new(0, 0, -0.25)
+                end
+                if character1:FindFirstChild("Russo's Sword") then
+                    hatGrip.Position = Vector3.new(0, 0, 0.25)
+                end
+                
+                --Function
+                Hats()
+                
+                --Fling Stuff
+                flinger.AngularVelocity = Vector3.new(0, 0, 0)
+                
+                flinging = false
             end
         end
     end
     
     --Left Hand
     if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true then
-        if flinging == false and autoEquip == false and leftHand == true then
+        if flinging == false and leftHand == true then
             --Start Flinging
             sword.BodyBackAttachment.Name = lGrip1.Name
             
@@ -637,94 +563,39 @@ userInputService.InputBegan:Connect(function(key)
             Hats()
             
             --FLing Stuff
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger = Instance.new("BodyAngularVelocity", hrp)
-            flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger.P = 1000000000000000000000000000
             flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
             
             flinging = true
         else
-            if flinging == false and autoEquip == true and leftHand == true then
-            --Start Flinging
-            sword.BodyBackAttachment.Name = lGrip1.Name
-            
-            local hatGrip = sword.LeftGripAttachment
-            
-            --Orientation
-            if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
-                hatGrip.Orientation = Vector3.new(-100, -90, 0)
-            end
-            if character1:FindFirstChild("Russo's Sword") then
-                hatGrip.Orientation = Vector3.new(45, -90, -180)
-            end
-            
-            --Position
-            if character1:FindFirstChild("Dark Matter Sword") then
-                hatGrip.Position = lGrip1.Position + Vector3.new(1.2, 2.4, 0)
-            end
-            if character1:FindFirstChild("MeshPartAccessory") then
-                hatGrip.Position = lGrip1.Position + Vector3.new(1.7, 2.6, 0)
-            end
-            if character1:FindFirstChild("Russo's Sword") then
-                hatGrip.Position = lGrip1.Position + Vector3.new(-0.1, -0.7, 0)
-            end
-            
-            --Function
-            Hats()
-            
-            --FLing Stuff
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger = Instance.new("BodyAngularVelocity", hrp)
-            flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger.P = 1000000000000000000000000000
-            flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
-            
-            flinging = true
-            else
-                if flinging == true and autoEquip == true and leftHand == true then
-                    --Stop Flinging
-                    sword.LeftGripAttachment.Name = "BodyBackAttachment"
-                    
-                    local hatGrip = sword.BodyBackAttachment
-                    
-                    --Orientation
-                    if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
-                        hatGrip.Orientation = Vector3.new(0, 0, -90)
-                    end
-                    if character1:FindFirstChild("Russo's Sword") then
-                        hatGrip.Orientation = Vector3.new(-0, 180, 125.002)
-                    end
-                    
-                    --Position
-                    if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
-                        hatGrip.Position = Vector3.new(0, 0, -0.25)
-                    end
-                    if character1:FindFirstChild("Russo's Sword") then
-                        hatGrip.Position = Vector3.new(0, 0, 0.25)
-                    end
-                    
-                    --Function
-                    Hats()
-                    
-                    --Fling Stuff
-                    if hrp:FindFirstChild("BodyAngularVelocity") then
-                        hrp.BodyAngularVelocity:Destroy()
-                    end
-                    
-                    local flinger = Instance.new("BodyAngularVelocity", hrp)
-                    flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-                    flinger.P = 1000000000000000000000000000
-                    flinger.AngularVelocity = Vector3.new(0, 0, 0)
-                    
-                    flinging = false
+            if flinging == true and autoEquip == true and leftHand == true then
+                --Stop Flinging
+                sword.LeftGripAttachment.Name = "BodyBackAttachment"
+                
+                local hatGrip = sword.BodyBackAttachment
+                
+                --Orientation
+                if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
+                    hatGrip.Orientation = Vector3.new(0, 0, -90)
                 end
+                if character1:FindFirstChild("Russo's Sword") then
+                    hatGrip.Orientation = Vector3.new(-0, 180, 125.002)
+                end
+                
+                --Position
+                if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
+                    hatGrip.Position = Vector3.new(0, 0, -0.25)
+                end
+                if character1:FindFirstChild("Russo's Sword") then
+                    hatGrip.Position = Vector3.new(0, 0, 0.25)
+                end
+                
+                --Function
+                Hats()
+                
+                --Fling Stuff
+                flinger.AngularVelocity = Vector3.new(0, 0, 0)
+                
+                flinging = false
             end
         end
     end
@@ -761,13 +632,6 @@ userInputService.InputEnded:Connect(function(key)
             Hats()
             
             --Fling Stuff
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger = Instance.new("BodyAngularVelocity", hrp)
-            flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger.P = 1000000000000000000000000000
             flinger.AngularVelocity = Vector3.new(0, 0, 0)
             
             flinging = false
@@ -802,13 +666,6 @@ userInputService.InputEnded:Connect(function(key)
             Hats()
             
             --Fling Stuff
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger = Instance.new("BodyAngularVelocity", hrp)
-            flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger.P = 1000000000000000000000000000
             flinger.AngularVelocity = Vector3.new(0, 0, 0)
             
             flinging = false
@@ -867,7 +724,7 @@ Script = function()
     local Players = game:GetService("Players")
     local Client = Players.LocalPlayer
     local Character = Client.Character or Client.CharacterAdded:Wait()
-    local WeldBase = Character:WaitForChild("hrpReplacement")
+    local WeldBase = folder:WaitForChild("Replacement HumanoidRootPart")
     local ArmBase = Character:FindFirstChild("RightHand") or Character:FindFirstChild("Right Arm") or WeldBase
     local Backpack = Client:WaitForChild("Backpack")
     local Mouse = Client:GetMouse()
@@ -969,22 +826,19 @@ Script = function()
         local Attachment1 = Instance.new("Attachment", Limb)
         local Orientation = Instance.new("AlignOrientation")
         local Position = Instance.new("AlignPosition")
-        
         Orientation.Attachment0 = Attachment1
         Orientation.Attachment1 = Attachment0
         Orientation.RigidityEnabled = false
         Orientation.MaxTorque = 20000
-        Orientation.Responsiveness = 200
-        Orientation.Parent = Character.hrpReplacement
-        
+        Orientation.Responsiveness = 40
+        Orientation.Parent = folder["Replacement HumanoidRootPart"]
         Position.Attachment0 = Attachment1
         Position.Attachment1 = Attachment0
         Position.RigidityEnabled = false
         Position.MaxForce = 40000
-        Position.Responsiveness = 200
-        Position.Parent = Character.hrpReplacement
+        Position.Responsiveness = 40
+        Position.Parent = folder["Replacement HumanoidRootPart"]
         Limb.Massless = false
-        
         local Motor = GetMotorForLimb(Limb)
         if Motor then
             Motor:Destroy()
@@ -1074,7 +928,7 @@ Script = function()
                 local Handle, RightGrip, HatAtt, HeadAtt, BasePart = CreateAccessory(Accessory)
                 table.insert(HeadAccessories, {Handle, RightGrip, HatAtt, HeadAtt, BasePart})
                 do
-                    Handle.Transparency = 0
+                    Handle.Transparency = 1
                 end
                 if not WearAllAccessories then
                     break
@@ -1100,16 +954,17 @@ Script = function()
     elseif RagdollEnabled then
         if RagdollHeadMovement then
             Permadeath()
-            MoveHead = CreateAlignment(Character["Head"])
+            MoveHead = CreateAlignment(folder["Replacement Head"])
         end
-        MoveRightArm = CreateAlignment(Character["Right Arm"])
-        MoveLeftArm = CreateAlignment(Character["Left Arm"])
-        MoveRightLeg = CreateAlignment(Character["Right Leg"])
-        MoveLeftLeg = CreateAlignment(Character["Left Leg"])
-        MoveTorso = CreateAlignment(Character["Torso"])
-        MoveRoot = CreateAlignment(Character.hrpReplacement)
+        MoveRightArm = CreateAlignment(folder["Replacement Right Arm"])
+        MoveLeftArm = CreateAlignment(folder["Replacement Left Arm"])
+        MoveRightLeg = CreateAlignment(folder["Replacement Right Leg"])
+        MoveLeftLeg = CreateAlignment(folder["Replacement Left Leg"])
+        MoveTorso = CreateAlignment(folder["Replacement Torso"])
+        MoveRoot = CreateAlignment(folder["Replacement HumanoidRootPart"])
+        --
         if RagdollHeadMovement then
-            for _, Accessory in next, Character:GetChildren() do
+            for _, Accessory in next, folder:GetChildren() do
                 if Accessory:IsA("Accessory") and Accessory:FindFirstChild("Handle") then
                     local Attachment1 = Accessory.Handle:FindFirstChildWhichIsA("Attachment")
                     local Attachment0 = Character:FindFirstChild(tostring(Attachment1), true)
@@ -1117,24 +972,33 @@ Script = function()
                     local Position = Instance.new("AlignPosition")
                     print(Attachment1, Attachment0, Accessory)
                     
+                    local clone = Attachment0:Clone()
+                    clone.Parent = folder:FindFirstChild("Replacement "..Attachment0.Parent.Name)
+                    Attachment0 = clone
+                    
                     Orientation.Attachment0 = Attachment1
                     Orientation.Attachment1 = Attachment0
-                    Orientation.RigidityEnabled = true
+                    Orientation.RigidityEnabled = false
                     Orientation.ReactionTorqueEnabled = true
                     Orientation.MaxTorque = 20000
-                    Orientation.Responsiveness = 200
-                    Orientation.Parent = Character.Head
+                    Orientation.Responsiveness = 40
+                    Orientation.Parent = folder["Replacement Head"]
+                    Orientation.Name = (Accessory.Name.."'s AlignRot")
                     
                     Position.Attachment0 = Attachment1
                     Position.Attachment1 = Attachment0
-                    Position.RigidityEnabled = true
+                    Position.RigidityEnabled = false
                     Position.ReactionForceEnabled = true
                     Position.MaxForce = 40000
-                    Position.Responsiveness = 200
-                    Position.Parent = Character.Head
+                    Position.Responsiveness = 40
+                    Position.Parent = folder["Replacement Head"]
+                    Position.Name = (Accessory.Name.."'s AlignPos")
+                    
+                    Accessory.Handle:FindFirstChildWhichIsA("Weld"):Destroy()
                 end
             end
         end
+        
     end
     --[[
  Movement
@@ -1214,7 +1078,7 @@ Script = function()
                 end
                 
             elseif Part:IsA("BasePart") and Part.Transparency < 0.5 and Part.Name ~= "Head" then
-                Part.LocalTransparencyModifier = 0
+                Part.LocalTransparencyModifier = bodyTransparency
             elseif Part:IsA("BasePart") and Part.Name == "Head" then
                 Part.LocalTransparencyModifier = 1
             end
@@ -1567,8 +1431,8 @@ Script = function()
         function()
             Camera.CameraSubject = VirtualBody.Humanoid
             if RagdollEnabled then
-                Character.hrpReplacement.CFrame = VirtualRig.UpperTorso.CFrame
-                Character.hrpReplacement.Velocity = Vector3.new(0, 0, 0)
+                folder["Replacement HumanoidRootPart"].CFrame = VirtualRig.UpperTorso.CFrame
+                folder["Replacement HumanoidRootPart"].Velocity = Vector3.new(0, 0, 0)
             end
             if not VRReady then
                 OnUserCFrameChanged(Enum.UserCFrame.Head, CFrame.new(0, 0, 0))
@@ -1791,19 +1655,6 @@ Permadeath = function()
     game.Players.LocalPlayer.Character = ch
     wait(3)
     warn("100%")
-    
-    game:GetService("RunService").Heartbeat:Connect(function()
-        for i,v in pairs(character1:GetChildren()) do
-            if v:IsA("BasePart") or v:IsA("MeshPart") then
-                v.Velocity = Vector3.new(-17.7, 0, -17.7)
-            end
-            
-            if v:IsA("Accessory") then
-                v.Handle.Velocity = Vector3.new(-17.7, 0, -17.7)
-            end
-        end
-    end)
-    
 end
 Respawn = function()
     local ch = game.Players.LocalPlayer.Character
@@ -2112,44 +1963,126 @@ ViewHUDFunc = function()
     )
     
     ------------------------Part of modification------------------------
-    ----------------This is from FE Sniper by x0rs#4411----------------
-    local bp = Instance.new("BodyPosition", hrp)
-    bp.Position = hrp.Position
-    bp.D = 9999999
-    bp.P = 999999999999999
-    bp.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-    local flinger = Instance.new("BodyAngularVelocity", hrp)
-    flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-    flinger.P = 1000000000000000000000000000
-    flinger.AngularVelocity = Vector3.new(0, 0, 0)
-    -------------------------------------------------------------------
-    
-    --hrpReplacement.Anchored = false
+    for i,v in pairs(character1.Torso:GetChildren()) do
+        if v:IsA("Motor6D") then
+            v:Destroy()
+        end
+    end
     
     if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
-        character1.LeftHand.LeftWrist:Destroy()
-        character1.LeftLowerArm.LeftElbow:Destroy()
-        character1.LeftUpperArm.LeftShoulder:Destroy()
-        character1.RightHand.RightWrist:Destroy()
-        character1.RightLowerArm.RightElbow:Destroy()
-        character1.RightUpperArm.RightShoulder:Destroy()
-        character1.UpperTorso.Waist:Destroy()
-        character1.LeftFoot.LeftAnkle:Destroy()
-        character1.LeftLowerLeg.LeftKnee:Destroy()
-        character1.LeftUpperLeg.LeftHip:Destroy()
-        character1.RightFoot.RightAnkle:Destroy()
-        character1.RightLowerLeg.RightKnee:Destroy()
-        character1.RightUpperLeg.RightHip:Destroy()
-        character1.LowerTorso.Root:Destroy()
+        character1:BreakJoints()
+    end
+    
+    for i,v in pairs(folder:GetChildren()) do
+        if v:IsA("BasePart") then
+            v.Anchored = false
+        end
+    end
+    
+    game:GetService("RunService").Heartbeat:Connect(function()
+        for i,v in pairs(character1:GetChildren()) do
+            if v:IsA("BasePart") or v:IsA("MeshPart") then
+                v.Velocity = Vector3.new(-17.7, 0, -17.7)
+            end
+            
+            if v:IsA("Accessory") then
+                v.Handle.Velocity = Vector3.new(-17.7, 0, -17.7)
+            end
+        end
+    end)
+    
+    --Attachments (Fake Character)
+    for i,v in pairs(folder:GetChildren()) do
+        if v:IsA("Part") and v.Name ~= "HumanoidRootPart" then
+            local posAtt2 = Instance.new("Attachment", v)
+            posAtt2.Name = "posAtt2"
+            
+            local rotAtt2 = Instance.new("Attachment", v)
+            rotAtt2.Name = "rotAtt2"
+        end
+        
+        if v:IsA("Accessory") then
+            local posAtt2 = Instance.new("Attachment", v.Handle)
+            posAtt2.Name = "posAtt2"
+            
+            local rotAtt2 = Instance.new("Attachment", v.Handle)
+            rotAtt2.Name = "rotAtt2"
+        end
+    end
+    
+    --Attachments and Alignments (Real Character)
+    for i,v in pairs(character1:GetChildren()) do
+        if v:IsA("Accessory") or (v:IsA("Part") and v.Name ~= "HumanoidRootPart") then
+            --Creating AlignPosition
+            local alignPosition = Instance.new("AlignPosition")
+            
+            --Creating posAtt1--
+            local posAtt1 = Instance.new("Attachment")
+            if v:IsA("Accessory") then
+                posAtt1.Parent = v.Handle
+            else
+                posAtt1.Parent = v
+            end
+            posAtt1.Name = "posAtt1"
+            
+            --AlignPosition Properties--
+            alignPosition.Attachment0 = posAtt1
+            if v:IsA("Accessory") then
+                alignPosition.Attachment1 = folder:FindFirstChild(v.Name).Handle.posAtt2
+            else
+                alignPosition.Attachment1 = folder:FindFirstChild("Replacement "..v.Name).posAtt2
+            end
+            alignPosition.RigidityEnabled = false
+            alignPosition.ReactionForceEnabled = false
+            alignPosition.MaxForce = 99999999999999999999999999
+            alignPosition.Responsiveness = 200
+            if v:IsA("Accessory") then
+                alignPosition.Parent = v.Handle
+            else
+                alignPosition.Parent = v
+            end
+            
+            -------------------------------------------------
+            
+            --Creating AlignOrientation--
+            local alignOrientation = Instance.new("AlignOrientation")
+            
+            --Creating rotAtt1--
+            local rotAtt1 = Instance.new("Attachment")
+            if v:IsA("Accessory") then
+                rotAtt1.Parent = v.Handle
+            else
+                rotAtt1.Parent = v
+            end
+            rotAtt1.Name = "rotAtt1"
+            
+            --AlignOrientation Properties--
+            alignOrientation.Attachment0 = rotAtt1
+            if v:IsA("Accessory") then
+                alignOrientation.Attachment1 = folder:FindFirstChild(v.Name).Handle.rotAtt2
+            else
+                alignOrientation.Attachment1 = folder:FindFirstChild("Replacement "..v.Name).rotAtt2
+            end
+            alignOrientation.RigidityEnabled = false
+            alignOrientation.ReactionTorqueEnabled = false
+            alignOrientation.MaxTorque = 99999999999999999999999999
+            alignOrientation.MaxAngularVelocity = 99999999999999999999999999
+            alignOrientation.Responsiveness = 200
+            if v:IsA("Accessory") then
+                alignOrientation.Parent = v.Handle
+            else
+                alignOrientation.Parent = v
+            end
+        end
     end
     
     scriptLoaded = true
     
     while true do
-        bp.Position = sword.Position
-        wait()
+        hrp.Position = sword.Position
+        game:GetService("RunService").Heartbeat:wait()
     end
-    -------------------------------------------------------------------
+    --------------------------------------------------------------------
     
     wait(9e9)
 end
@@ -2157,26 +2090,26 @@ Script()
 wait(2)
 local Players = game:GetService("Players")
 local lp = Players.LocalPlayer
-local character = lp.Character
-local A0LL = Instance.new("Attachment", character["Left Leg"])
+local character = folder--lp.Character
+local A0LL = Instance.new("Attachment", character["Replacement Left Leg"])
 A0LL.Position = Vector3.new(0, 1, 0)
-local A1LL = Instance.new("Attachment", character["Torso"])
+local A1LL = Instance.new("Attachment", character["Replacement Torso"])
 A1LL.Position = Vector3.new(-0.5, -1, 0)
-local socket1 = Instance.new("BallSocketConstraint", character["Left Leg"])
+local socket1 = Instance.new("BallSocketConstraint", character["Replacement Left Leg"])
 socket1.Attachment0 = A0LL
 socket1.Attachment1 = A1LL
-local A0RL = Instance.new("Attachment", character["Right Leg"])
+local A0RL = Instance.new("Attachment", character["Replacement Right Leg"])
 A0RL.Position = Vector3.new(0, 1, 0)
-local A1RL = Instance.new("Attachment", character["Torso"])
+local A1RL = Instance.new("Attachment", character["Replacement Torso"])
 A1RL.Position = Vector3.new(0.5, -1, 0)
-local socket2 = Instance.new("BallSocketConstraint", character["Right Leg"])
+local socket2 = Instance.new("BallSocketConstraint", character["Replacement Right Leg"])
 socket2.Attachment0 = A0RL
 socket2.Attachment1 = A1RL
-local A0H = Instance.new("Attachment", character["Head"])
+local A0H = Instance.new("Attachment", character["Replacement Head"])
 A0H.Position = Vector3.new(0, -0.5, 0)
-local A1H = Instance.new("Attachment", character["Torso"])
+local A1H = Instance.new("Attachment", character["Replacement Torso"])
 A1H.Position = Vector3.new(0, 1, 0)
-local socket5 = Instance.new("BallSocketConstraint", character["Head"])
+local socket5 = Instance.new("BallSocketConstraint", character["Replacement Head"])
 socket5.Attachment0 = A0H
 socket5.Attachment1 = A1H
 loadstring(game:HttpGet("https://ghostbin.co/paste/krmyf/raw", true))()
