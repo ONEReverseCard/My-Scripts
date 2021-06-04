@@ -83,23 +83,172 @@ local player1 = game.Players.LocalPlayer
 local character1 = player1.Character
 local StarterGUI = game:GetService("StarterGui")
 
+--Folder
+local folder = Instance.new("Folder", character1)
+folder.Name = "Replacement Parts"
+
+--Head
+local r6Head = character1.Head:Clone()
+r6Head.Parent = folder
+for i,v in pairs(r6Head:GetChildren()) do
+    v:Destroy()
+end
+r6Head.Anchored = true
+r6Head.CanCollide = false
+r6Head.Name = "Replacement Head"
+r6Head.Transparency = 1
+
+--Torso
+local r6Torso = Instance.new("Part")
+r6Torso.Size = Vector3.new(2, 2, 1)
+r6Torso.Parent = folder
+r6Torso.CanCollide = false
+if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+    r6Torso.Position = character1.UpperTorso.Position
+    r6Torso.Orientation = character1.UpperTorso.Orientation
+    r6Torso.BrickColor = character1.UpperTorso.BrickColor
+else
+    r6Torso.Position = character1.Torso.Position
+    r6Torso.Orientation = character1.Torso.Orientation
+    r6Torso.BrickColor = character1.Torso.BrickColor
+end
+r6Torso.Name = "Replacement Torso"
+r6Torso.Anchored = true
+r6Torso.Transparency = 1
+
+--Right Arm
+local r6RArm = Instance.new("Part")
+r6RArm.Size = Vector3.new(1, 2, 1)
+r6RArm.Parent = folder
+r6RArm.CanCollide = false
+if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+    r6RArm.Position = character1.RightUpperArm.Position
+    r6RArm.Orientation = character1.RightUpperArm.Orientation
+    r6RArm.BrickColor = character1.RightUpperArm.BrickColor
+else
+    r6RArm.Position = character1["Right Arm"].Position
+    r6RArm.Orientation = character1["Right Arm"].Orientation
+    r6RArm.BrickColor = character1["Right Arm"].BrickColor
+end
+r6RArm.Name = "Replacement Right Arm"
+r6RArm.Anchored = true
+r6RArm.Transparency = 1
+
+--Left Arm
+local r6LArm = Instance.new("Part")
+r6LArm.Size = Vector3.new(1, 2, 1)
+r6LArm.Parent = folder
+r6LArm.CanCollide = false
+if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+    r6LArm.Position = character1.LeftUpperArm.Position
+    r6LArm.Orientation = character1.LeftUpperArm.Orientation
+    r6LArm.BrickColor = character1.LeftUpperArm.BrickColor
+else
+    r6LArm.Position = character1["Left Arm"].Position
+    r6LArm.Orientation = character1["Left Arm"].Orientation
+    r6LArm.BrickColor = character1["Left Arm"].BrickColor
+end
+r6LArm.Name = "Replacement Left Arm"
+r6LArm.Anchored = true
+r6LArm.Transparency = 1
+
+--Right Leg
+local r6RLeg = Instance.new("Part")
+r6RLeg.Size = Vector3.new(1, 2, 1)
+r6RLeg.Parent = folder
+r6RLeg.CanCollide = false
+if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+    r6RLeg.Position = character1.RightUpperLeg.Position
+    r6RLeg.Orientation = character1.RightUpperLeg.Orientation
+    r6RLeg.BrickColor = character1.RightUpperLeg.BrickColor
+else
+    r6RLeg.Position = character1["Right Leg"].Position
+    r6RLeg.Orientation = character1["Right Leg"].Orientation
+    r6RLeg.BrickColor = character1["Right Leg"].BrickColor
+end
+r6RLeg.Name = "Replacement Right Leg"
+r6RLeg.Anchored = true
+r6RLeg.Transparency = 1
+
+--Left Leg
+local r6LLeg = Instance.new("Part")
+r6LLeg.Size = Vector3.new(1, 2, 1)
+r6LLeg.Parent = folder
+r6LLeg.CanCollide = false
+if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+    r6LLeg.Position = character1.LeftUpperLeg.Position
+    r6LLeg.Orientation = character1.LeftUpperLeg.Orientation
+    r6LLeg.BrickColor = character1.LeftUpperLeg.BrickColor
+else
+    r6LLeg.Position = character1["Left Leg"].Position
+    r6LLeg.Orientation = character1["Left Leg"].Orientation
+    r6LLeg.BrickColor = character1["Left Leg"].BrickColor
+end
+r6LLeg.Name = "Replacement Left Leg"
+r6LLeg.Anchored = true
+r6LLeg.Transparency = 1
+
+--Replacement for the HumanoidRootPart--
+local hrpReplacement = character1.HumanoidRootPart:Clone()
+hrpReplacement.Parent = folder
+hrpReplacement.Name = "Replacement HumanoidRootPart"
+hrpReplacement.Size = character1.HumanoidRootPart.Size
+hrpReplacement.Transparency = 1
+hrpReplacement.Anchored = true
+hrpReplacement.Position = character1.HumanoidRootPart.Position
+--hrpReplacement:FindFirstChild("Root"):Destroy()
+for i,v in pairs(hrpReplacement:GetChildren()) do
+    v:Destroy()
+end
+
+local flinger = Instance.new("BodyAngularVelocity", character1.HumanoidRootPart)
+flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+flinger.P = 1000000000000000000000000000
+flinger.AngularVelocity = Vector3.new(0, 0, 0)
+
+--Cloning Hats (For Netless)
+for i,v in pairs(character1:GetChildren()) do
+    if v:IsA("Accessory") then
+        local clone = v:Clone()
+        clone.Handle:FindFirstChildWhichIsA("Weld"):Destroy()
+        local weld = v.Handle:FindFirstChildWhichIsA("Weld")
+        local weldPart1 = weld.Part1
+        local newWeld = Instance.new("Weld", clone.Handle)
+        local CFrame0 = v.Handle.AccessoryWeld.C0
+        local CFrame1 = v.Handle.AccessoryWeld.C1
+        
+        clone.Parent = folder
+        --clone.Handle.Anchored = true
+        newWeld.Name = "AccessoryWeld"
+        newWeld.C0 = CFrame0
+        newWeld.C1 = CFrame1
+        newWeld.Part0 = clone.Handle
+        newWeld.Part1 = folder:FindFirstChild("Replacement "..weldPart1.Name)
+        clone.Handle.Transparency = 1
+    end
+end
+----------------------------------------
+
 --Multiple Snipers
-if character1:FindFirstChild("Meshes/Sniper_rbxAccessory") then
+if folder:FindFirstChild("Meshes/Sniper_rbxAccessory") then
     game.Players.LocalPlayer.Character["Meshes/Sniper_rbxAccessory"].Name = "Sniper"
+    folder["Meshes/Sniper_rbxAccessory"].Name = "Sniper"
 end
 
 --Pink Cow Cyberpunk Sniper
-if character1:FindFirstChild("Meshes/cowsniperAccessory") then
+if folder:FindFirstChild("Meshes/cowsniperAccessory") then
     game.Players.LocalPlayer.Character["Meshes/cowsniperAccessory"].Name = "Meshes/SniperAccessory"
+    folder["Meshes/cowsniperAccessory"].Name = "Meshes/SniperAccessory"
 end
 
 --Wavy Cyberpunk Sniper
-if character1:FindFirstChild("WavySniper") then
+if folder:FindFirstChild("WavySniper") then
     game.Players.LocalPlayer.Character.WavySniper.Name = "Meshes/RainbowSniperAccessory"
+    folder.WavySniper.Name = "Meshes/RainbowSniperAccessory"
 end
 
 --Checks to see if you have one of the swords--
-if secondaryWeapon == true and not character1:FindFirstChild("Dark Matter Sword") and not character1:FindFirstChild("Russo's Sword") and not character1:FindFirstChild("MeshPartAccessory") and not character1:FindFirstChild("UMAD") then
+if secondaryWeapon == true and not folder:FindFirstChild("Dark Matter Sword") and not folder:FindFirstChild("Russo's Sword") and not folder:FindFirstChild("MeshPartAccessory") and not folder:FindFirstChild("UMAD") then
     local errorSound = Instance.new("Sound")
     errorSound.SoundId = "rbxassetid://3041205264"
     errorSound.PlaybackSpeed = 1
@@ -125,7 +274,7 @@ end
 -----------------------------------------------
 
 --Checks to see if you have one of the guns--
-if not character1:FindFirstChild("Sniper") and not character1:FindFirstChild("Meshes/SniperAccessory") and not character1:FindFirstChild("Meshes/RainbowSniperAccessory") and not character1:FindFirstChild("Meshes/GiftsniperAccessory") and not character1:FindFirstChild("HalloweenSniperAccessory") and not character1:FindFirstChild("Type-49 Abomindation Back Accessory") and not character1:FindFirstChild("Blox Rifle 5000") then
+if not folder:FindFirstChild("Sniper") and not folder:FindFirstChild("Meshes/SniperAccessory") and not folder:FindFirstChild("Meshes/RainbowSniperAccessory") and not folder:FindFirstChild("Meshes/GiftsniperAccessory") and not folder:FindFirstChild("HalloweenSniperAccessory") and not folder:FindFirstChild("Type-49 Abomindation Back Accessory") and not folder:FindFirstChild("Blox Rifle 5000") then
     local errorSound = Instance.new("Sound")
     errorSound.SoundId = "rbxassetid://3041205264"
     errorSound.PlaybackSpeed = 1
@@ -159,253 +308,135 @@ local lGrip1 = nil
 local hrp  = character1.HumanoidRootPart
 local mouse = player1:GetMouse()
 
+--Holstered Values
+local gHolstPos = nil
+local gHolstRot = nil
+local sHolstPos = nil
+local sHolstRot = nil
+
+--Holding Values
+local gHoldPos = nil
+local gHoldRot = nil
+local sHoldPos = nil
+local sHoldRot = nil
+
 local userInputService = game:GetService("UserInputService")
 local vrService = game:GetService("VRService")
 
 hrp.Transparency = 0.5
 
 --Swords/Knifes
-if secondaryWeapon == true and character1:FindFirstChild("Dark Matter Sword") then
-    sword = character1["Dark Matter Sword"].Handle
+if secondaryWeapon == true and folder:FindFirstChild("Dark Matter Sword") then
+    sword = folder["Dark Matter Sword"].Handle
 end
 
-if secondaryWeapon == true and character1:FindFirstChild("Russo's Sword") then
-    sword = character1["Russo's Sword"].Handle
+if secondaryWeapon == true and folder:FindFirstChild("Russo's Sword") then
+    sword = folder["Russo's Sword"].Handle
 end
 
-if secondaryWeapon == true and character1:FindFirstChild("MeshPartAccessory") then
-    sword = character1.MeshPartAccessory.Handle
+if secondaryWeapon == true and folder:FindFirstChild("MeshPartAccessory") then
+    sword = folder.MeshPartAccessory.Handle
 end
 
-if secondaryWeapon == true and character1:FindFirstChild("UMAD") then
-    sword = character1.UMAD.Handle
+if secondaryWeapon == true and folder:FindFirstChild("UMAD") then
+    sword = folder.UMAD.Handle
 end
 
 --Snipers
-if character1:FindFirstChild("Sniper") then
-    gun = character1.Sniper.Handle
+if folder:FindFirstChild("Sniper") then
+    gun = folder.Sniper.Handle
 end
 
-if character1:FindFirstChild("Meshes/SniperAccessory") then
-    gun = character1["Meshes/SniperAccessory"].Handle
+if folder:FindFirstChild("Meshes/SniperAccessory") then
+    gun = folder["Meshes/SniperAccessory"].Handle
 end
 
-if character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-    gun = character1["Meshes/RainbowSniperAccessory"].Handle
+if folder:FindFirstChild("Meshes/RainbowSniperAccessory") then
+    gun = folder["Meshes/RainbowSniperAccessory"].Handle
 end
 
-if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-    gun = character1["Meshes/GiftsniperAccessory"].Handle
+if folder:FindFirstChild("Meshes/GiftsniperAccessory") then
+    gun = folder["Meshes/GiftsniperAccessory"].Handle
 end
 
-if character1:FindFirstChild("HalloweenSniperAccessory") then
-    gun = character1.HalloweenSniperAccessory.Handle
+if folder:FindFirstChild("HalloweenSniperAccessory") then
+    gun = folder.HalloweenSniperAccessory.Handle
 end
 
-if character1:FindFirstChild("Blox Rifle 5000") then
-    gun = character1["Blox Rifle 5000"].Handle
+if folder:FindFirstChild("Blox Rifle 5000") then
+    gun = folder["Blox Rifle 5000"].Handle
 end
 
 --Other Guns
-if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-    gun = character1["Type-49 Abomindation Back Accessory"].Handle
+if folder:FindFirstChild("Type-49 Abomindation Back Accessory") then
+    gun = folder["Type-49 Abomindation Back Accessory"].Handle
 end
 
---Replacement for the HumanoidRootPart--
-local hrpReplacement = hrp:Clone()
-hrpReplacement.Parent = character1
-hrpReplacement.Name = "hrpReplacement"
-hrpReplacement.Size = hrp.Size
-hrpReplacement.Transparency = 1
-hrpReplacement.Anchored = true
-hrpReplacement.Position = hrp.Position
-----------------------------------------
-
 --The part that will determine if you are shooting at a player or not (VR)--
+local function VRAimerPlacement(RANGE, SIZE, POSITION, ORIENTATION)
+    range = RANGE
+    --Aimer
+    local part = Instance.new("Part")
+    part.Parent = game.Workspace
+    part.CanCollide = false
+    part.Anchored = false
+    part.Massless = true
+    part.Size = SIZE
+    part.Transparency = 1
+    part.Orientation = gun.Orientation
+    part.Name = "VRAimer"
+    
+    local VRAimer = part
+    
+    --Aim Weld
+    local weld = Instance.new("Weld")
+    weld.Parent = VRAimer
+    weld.Part0 = VRAimer
+    weld.Part1 = gun
+    
+    local savePos = gun.Position
+    local saveRot = gun.Orientation
+    
+    --Gun Pos and Rot
+    gun.Position = Vector3.new(0, 0, 0)
+    gun.Orientation = Vector3.new (0, 0, 0)
+    
+    --Aimer Pos and Rot
+    VRAimer.Position = gun.Position + POSITION
+    VRAimer.Orientation = gun.Orientation + ORIENTATION
+    
+    --Gun Pos and Rot
+    gun.Position = savePos
+    gun.Orientation = saveRot
+    
+    vrAimer = VRAimer
+end
+
 local vrAimer = nil
 
 if vrService.VREnabled then
-    if character1:FindFirstChild("Sniper") then
-        range = 1000
-        local part = Instance.new("Part")
-        part.Parent = game.Workspace
-        part.CanCollide = false
-        part.Anchored = false
-        part.Massless = true
-        part.Size = Vector3.new(1000, 1 ,1)
-        part.Transparency = 1
-        
-        part.Orientation = gun.Orientation
-        part.Name = "VRAimer"
-        
-        local VRAimer = game.Workspace.VRAimer
-        
-        local weld = Instance.new("Weld")
-        weld.Parent = VRAimer
-        weld.Part0 = VRAimer
-        weld.Part1 = gun
-        
-        local savePos = gun.Position
-        local saveRot = gun.Orientation
-        
-        gun.Position = Vector3.new(0, 0, 0)
-        gun.Orientation = Vector3.new (0, 0, 0)
-        VRAimer.Position = gun.Position + Vector3.new(500, 0, 0)
-        
-        gun.Position = savePos
-        gun.Orientation = saveRot
-        
-        vrAimer = game.Workspace.VRAimer
+    if folder:FindFirstChild("Sniper") then
+        VRAimerPlacement(1000, Vector3.new(1000, 1 ,1), Vector3.new(500, 0, 0), Vector3.new(0, 0, 0))
     end
     
-    if character1:FindFirstChild("Meshes/SniperAccessory") then
-        range = 1000
-        local part = Instance.new("Part")
-        part.Parent = game.Workspace
-        part.CanCollide = false
-        part.Anchored = false
-        part.Massless = true
-        part.Size = Vector3.new(1000, 1 ,1)
-        part.Transparency = 1
-        
-        part.Orientation = gun.Orientation + Vector3.new(0, 0, 0)
-        part.Name = "VRAimer"
-        
-        local VRAimer = game.Workspace.VRAimer
-        
-        local weld = Instance.new("Weld")
-        weld.Parent = VRAimer
-        weld.Part0 = VRAimer
-        weld.Part1 = gun
-        
-        local savePos = gun.Position
-        local saveRot = gun.Orientation
-        
-        gun.Position = Vector3.new(0, 0, 0)
-        gun.Orientation = Vector3.new (0, 0, 0)
-        VRAimer.Position = gun.Position + Vector3.new(-305.25, 398, 0)
-        VRAimer.Orientation = gun.Orientation + Vector3.new(0, 0, -52.5)
-        
-        gun.Position = savePos
-        gun.Orientation = saveRot
-        
-        vrAimer = game.Workspace.VRAimer
+    if folder:FindFirstChild("Meshes/SniperAccessory") then
+        VRAimerPlacement(1000, Vector3.new(1000, 1 ,1), Vector3.new(-305.25, 398, 0), Vector3.new(0, 0, -52.5))
     end
     
-    if character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-        range = 1000
-        local part = Instance.new("Part")
-        part.Parent = game.Workspace
-        part.CanCollide = false
-        part.Anchored = false
-        part.Massless = true
-        part.Size = Vector3.new(1000, 1 ,1)
-        part.Transparency = 1
-        
-        part.Orientation = gun.Orientation + Vector3.new(0, 0, 0)
-        part.Name = "VRAimer"
-        
-        local VRAimer = game.Workspace.VRAimer
-        
-        local weld = Instance.new("Weld")
-        weld.Parent = VRAimer
-        weld.Part0 = VRAimer
-        weld.Part1 = gun
-        
-        local savePos = gun.Position
-        local saveRot = gun.Orientation
-        
-        gun.Position = Vector3.new(0, 0, 0)
-        gun.Orientation = Vector3.new (0, 0, 0)
-        VRAimer.Position = gun.Position + Vector3.new(-335.3, 372.6, 5.9)
-        VRAimer.Orientation = gun.Orientation + Vector3.new(0, 1, -48)
-        
-        gun.Position = savePos
-        gun.Orientation = saveRot
-        
-        vrAimer = game.Workspace.VRAimer
+    if folder:FindFirstChild("Meshes/RainbowSniperAccessory") then
+        VRAimerPlacement(1000, Vector3.new(1000, 1 ,1), Vector3.new(-335.3, 372.6, 5.9), Vector3.new(0, 1, -48))
     end
     
-    if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-        range = 1000
-        local part = Instance.new("Part")
-        part.Parent = game.Workspace
-        part.CanCollide = false
-        part.Anchored = false
-        part.Massless = true
-        part.Size = Vector3.new(1000, 1 ,1)
-        part.Transparency = 1
-        
-        part.Orientation = gun.Orientation + Vector3.new(0, 0, 0)
-        part.Name = "VRAimer"
-        
-        local VRAimer = game.Workspace.VRAimer
-        
-        local weld = Instance.new("Weld")
-        weld.Parent = VRAimer
-        weld.Part0 = VRAimer
-        weld.Part1 = gun
-        
-        local savePos = gun.Position
-        local saveRot = gun.Orientation
-        
-        gun.Position = Vector3.new(0, 0, 0)
-        gun.Orientation = Vector3.new (0, 0, 0)
-        VRAimer.Position = gun.Position + Vector3.new(334, 361.2, 97.67)
-        VRAimer.Orientation = gun.Orientation + Vector3.new(43.89, 76.6, 91.98)
-        
-        gun.Position = savePos
-        gun.Orientation = saveRot
-        
-        vrAimer = game.Workspace.VRAimer
+    if folder:FindFirstChild("Meshes/GiftsniperAccessory") then
+        VRAimerPlacement(1000, Vector3.new(1000, 1 ,1), Vector3.new(334, 361.2, 97.67), Vector3.new(43.89, 76.6, 91.98))
     end
     
-    if character1:FindFirstChild("HalloweenSniperAccessory") then
-        range = 1000
-        local part = Instance.new("Part")
-        part.Parent = game.Workspace
-        part.CanCollide = false
-        part.Anchored = false
-        part.Massless = true
-        part.Size = Vector3.new(1000, 1 ,1)
-        part.Transparency = 1
-        
-        part.Orientation = gun.Orientation + Vector3.new(0, 0, 0)
-        part.Name = "VRAimer"
-        
-        local VRAimer = game.Workspace.VRAimer
-        
-        local weld = Instance.new("Weld")
-        weld.Parent = VRAimer
-        weld.Part0 = VRAimer
-        weld.Part1 = gun
-        
-        local savePos = gun.Position
-        local saveRot = gun.Orientation
-        
-        gun.Position = Vector3.new(0, 0, 0)
-        gun.Orientation = Vector3.new (0, 0, 0)
-        VRAimer.Position = gun.Position + Vector3.new(342.25, 367, 0)
-        VRAimer.Orientation = gun.Orientation + Vector3.new(0, 0, 47)
-        
-        gun.Position = savePos
-        gun.Orientation = saveRot
-        
-        vrAimer = game.Workspace.VRAimer
+    if folder:FindFirstChild("HalloweenSniperAccessory") then
+        VRAimerPlacement(1000, Vector3.new(1000, 1 ,1), Vector3.new(342.25, 367, 0), Vector3.new(0, 0, 47))
     end
     
-    if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-        range = 500
-        --Aimer
-        local part = Instance.new("Part")
-        part.Parent = game.Workspace
-        part.CanCollide = false
-        part.Anchored = false
-        part.Massless = true
-        part.Size = Vector3.new(500, 0.3, 0.3)
-        part.Transparency = 1
-        part.Orientation = gun.Orientation + Vector3.new(0, 0, 0)
-        part.Name = "VRAimer"
+    if folder:FindFirstChild("Type-49 Abomindation Back Accessory") then
+        VRAimerPlacement(500, Vector3.new(500, 0.3, 0.3), Vector3.new(-168.6, -187.2, -0.3), Vector3.new(0, 0, 48))
         
         --Laser
         local laser = Instance.new("Part")
@@ -420,14 +451,6 @@ if vrService.VREnabled then
         laser.Shape = "Cylinder"
         laser.Name = "VRLaser"
         
-        local VRAimer = game.Workspace.VRAimer
-        
-        --Aim Weld
-        local weld = Instance.new("Weld")
-        weld.Parent = VRAimer
-        weld.Part0 = VRAimer
-        weld.Part1 = gun
-        
         --Laser Weld
         local lWeld = Instance.new("Weld")
         lWeld.Parent = laser
@@ -437,14 +460,6 @@ if vrService.VREnabled then
         local savePos = gun.Position
         local saveRot = gun.Orientation
         
-        --Gun Pos and Rot
-        gun.Position = Vector3.new(0, 0, 0)
-        gun.Orientation = Vector3.new (0, 0, 0)
-        
-        --Aimer Pos and Rot
-        VRAimer.Position = gun.Position + Vector3.new(-168.6, -187.2, -0.3)
-        VRAimer.Orientation = gun.Orientation + Vector3.new(0, 0, 48)
-        
         --Laser Pos and Rot
         laser.Position = gun.Position + Vector3.new(-4.585, -5.255, -0.286)
         laser.Orientation = gun.Orientation + Vector3.new(0, 0, 48)
@@ -452,42 +467,10 @@ if vrService.VREnabled then
         --Gun Pos and Rot
         gun.Position = savePos
         gun.Orientation = saveRot
-        
-        vrAimer = game.Workspace.VRAimer
     end
     
-    if character1:FindFirstChild("Blox Rifle 5000") then
-        range = 1000
-        local part = Instance.new("Part")
-        part.Parent = game.Workspace
-        part.CanCollide = false
-        part.Anchored = false
-        part.Massless = true
-        part.Size = Vector3.new(1000, 1 ,1)
-        part.Transparency = 1
-        
-        part.Orientation = gun.Orientation + Vector3.new(0, 0, 0)
-        part.Name = "VRAimer"
-        
-        local VRAimer = game.Workspace.VRAimer
-        
-        local weld = Instance.new("Weld")
-        weld.Parent = VRAimer
-        weld.Part0 = VRAimer
-        weld.Part1 = gun
-        
-        local savePos = gun.Position
-        local saveRot = gun.Orientation
-        
-        gun.Position = Vector3.new(0, 0, 0)
-        gun.Orientation = Vector3.new (0, 0, 0)
-        VRAimer.Position = gun.Position + Vector3.new(0, 355.15, -355)
-        VRAimer.Orientation = gun.Orientation + Vector3.new(0, 90, 45)
-        
-        gun.Position = savePos
-        gun.Orientation = saveRot
-        
-        vrAimer = game.Workspace.VRAimer
+    if folder:FindFirstChild("Blox Rifle 5000") then
+        VRAimerPlacement(1000, Vector3.new(1000, 1 ,1), Vector3.new(0, 355.15, -355), Vector3.new(0, 90, 45))
     end
 end
 ----------------------------------------------------------------------------
@@ -495,188 +478,381 @@ end
 if leftHand == true then
     --Gun
     --Sniper
-    if character1:FindFirstChild("Sniper") then
+    if folder:FindFirstChild("Sniper") then
         gun.BodyBackAttachment.Orientation = Vector3.new(0, 0, 43.1329) --Orientation
         gun.BodyBackAttachment.Position = Vector3.new(0.07, 0.08, -0.19) --Position
+        
+        --Holster
+        gHolstRot = Vector3.new(0, 0, 43.1329) --Orientation
+        gHolstPos = Vector3.new(0.07, 0.08, -0.19) --Position
+        
+        --Holding
+        gHoldRot = Vector3.new(90, -90, 0) --Orientation
+        gHoldPos = Vector3.new(0, -1, 0) + Vector3.new(-1.8, 0.6, 0) --Position
     end
     
     --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-    if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
+    if folder:FindFirstChild("Meshes/SniperAccessory") or folder:FindFirstChild("Meshes/RainbowSniperAccessory") then
         gun.BodyBackAttachment.Orientation = Vector3.new(-0, 180, 94.25939) --Orientation
         gun.BodyBackAttachment.Position = Vector3.new(0.18, -0.70, 0.27) --Position
+        
+        --Holster
+        gHolstRot = Vector3.new(-0, 180, 94.25939) --Orientation
+        gHolstPos = Vector3.new(0.18, -0.70, 0.27) --Position
+        
+        --Holding
+        gHoldRot = Vector3.new(40, -90, 180) --Orientation
+        if folder:FindFirstChild("Meshes/SniperAccessory") then
+            gHoldPos = Vector3.new(0, -1, 0) + Vector3.new(0.6, -0.7, 0) --Position
+        elseif folder:FindFirstChild("Meshes/RainbowSniperAccessory") then
+            gHoldPos = Vector3.new(0, -1, 0) + Vector3.new(0.8, -0.6, 0) --Position
+        end
     end
     
     --Festive Cyberpunk Sniper
-    if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
+    if folder:FindFirstChild("Meshes/GiftsniperAccessory") then
         gun.BodyBackAttachment.Orientation = Vector3.new(46.14, 72.67, 134.3) --Orientation
         gun.BodyBackAttachment.Position = Vector3.new(-0.6, -0.3, -0.3) --Position
+        
+        --Holster
+        gHolstRot = Vector3.new(46.14, 72.67, 134.3) --Orientation
+        gHolstPos = Vector3.new(-0.6, -0.3, -0.3) --Position
+        
+        --Holding
+        gHoldRot = Vector3.new(-1, 164, -135) --Orientation
+        gHoldPos = Vector3.new(0, -1, 0) + Vector3.new(-1.05, -0.3, -0.7) --Position
     end
     
     --Spooky Cyberpunk Sniper
-    if character1:FindFirstChild("HalloweenSniperAccessory") then
+    if folder:FindFirstChild("HalloweenSniperAccessory") then
         gun.BodyBackAttachment.Orientation = Vector3.new(0, 0, 90) --Orientation
         gun.BodyBackAttachment.Position = Vector3.new(-0.36, -0.66, -0.21) --Position
+        
+        --Holster
+        gHolstRot = Vector3.new(0, 0, 90) --Orientation
+        gHolstPos = Vector3.new(-0.36, -0.66, -0.21) --Position
+        
+        --Holding
+        gHoldRot = Vector3.new(45, 86.75, -180) --Orientation
+        gHoldPos = Vector3.new(0, -1, 0) + Vector3.new(-0.8, -0.6, 0.05) --Position
     end
     
     --Type-49 The Abomination
-    if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
+    if folder:FindFirstChild("Type-49 Abomindation Back Accessory") then
         gun.BodyBackAttachment.Orientation = Vector3.new(0, 180, 0) --Orientation
         gun.BodyBackAttachment.Position = Vector3.new(-0.08, -0.18, -0.05) --Position
+        
+        --Holster
+        gHolstRot = Vector3.new(0, 180, 0) --Orientation
+        gHolstPos = Vector3.new(-0.08, -0.18, -0.05) --Position
+        
+        --Holding
+        gHoldRot = Vector3.new(40, 90, 0) --Orientation
+        gHoldPos = Vector3.new(0, -1, 0) + Vector3.new(1, 1.2, -0.3) --Position
     end
     
     --Blox Rifle 5000
-    if character1:FindFirstChild("Blox Rifle 5000") then
+    if folder:FindFirstChild("Blox Rifle 5000") then
         gun.BodyBackAttachment.Orientation = Vector3.new(-0, 90, 90) --Orientation
         gun.BodyBackAttachment.Position = Vector3.new(-0.24, -0.14, 0.0009) --Position
+        
+        --Holster
+        gHolstRot = Vector3.new(-0, 90, 90) --Orientation
+        gHolstPos = Vector3.new(-0.24, -0.14, 0.0009) --Position
+        
+        --Holding
+        gHoldRot = Vector3.new(45, 180, 180) --Orientation
+        gHoldPos = Vector3.new(0, -1, 0) + Vector3.new(0, -0.3, 0.5) --Position
     end
     
     --Knife
     --UMAD?
-    if character1:FindFirstChild("UMAD") then
+    if folder:FindFirstChild("UMAD") then
         sword.BodyBackAttachment.Orientation = Vector3.new(-20, -180, 0) --Orientation
         sword.BodyBackAttachment.Position = Vector3.new(1.08, 0.9, -0.5) --Position
+        
+        --Holster
+        sHolstRot = Vector3.new(-20, -180, 0) --Orientation
+        sHolstPos = Vector3.new(1.08, 0.9, -0.5) --Position
+        
+        --Holding
+        sHoldRot = Vector3.new(40, 0, 0) --Orientation
+        sHoldPos = Vector3.new(0, -0.4, 0.7) --Position
     end
     
     --Sword
     if vrService.VREnabled then
         --Dark Matter Sword
-        if secondaryWeapon == true and character1:FindFirstChild("Dark Matter Sword") then
+        if secondaryWeapon == true and folder:FindFirstChild("Dark Matter Sword") then
             sword.BodyBackAttachment.Orientation = Vector3.new(50, -90, 0) --Orientation
             sword.BodyBackAttachment.Position = Vector3.new(0, 1, -1.2) --Position
+            
+            --Holster
+            sHolstRot = Vector3.new(50, -90, 0) --Orientation
+            sHolstPos = Vector3.new(0, 1, -1.2) --Position
+            
+            --Holding
+            sHoldRot = Vector3.new(50, -90, 0) --Orientation
+            sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(1.3, 2.6, 0) --Position
         end
         
         --Russo's Sword
-        if secondaryWeapon == true and character1:FindFirstChild("Russo's Sword") then
+        if secondaryWeapon == true and folder:FindFirstChild("Russo's Sword") then
             sword.BodyBackAttachment.Orientation = Vector3.new(-90, 90, 0) --Orientation
             sword.BodyBackAttachment.Position = Vector3.new(-0.7, -0.5, 1.1) --Position
+            
+            --Holster
+            sHolstRot = Vector3.new(-90, 90, 0) --Orientation
+            sHolstPos = Vector3.new(-0.7, -0.5, 1.1) --Position
+            
+            --Holding
+            sHoldRot = Vector3.new(-90, -90, 0) --Orientation
+            sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(-0.1, -0.9, 0) --Position
         end
         
         --Greatswords
-        if secondaryWeapon == true and character1:FindFirstChild("MeshPartAccessory") then
+        if secondaryWeapon == true and folder:FindFirstChild("MeshPartAccessory") then
             sword.BodyBackAttachment.Orientation = Vector3.new(45, -90, 0) --Orientation
             sword.BodyBackAttachment.Position = Vector3.new(0.3, 1.2, -1.2) --Position
+            
+            --Holster
+            sHolstRot = Vector3.new(45, -90, 0) --Orientation
+            sHolstPos = Vector3.new(0.3, 1.2, -1.2) --Position
+            
+            --Holding
+            sHoldRot = Vector3.new(45, -90, 0) --Orientation
+            sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(1.8, 2.8, 0) --Position
         end
     else
         --Dark Matter Sword/Greatswords
-        if secondaryWeapon == true and character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
+        if secondaryWeapon == true and folder:FindFirstChild("Dark Matter Sword") or folder:FindFirstChild("MeshPartAccessory") then
             sword.BodyBackAttachment.Orientation = Vector3.new(0, 0, 0) --Orientation
+            
+            --Holster
+            sHolstRot = Vector3.new(0, 0, 0) --Orientation
+            sHolstPos = sword.BodyBackAttachment.Position --Position
+            
+            --Holding
+            sHoldRot = Vector3.new(-100, -90, 0) --Orientation
+            if folder:FindFirstChild("Dark Matter Sword") then
+                sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(1.2, 2.4, 0) --Position
+            elseif folder:FindFirstChild("MeshPartAccessory") then
+                sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(1.7, 2.6, 0) --Position
+            end
         end
         
         --Russo's Sword
-        if secondaryWeapon == true and character1:FindFirstChild("Russo's Sword") then
+        if secondaryWeapon == true and folder:FindFirstChild("Russo's Sword") then
             sword.BodyBackAttachment.Orientation = Vector3.new(-0, 180, 215.002) --Orientation
             sword.BodyBackAttachment.Position = Vector3.new(-0.17, 0.23, 0.21) --Position
+            
+            --Holster
+            sHolstRot = Vector3.new(-0, 180, 215.002) --Orientation
+            sHolstPos = Vector3.new(-0.17, 0.23, 0.21) --Position
+            
+            --Holding
+            sHoldRot = Vector3.new(45, 90, -180) --Orientation
+            sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(-0.1, -0.7, 0) --Position
         end
     end
 else
     --Gun
     --Sniper
-    if character1:FindFirstChild("Sniper") then
+    if folder:FindFirstChild("Sniper") then
         gun.BodyBackAttachment.Orientation = Vector3.new(180, 0, 133.1329) --Orientation
         gun.BodyBackAttachment.Position = Vector3.new(-0.5, -0.3, 0.2) --Position
+        
+        --Holster
+        gHolstRot = Vector3.new(180, 0, 133.1329) --Orientation
+        gHolstPos = Vector3.new(-0.5, -0.3, 0.2) --Position
+        
+        --Holding
+        gHoldRot = Vector3.new(90, -90, 0) --Orientation
+        gHoldPos = Vector3.new(0, -1, 0) + Vector3.new(-1.8, 0.6, 0) --Position
     end
     
     --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-    if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
+    if folder:FindFirstChild("Meshes/SniperAccessory") or folder:FindFirstChild("Meshes/RainbowSniperAccessory") then
         gun.BodyBackAttachment.Orientation = Vector3.new(180, 180, 94.25939) --Orientation
         gun.BodyBackAttachment.Position = Vector3.new(0.18, -0.70, -0.26) --Position
+        
+        --Holster
+        gHolstRot = Vector3.new(180, 180, 94.25939) --Orientation
+        gHolstPos = Vector3.new(0.18, -0.70, -0.26) --Position
+        
+        --Holding
+        gHoldRot = Vector3.new(40, -90, 180) --Orientation
+        if folder:FindFirstChild("Meshes/SniperAccessory") then
+            gHoldPos = Vector3.new(0, -1, 0) + Vector3.new(0.6, -0.7, 0) --Position
+        elseif folder:FindFirstChild("Meshes/RainbowSniperAccessory") then
+            gHoldPos = Vector3.new(0, -1, 0) + Vector3.new(0.8, -0.6, 0) --Position
+        end
     end
     
     --Festive Cyberpunk Sniper
-    if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
+    if folder:FindFirstChild("Meshes/GiftsniperAccessory") then
         gun.BodyBackAttachment.Orientation = Vector3.new(-43.86, -107.33, -135.7) --Orientation
         gun.BodyBackAttachment.Position = Vector3.new(-0.3, -0.9, -0.3) --Position
+        
+        --Holster
+        gHolstRot = Vector3.new(-43.86, -107.33, -135.7) --Orientation
+        gHolstPos = Vector3.new(-0.3, -0.9, -0.3) --Position
+        
+        --Holding
+        gHoldRot = Vector3.new(-1, 164, -135) --Orientation
+        gHoldPos = Vector3.new(0, -1, 0) + Vector3.new(-1.05, -0.3, -0.7) --Position
     end
     
     --Spooky Cyberpunk Sniper
-    if character1:FindFirstChild("HalloweenSniperAccessory") then
+    if folder:FindFirstChild("HalloweenSniperAccessory") then
         gun.BodyBackAttachment.Orientation = Vector3.new(-0, -180, -90) --Orientation
         gun.BodyBackAttachment.Position = Vector3.new(-0.5, -0.3, 0.2) --Position
+        
+        --Holster
+        gHolstRot = Vector3.new(-0, -180, -90) --Orientation
+        gHolstPos = Vector3.new(-0.5, -0.3, 0.2) --Position
+        
+        --Holding
+        gHoldRot = Vector3.new(45, 86.75, -180) --Orientation
+        gHoldPos = Vector3.new(0, -1, 0) + Vector3.new(-0.8, -0.6, 0.05) --Position
     end
     
     --Type-49 The Abomination
-    if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
+    if folder:FindFirstChild("Type-49 Abomindation Back Accessory") then
         gun.BodyBackAttachment.Orientation = Vector3.new(0, 0, 0) --Orientation
         gun.BodyBackAttachment.Position = Vector3.new(-0.08, -0.18, -0.53) --Position
+        
+        --Holster
+        gHolstRot = Vector3.new(0, 0, 0) --Orientation
+        gHolstPos = Vector3.new(-0.08, -0.18, -0.53) --Position
+        
+        --Holding
+        gHoldRot = Vector3.new(40, 90, 0)
+        gHoldPos = Vector3.new(0, -1, 0) + Vector3.new(1, 1.2, -0.3)
     end
     
     --Blox Rifle 5000
-    if character1:FindFirstChild("Blox Rifle 5000") then
+    if folder:FindFirstChild("Blox Rifle 5000") then
         gun.BodyBackAttachment.Orientation = Vector3.new(-0, -90, -90) --Orientation
         gun.BodyBackAttachment.Position = Vector3.new(0.2, -0.14, 0.0009) --Position
+        
+        --Holster
+        gHolstRot = Vector3.new(-0, -90, -90) --Orientation
+        gHolstPos = Vector3.new(0.2, -0.14, 0.0009) --Position
+        
+        --Holding
+        gHoldRot = Vector3.new(45, 180, 180) --Orientation
+        gHoldPos = Vector3.new(0, -1, 0) + Vector3.new(0, -0.3, 0.5) --Position
     end
     
     --Knife
     --UMAD?
-    if character1:FindFirstChild("UMAD") then
+    if folder:FindFirstChild("UMAD") then
         sword.BodyBackAttachment.Orientation = Vector3.new(-20, -180, 0) --Orientation
         sword.BodyBackAttachment.Position = Vector3.new(-1.08, 0.9, -0.5) --Position
+        
+        --Holster
+        sHolstRot = Vector3.new(-20, -180, 0) --Orientation
+        sHolstPos = Vector3.new(-1.08, 0.9, -0.5) --Position
+        
+        --Holding
+        sHoldRot = Vector3.new(40, 0, 0) --Orientation
+        sHoldPos = Vector3.new(0, -0.4, 0.7) --Position
     end
     
     --Sword
     if vrService.VREnabled then
         --Dark Matter Sword
-        if secondaryWeapon == true and character1:FindFirstChild("Dark Matter Sword") then
+        if secondaryWeapon == true and folder:FindFirstChild("Dark Matter Sword") then
             sword.BodyBackAttachment.Orientation = Vector3.new(50, -90, 0) --Orientation
             sword.BodyBackAttachment.Position = Vector3.new(0, 1, 1.2) --Position
+            
+            --Holster
+            sHolstRot = Vector3.new(50, -90, 0) --Orientation
+            sHolstPos = Vector3.new(0, 1, 1.2) --Position
+            
+            --Holding
+            sHoldRot = Vector3.new(50, -90, 0) --Orientation
+            sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(1.3, 2.6, 0) --Position
         end
         
         --Russo's Sword
-        if secondaryWeapon == true and character1:FindFirstChild("Russo's Sword") then
+        if secondaryWeapon == true and folder:FindFirstChild("Russo's Sword") then
             sword.BodyBackAttachment.Orientation = Vector3.new(-90, -90, 0) --Orientation
             sword.BodyBackAttachment.Position = Vector3.new(0.7, -0.5, 1.1) --Position
+            
+            --Holster
+            sHolstRot = Vector3.new(-90, -90, 0) --Orientation
+            sHolstPos = Vector3.new(0.7, -0.5, 1.1) --Position
+            
+            --Holding
+            sHoldRot = Vector3.new(-90, 90, 0) --Orientation
+            sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(0, -0.9, 0) --Position
         end
         
         --Greatswords
-        if secondaryWeapon == true and character1:FindFirstChild("MeshPartAccessory") then
+        if secondaryWeapon == true and folder:FindFirstChild("MeshPartAccessory") then
             sword.BodyBackAttachment.Orientation = Vector3.new(45, -90, 0) --Orientation
             sword.BodyBackAttachment.Position = Vector3.new(0.3, 1.2, 1.2) --Position
+            
+            --Holster
+            sHolstRot = Vector3.new(45, -90, 0) --Orientation
+            sHolstPos = Vector3.new(0.3, 1.2, 1.2) --Position
+            
+            --Holding
+            sHoldRot = Vector3.new(45, -90, 0) --Orientation
+            sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(1.8, 2.8, 0) --Position
         end
     else
         --Dark Matter Sword
-        if secondaryWeapon == true and character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
+        if secondaryWeapon == true and folder:FindFirstChild("Dark Matter Sword") or folder:FindFirstChild("MeshPartAccessory") then
             sword.BodyBackAttachment.Orientation = Vector3.new(0, 0, -90) --Orientation
+            
+            --Holster
+            sHolstRot = Vector3.new(0, 0, -90) --Orientation
+            sHolstPos = sword.BodyBackAttachment.Position --Position
+            
+            --Holding
+            sHoldRot = Vector3.new(-100, -90, 0) --Orientation
+            if folder:FindFirstChild("Dark Matter Sword") then
+                sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(1.2, 2.4, 0) --Position
+            elseif folder:FindFirstChild("MeshPartAccessory") then
+                sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(1.7, 2.6, 0) --Position
+            end
         end
         
         --Russo's Sword
-        if secondaryWeapon == true and character1:FindFirstChild("Russo's Sword") then
+        if secondaryWeapon == true and folder:FindFirstChild("Russo's Sword") then
             sword.BodyBackAttachment.Orientation = Vector3.new(-0, 180, 125.002) --Orientation
             sword.BodyBackAttachment.Position = Vector3.new(-0.17, 0.23, 0.21) --Position
+            
+            --Holster
+            sHolstRot = Vector3.new(-0, 180, 125.002) --Orientation
+            sHolstPos = Vector3.new(-0.17, 0.23, 0.21) --Position
+            
+            --Holding
+            sHoldRot = Vector3.new(45, 90, -180) --Orientation
+            sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(-0.1, -0.7, 0) --Position
         end
     end
 end
 
 ------------------------------------Functions------------------------------------
-local function Hats()
+local function Hats(hat)
     --From CLOVR (Modified)------------------------------------------------
-    for _, Accessory in next, character1:GetChildren() do
-        if Accessory:IsA("Accessory") and Accessory:FindFirstChild("Handle") then
-            local Attachment1 = Accessory.Handle:FindFirstChildWhichIsA("Attachment")
-            local Attachment0 = character1:FindFirstChild(tostring(Attachment1), true)
-            local Orientation = Instance.new("AlignOrientation")
-            local Position = Instance.new("AlignPosition")
-            if character1.Head:FindFirstChild("AlignOrientation") and character1.Head:FindFirstChild("AlignPosition") then
-                character1.Head.AlignOrientation:Destroy()
-                character1.Head.AlignPosition:Destroy()
-            end
-            
-            Orientation.Attachment0 = Attachment1
-            Orientation.Attachment1 = Attachment0
-            Orientation.RigidityEnabled = true
-            Orientation.ReactionTorqueEnabled = true
-            Orientation.MaxTorque = 20000
-            Orientation.Responsiveness = 200
-            Orientation.Parent = character1.Head
-            
-            Position.Attachment0 = Attachment1
-            Position.Attachment1 = Attachment0
-            Position.RigidityEnabled = true
-            Position.ReactionForceEnabled = true
-            Position.MaxForce = 40000
-            Position.Responsiveness = 200
-            Position.Parent = character1.Head
-        end
-    end
+    local Attachment1 = hat:FindFirstChildWhichIsA("Attachment")
+    local Attachment0 = character1:FindFirstChild(tostring(Attachment1), true)
+    local Orientation = folder["Replacement Head"]:FindFirstChild(hat.Parent.Name.."'s AlignRot")
+    local Position = folder["Replacement Head"]:FindFirstChild(hat.Parent.Name.."'s AlignPos")
+    
+    local clone = Attachment0:Clone()
+    clone.Parent = folder:FindFirstChild("Replacement "..Attachment0.Parent.Name)
+    Attachment0 = clone
+    
+    Position.Attachment1:Destroy()
+    
+    Orientation.Attachment1 = Attachment0
+    Position.Attachment1 = Attachment0
     -----------------------------------------------------------------------
 end
 
@@ -737,160 +913,6 @@ end
 -----------------------------If your rig type is R15-----------------------------
 if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
     print("Nice. You jointy boi.")
-    
-    --Torso
-    local r6Torso = Instance.new("Part")
-    r6Torso.Size = Vector3.new(2, 2, 1)
-    r6Torso.Parent = character1
-    r6Torso.CanCollide = false
-    r6Torso.Position = character1.UpperTorso.Position
-    r6Torso.Orientation = character1.UpperTorso.Orientation
-    r6Torso.BrickColor = character1.UpperTorso.BrickColor
-    r6Torso.Name = "Torso"
-    r6Torso.Anchored = true
-    r6Torso.Transparency = 1
-    
-    --Attachments
-    local upperTorsoAtt = Instance.new("Attachment")
-    upperTorsoAtt.Parent = r6Torso
-    upperTorsoAtt.Position = Vector3.new(0, 0.3, 0)
-    
-    local lowerTorsoAtt = Instance.new("Attachment")
-    lowerTorsoAtt.Parent = r6Torso
-    lowerTorsoAtt.Position = Vector3.new(0, -0.7, 0)
-    
-    --BodyBackAttachment
-    local bodyBackAtt = Instance.new("Attachment")
-    bodyBackAtt.Parent = r6Torso
-    bodyBackAtt.Name = "BodyBackAttachment"
-    
-    --Right Arm
-    local r6RArm = Instance.new("Part")
-    r6RArm.Size = Vector3.new(1, 2, 1)
-    r6RArm.Parent = character1
-    r6RArm.CanCollide = false
-    r6RArm.Position = character1.RightUpperArm.Position
-    r6RArm.Orientation = character1.RightUpperArm.Orientation
-    r6RArm.BrickColor = character1.RightUpperArm.BrickColor
-    r6RArm.Name = "Right Arm"
-    r6RArm.Anchored = true
-    r6RArm.Transparency = 1
-    
-    --Attachments
-    local upperRArmAtt = Instance.new("Attachment")
-    upperRArmAtt.Parent = r6RArm
-    upperRArmAtt.Position = Vector3.new(0, 0.3, 0)
-    
-    local lowerRArmAtt = Instance.new("Attachment")
-    lowerRArmAtt.Parent = r6RArm
-    lowerRArmAtt.Position = Vector3.new(0, -0.29, 0)
-    
-    local rHandAtt = Instance.new("Attachment")
-    rHandAtt.Parent = r6RArm
-    rHandAtt.Position = Vector3.new(0, -0.87, 0)
-    
-    --RightGripAttachment
-    local rGripAtt = Instance.new("Attachment")
-    rGripAtt.Parent = r6RArm
-    rGripAtt.Name = "RightGripAttachment"
-    rGripAtt.Position = Vector3.new(0, -1, 0)
-    
-    --RightHand RightGripAttachment
-    character1.RightHand.RightGripAttachment.Orientation = Vector3.new(0, 0, 0)
-    character1.RightHand.RightGripAttachment.Position = Vector3.new(0, 0, 0)
-    
-    --Variables
-    rArm1 = character1["Right Arm"]
-    rGrip1 = rArm1.RightGripAttachment
-    
-    --Left Arm
-    local r6LArm = Instance.new("Part")
-    r6LArm.Size = Vector3.new(1, 2, 1)
-    r6LArm.Parent = character1
-    r6LArm.CanCollide = false
-    r6LArm.Position = character1.LeftUpperArm.Position
-    r6LArm.Orientation = character1.LeftUpperArm.Orientation
-    r6LArm.BrickColor = character1.LeftUpperArm.BrickColor
-    r6LArm.Name = "Left Arm"
-    r6LArm.Anchored = true
-    r6LArm.Transparency = 1
-    
-    --Attachments
-    local upperLArmAtt = Instance.new("Attachment")
-    upperLArmAtt.Parent = r6LArm
-    upperLArmAtt.Position = Vector3.new(0, 0.3, 0)
-    
-    local lowerLArmAtt = Instance.new("Attachment")
-    lowerLArmAtt.Parent = r6LArm
-    lowerLArmAtt.Position = Vector3.new(0, -0.29, 0)
-    
-    local lHandAtt = Instance.new("Attachment")
-    lHandAtt.Parent = r6LArm
-    lHandAtt.Position = Vector3.new(0, -0.87, 0)
-    
-    --LeftGripAttachment
-    local lGripAtt = Instance.new("Attachment")
-    lGripAtt.Parent = r6LArm
-    lGripAtt.Name = "LeftGripAttachment"
-    lGripAtt.Position = Vector3.new(0, -1, 0)
-    
-    --LeftHand LeftGripAttachment
-    character1.LeftHand.LeftGripAttachment.Orientation = Vector3.new(0, 0, 0)
-    character1.LeftHand.LeftGripAttachment.Position = Vector3.new(0, 0, 0)
-    
-    --Variables
-    lArm1 = character1["Left Arm"]
-    lGrip1 = lArm1.LeftGripAttachment
-    
-    --Right Leg
-    local r6RLeg = Instance.new("Part")
-    r6RLeg.Size = Vector3.new(1, 2, 1)
-    r6RLeg.Parent = character1
-    r6RLeg.CanCollide = false
-    r6RLeg.Position = character1.RightUpperLeg.Position
-    r6RLeg.Orientation = character1.RightUpperLeg.Orientation
-    r6RLeg.BrickColor = character1.RightUpperLeg.BrickColor
-    r6RLeg.Name = "Right Leg"
-    r6RLeg.Anchored = true
-    r6RLeg.Transparency = 1
-    
-    --Attachments
-    local upperRLegAtt = Instance.new("Attachment")
-    upperRLegAtt.Parent = r6RLeg
-    upperRLegAtt.Position = Vector3.new(0, 0.3, 0)
-    
-    local lowerRLegAtt = Instance.new("Attachment")
-    lowerRLegAtt.Parent = r6RLeg
-    lowerRLegAtt.Position = Vector3.new(0, -0.49, 0)
-    
-    local rFootAtt = Instance.new("Attachment")
-    rFootAtt.Parent = r6RLeg
-    rFootAtt.Position = Vector3.new(0, -1.08, 0)
-    
-    --Left Leg
-    local r6LLeg = Instance.new("Part")
-    r6LLeg.Size = Vector3.new(1, 2, 1)
-    r6LLeg.Parent = character1
-    r6LLeg.CanCollide = false
-    r6LLeg.Position = character1.LeftUpperLeg.Position
-    r6LLeg.Orientation = character1.LeftUpperLeg.Orientation
-    r6LLeg.BrickColor = character1.LeftUpperLeg.BrickColor
-    r6LLeg.Name = "Left Leg"
-    r6LLeg.Anchored = true
-    r6LLeg.Transparency = 1
-    
-    --Attachments
-    local upperLLegAtt = Instance.new("Attachment")
-    upperLLegAtt.Parent = r6LLeg
-    upperLLegAtt.Position = Vector3.new(0, 0.3, 0)
-    
-    local lowerLLegAtt = Instance.new("Attachment")
-    lowerLLegAtt.Parent = r6LLeg
-    lowerLLegAtt.Position = Vector3.new(0, -0.49, 0)
-    
-    local lFootAtt = Instance.new("Attachment")
-    lFootAtt.Parent = r6LLeg
-    lFootAtt.Position = Vector3.new(0, -1.08, 0)
     
     --R15 Body
     for i, v in pairs(character1:GetChildren()) do
@@ -997,1494 +1019,456 @@ if secondaryWeapon == true then
 end
 
 userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
-    --No VR-------------------------------------------------------------------------------
-    --Gun
-    if key.KeyCode == Enum.KeyCode.F and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent then
-        if holdingGun == false then
-            --Start Flinging
-            local hatGrip = gun.BodyBackAttachment
-            
-            --Orientation
-            if leftHand == true then
-                hatGrip.Name = lGrip1.Name
-                hatGrip = gun.LeftGripAttachment
+    if character1.Parent == game.Workspace then
+        --No VR-------------------------------------------------------------------------------
+        --Gun
+        if key.KeyCode == Enum.KeyCode.F and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent then
+            if holdingGun == false then
+                --Start Flinging
+                local hatGrip = gun.BodyBackAttachment
                 
-                --Sniper
-                if character1:FindFirstChild("Sniper") then
-                    hatGrip.Orientation = Vector3.new(90, -90, 0)
+                --Orientation
+                if leftHand == true then
+                    hatGrip.Name = lGrip1.Name
+                    hatGrip = gun.LeftGripAttachment
+                else
+                    hatGrip.Name = rGrip1.Name
+                    hatGrip = gun.RightGripAttachment
                 end
                 
-                --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(40, -90, 180)
-                end
+                hatGrip.Orientation = gHoldRot
+                hatGrip.Position = gHoldPos
                 
-                --Festive Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(-1, 164, -135)
-                end
+                --Function
+                Hats(gun)
                 
-                --Spooky Cyberpunk Sniper
-                if character1:FindFirstChild("HalloweenSniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(45, 86.75, -180)
-                end
-                
-                --Type-49 The Abomination
-                if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                    hatGrip.Orientation = Vector3.new(40, 90, 0)
-                end
-                
-                --Blox Rifle 5000
-                if character1:FindFirstChild("Blox Rifle 5000") then
-                    hatGrip.Orientation = Vector3.new(45, 180, 180)
-                end
+                holdingGun = true
             else
-                hatGrip.Name = rGrip1.Name
-                hatGrip = gun.RightGripAttachment
-                
-                --Sniper
-                if character1:FindFirstChild("Sniper") then
-                    hatGrip.Orientation = Vector3.new(90, -90, 0)
+                --Stop Flinging
+                if leftHand == true then
+                    gun.LeftGripAttachment.Name = "BodyBackAttachment"
+                else
+                    gun.RightGripAttachment.Name = "BodyBackAttachment"
                 end
                 
-                --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(40, -90, 180)
-                end
+                local hatGrip = gun.BodyBackAttachment
                 
-                --Festive Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(-1, 164, -135)
-                end
+                hatGrip.Orientation = gHolstRot
+                hatGrip.Position = gHolstPos
                 
-                --Spooky Cyberpunk Sniper
-                if character1:FindFirstChild("HalloweenSniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(45, 86.75, -180)
-                end
+                --Function
+                Hats(gun)
                 
-                --Type-49 The Abomination
-                if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                    hatGrip.Orientation = Vector3.new(40, 90, 0)
-                end
-                
-                --Blox Rifle 5000
-                if character1:FindFirstChild("Blox Rifle 5000") then
-                    hatGrip.Orientation = Vector3.new(45, 180, 180)
-                end
+                holdingGun = false
             end
+        end
+        
+        --Shoot Gun
+        if key.KeyCode == Enum.KeyCode.E and shooting == false and holdingGun == true and not vrService.VREnabled and scriptLoaded == true and not folder:FindFirstChild("Type-49 Abomindation Back Accessory") and not gameProcessedEvent then
+            shooting = true 
             
-            --Position
-            if leftHand == true then 
-                --Sniper
-                if character1:FindFirstChild("Sniper") then
-                    hatGrip.Position = lGrip1.Position + Vector3.new(-1.8, 0.6, 0)
-                end
-                
-                --Tactical Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/SniperAccessory") then
-                    hatGrip.Position = lGrip1.Position + Vector3.new(0.6, -0.7, 0)
-                end
-                
-                --Rainbow Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                    hatGrip.Position = lGrip1.Position + Vector3.new(0.8, -0.6, 0)
-                end
-                
-                --Festive Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                    hatGrip.Position = lGrip1.Position + Vector3.new(-1.05, -0.3, -0.7)
-                end
-                
-                --Spooky Cyberpunk Sniper
-                if character1:FindFirstChild("HalloweenSniperAccessory") then
-                    hatGrip.Position = lGrip1.Position + Vector3.new(-0.8, -0.6, 0.05)
-                end
-                
-                --Type-49 The Abomination
-                if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                    hatGrip.Position = lGrip1.Position + Vector3.new(1, 1.2, -0.3)
-                end
-                
-                --Blox Rifle 5000
-                if character1:FindFirstChild("Blox Rifle 5000") then
-                    hatGrip.Position = lGrip1.Position + Vector3.new(0, -0.3, 0.5)
-                end
-            else
-                --Sniper
-                if character1:FindFirstChild("Sniper") then
-                    hatGrip.Position = rGrip1.Position + Vector3.new(-1.8, 0.6, 0)
-                end
-                
-                --Tactical Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/SniperAccessory") then
-                    hatGrip.Position = rGrip1.Position + Vector3.new(0.6, -0.7, 0)
-                end
-                
-                --Rainbow Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                    hatGrip.Position = rGrip1.Position + Vector3.new(0.8, -0.6, 0)
-                end
-                
-                --Festive Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                    hatGrip.Position = rGrip1.Position + Vector3.new(-1.05, -0.3, -0.7)
-                end
-                
-                --Spooky Cyberpunk Sniper
-                if character1:FindFirstChild("HalloweenSniperAccessory") then
-                    hatGrip.Position = rGrip1.Position + Vector3.new(-0.8, -0.6, 0.05)
-                end
-                
-                --Type-49 The Abomination
-                if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                    hatGrip.Position = rGrip1.Position + Vector3.new(1, 1.2, -0.3)
-                end
-                
-                --Blox Rifle 5000
-                if character1:FindFirstChild("Blox Rifle 5000") then
-                    hatGrip.Position = rGrip1.Position + Vector3.new(0, -0.3, 0.5)
-                end
+            --Fling Stuff
+            if holdingSword == false then
+                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
             end
             
             --Function
-            Hats()
+            GunShot(680140087, 0.7, 1)
             
-            holdingGun = true
-        else
-            --Stop Flinging
-            if leftHand == true then
-                gun.LeftGripAttachment.Name = "BodyBackAttachment"
+            --Wait
+            wait(shootCooldown)
+            
+            shooting = false 
+            
+            --Fling Stuff
+            if holdingSword == false then
+                flinger.AngularVelocity = Vector3.new(0, 0, 0)
+            end
+        end
+        
+        if key.KeyCode == Enum.KeyCode.E and shooting == false and holdingGun == true and not vrService.VREnabled and scriptLoaded == true and folder:FindFirstChild("Type-49 Abomindation Back Accessory") and not gameProcessedEvent then
+            shooting = true 
+            
+            --Fling Stuff
+            if holdingSword == false then
+                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+            end
+        end
+        
+        --Sword/Kinfe
+        if key.KeyCode == Enum.KeyCode.G and not vrService.VREnabled and scriptLoaded == true and secondaryWeapon == true and not gameProcessedEvent then
+           if holdingSword == false then
+                --Start Flinging
+                local hatGrip = sword.BodyBackAttachment
+                
+                --Orientation
+                if leftHand == true then
+                    hatGrip.Name = rGrip1.Name
+                    hatGrip = sword.RightGripAttachment
+                else
+                    hatGrip.Name = lGrip1.Name
+                    hatGrip = sword.LeftGripAttachment
+                end
+                
+                hatGrip.Orientation = sHoldRot
+                hatGrip.Position = sHoldPos
+                
+                --Function
+                Hats(sword)
+                
+                --Fling Stuff
+                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+                
+                holdingSword = true
             else
-                gun.RightGripAttachment.Name = "BodyBackAttachment"
+                --Stop Flinging
+                if leftHand == true then
+                    sword.RightGripAttachment.Name = "BodyBackAttachment"
+                else
+                    sword.LeftGripAttachment.Name = "BodyBackAttachment"
+                end
+                
+                local hatGrip = sword.BodyBackAttachment
+                
+                hatGrip.Orientation = sHolstRot
+                hatGrip.Position = sHolstPos
+                
+                --Function
+                Hats(sword)
+                
+                --Fling Stuff
+                flinger.AngularVelocity = Vector3.new(0, 0, 0)
+                
+                holdingSword = false
             end
-            
-            local hatGrip = gun.BodyBackAttachment
-            
-            --Orientation
-            if leftHand == true then
-                --Sniper
-                if character1:FindFirstChild("Sniper") then
-                    hatGrip.Orientation = Vector3.new(0, 0, 43.1329)
-                end
+        end
+        --------------------------------------------------------------------------------------
+        
+        --VR----------------------------------------------------------------------------------
+        --Right Hand
+        if key.KeyCode == Enum.KeyCode.ButtonR1 and scriptLoaded == true then
+            --Gun
+            if holdingGun == false and leftHand == false then
+                --Start Flinging
+                gun.BodyBackAttachment.Name = rGrip1.Name
                 
-                --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(0, 180, 94.25939)
-                end
+                local hatGrip = gun.RightGripAttachment
                 
-                --Festive Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(46.14, 72.67, 134.3)
-                end
+                hatGrip.Orientation = gHoldRot
+                hatGrip.Position = gHoldPos
                 
-                --Spooky Cyberpunk Sniper
-                if character1:FindFirstChild("HalloweenSniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(0, 0, 90)
-                end
+                --Function
+                Hats(gun)
                 
-                --Type-49 The Abomination
-                if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                    hatGrip.Orientation = Vector3.new(0, 180, 0)
-                end
-                
-                --Blox Rifle 5000
-                if character1:FindFirstChild("Blox Rifle 5000") then
-                    hatGrip.Orientation = Vector3.new(-0, 90, 90)
-                end
+                holdingGun = true
             else
-                --Sniper
-                if character1:FindFirstChild("Sniper") then
-                    hatGrip.Orientation = Vector3.new(180, 0, 133.1329)
-                end
-                
-                --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(180, 180, 94.25939)
-                end
-                
-                --Festive Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(-43.86, -107.33, -135.7)
-                end
-                
-                --Spooky Cyberpunk Sniper
-                if character1:FindFirstChild("HalloweenSniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(-0, -180, -90)
-                end
-                
-                --Type-49 The Abomination
-                if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                    hatGrip.Orientation = Vector3.new(0, 0, 0)
-                end
-                
-                --Blox Rifle 5000
-                if character1:FindFirstChild("Blox Rifle 5000") then
-                    hatGrip.Orientation = Vector3.new(-0, -90, -90)
+                if holdingGun == true and gunAutoEquip == true and leftHand == false then
+                    --Stop Flinging
+                    gun.RightGripAttachment.Name = "BodyBackAttachment"
+                    
+                    local hatGrip = gun.BodyBackAttachment
+                    
+                    hatGrip.Orientation = gHolstRot
+                    hatGrip.Position = gHolstPos
+                    
+                    --Function
+                    Hats(gun)
+                    
+                    holdingGun = false
                 end
             end
             
-            --Position
-            if leftHand == true then
-                --Sniper
-                if character1:FindFirstChild("Sniper") then
-                    hatGrip.Position = Vector3.new(0.07, 0.08, -0.19)
-                end
+            --Sword
+            if holdingSword == false and leftHand == true and secondaryWeapon == true then
+                --Start Flinging
+                local hatGrip = sword.BodyBackAttachment
                 
-                --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                    hatGrip.Position = Vector3.new(0.18, -0.70, 0.27)
-                end
-                
-                --Festive Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                    hatGrip.Position = Vector3.new(-0.6, -0.3, -0.3)
-                end
-                
-                --Spooky Cyberpunk Sniper
-                if character1:FindFirstChild("HalloweenSniperAccessory") then
-                    hatGrip.Position = Vector3.new(-0.36, -0.66, -0.21)
-                end
-                
-                --Type-49 The Abomination
-                if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                    hatGrip.Position = Vector3.new(-0.08, -0.18, -0.05)
-                end
-                
-                --Blox Rifle 5000
-                if character1:FindFirstChild("Blox Rifle 5000") then
-                    hatGrip.Position = Vector3.new(-0.24, -0.14, 0.0009)
-                end
-            else
-                --Sniper
-                if character1:FindFirstChild("Sniper") then
-                    hatGrip.Position = Vector3.new(-0.5, -0.3, 0.2)
-                end
-                
-                --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                    hatGrip.Position = Vector3.new(0.18, -0.7, -0.26)
-                end
-                
-                --Festive Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                    hatGrip.Position = Vector3.new(-0.3, -0.9, -0.3)
-                end
-                
-                --Spooky Cyberpunk Sniper
-                if character1:FindFirstChild("HalloweenSniperAccessory") then
-                    hatGrip.Position = Vector3.new(-0.5, -0.3, 0.2)
-                end
-                
-                --Spooky Cyberpunk Sniper
-                if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                    hatGrip.Position = Vector3.new(-0.08, -0.18, -0.53)
-                end
-                
-                --Blox Rifle 5000
-                if character1:FindFirstChild("Blox Rifle 5000") then
-                    hatGrip.Position = Vector3.new(0.2, -0.14, 0.0009)
-                end
-            end
-            
-            --Function
-            Hats()
-            
-            holdingGun = false
-        end
-    end
-    
-    --Shoot Gun
-    if key.KeyCode == Enum.KeyCode.E and shooting == false and holdingGun == true and not vrService.VREnabled and scriptLoaded == true and not character1:FindFirstChild("Type-49 Abomindation Back Accessory") and not gameProcessedEvent then
-        shooting = true 
-        
-        --Fling Stuff
-        if holdingSword == false then
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger1 = Instance.new("BodyAngularVelocity", hrp)
-            flinger1.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger1.P = 1000000000000000000000000000
-            flinger1.AngularVelocity = Vector3.new(10000, 10000, 10000)
-        end
-        
-        --Function
-        GunShot(680140087, 0.7, 1)
-        
-        --Wait
-        wait(shootCooldown)
-        
-        shooting = false 
-        
-        --Fling Stuff
-        if holdingSword == false then
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger2 = Instance.new("BodyAngularVelocity", hrp)
-            flinger2.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger2.P = 1000000000000000000000000000
-            flinger2.AngularVelocity = Vector3.new(0, 0, 0)
-        end
-    end
-    
-    if key.KeyCode == Enum.KeyCode.E and shooting == false and holdingGun == true and not vrService.VREnabled and scriptLoaded == true and character1:FindFirstChild("Type-49 Abomindation Back Accessory") and not gameProcessedEvent then
-        shooting = true 
-        
-        --Fling Stuff
-        if holdingSword == false then
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger1 = Instance.new("BodyAngularVelocity", hrp)
-            flinger1.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger1.P = 1000000000000000000000000000
-            flinger1.AngularVelocity = Vector3.new(10000, 10000, 10000)
-        end
-    end
-    
-    --Sword/Kinfe
-    if key.KeyCode == Enum.KeyCode.G and not vrService.VREnabled and scriptLoaded == true and secondaryWeapon == true and not gameProcessedEvent then
-       if holdingSword == false then
-            --Start Flinging
-            local hatGrip = sword.BodyBackAttachment
-            
-            --Orientation
-            if leftHand == true then
                 hatGrip.Name = rGrip1.Name
                 hatGrip = sword.RightGripAttachment
                 
-                if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
-                    hatGrip.Orientation = Vector3.new(-100, -90, 0)
-                end
+                hatGrip.Orientation = sHoldRot
+                hatGrip.Position = sHoldPos
                 
-                if character1:FindFirstChild("Russo's Sword") then
-                    hatGrip.Orientation = Vector3.new(45, 90, -180)
-                end
+                --Function
+                Hats(sword)
                 
-                if character1:FindFirstChild("UMAD") then
-                    hatGrip.Orientation = Vector3.new(40, 0, 0)
-                end
+                --Fling Stuff
+                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+                
+                holdingSword = true
             else
+                if holdingSword == true and leftHand == true and swordAutoEquip == true and secondaryWeapon == true then
+                    --Stop Flinging
+                    sword.RightGripAttachment.Name = "BodyBackAttachment"
+                    
+                    local hatGrip = sword.BodyBackAttachment
+                    
+                    hatGrip.Orientation = sHolstRot
+                    hatGrip.Position = sHolstPos
+                    
+                    --Function
+                    Hats(sword)
+                    
+                    --Fling Stuff
+                    flinger.AngularVelocity = Vector3.new(0, 0, 0)
+                    
+                    holdingSword = false
+                end
+            end
+        end
+        
+        --Shoot Gun
+        if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == false and holdingGun == true and leftHand == false and scriptLoaded == true and not folder:FindFirstChild("Type-49 Abomindation Back Accessory") then
+            shooting = true 
+            
+            --Fling Stuff
+            if holdingSword == false then
+                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+            end
+            
+            --Function
+            GunShot(680140087, 0.7, 1)
+            
+            --Wait
+            wait(shootCooldown)
+            
+            shooting = false 
+            
+            --Fling Stuff
+            if holdingSword == false then
+                flinger.AngularVelocity = Vector3.new(0, 0, 0)
+            end
+        end
+        
+        if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == false and holdingGun == true and leftHand == false and scriptLoaded == true and folder:FindFirstChild("Type-49 Abomindation Back Accessory") then
+            shooting = true 
+            
+            --Fling Stuff
+            if holdingSword == false then
+                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+            end
+        end
+        
+        --Left Hand
+        if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true then
+            --Gun
+            if holdingGun == false and leftHand == true then
+                --Start Flinging
+                gun.BodyBackAttachment.Name = lGrip1.Name
+                
+                local hatGrip = gun.LeftGripAttachment
+                
+                hatGrip.Orientation = gHoldRot
+                hatGrip.Position = gHoldPos
+                
+                --Function
+                Hats(gun)
+                
+                holdingGun = true
+            else
+                if holdingGun == true and gunAutoEquip == true and leftHand == true then
+                    --Stop Flinging
+                    gun.LeftGripAttachment.Name = "BodyBackAttachment"
+                    
+                    local hatGrip = gun.BodyBackAttachment
+                    
+                    hatGrip.Orientation = gHolstRot
+                    hatGrip.Position = gHolstPos
+                    
+                    --Function
+                    Hats(gun)
+                    
+                    holdingGun = false
+                end
+            end
+            
+            --Sword
+            if holdingSword == false and leftHand == false and secondaryWeapon == true then
+                --Start Flinging
+                local hatGrip = sword.BodyBackAttachment
+                
                 hatGrip.Name = lGrip1.Name
                 hatGrip = sword.LeftGripAttachment
                 
-                if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
-                    hatGrip.Orientation = Vector3.new(-100, -90, 0)
-                end
+                hatGrip.Orientation = sHoldRot
+                hatGrip.Position = sHoldPos
                 
-                if character1:FindFirstChild("Russo's Sword") then
-                    hatGrip.Orientation = Vector3.new(45, 90, -180)
-                end
+                --Function
+                Hats(sword)
                 
-                if character1:FindFirstChild("UMAD") then
-                    hatGrip.Orientation = Vector3.new(40, 0, 0)
-                end
-            end
-            
-            --Position
-            if leftHand == true then
-                if character1:FindFirstChild("Dark Matter Sword") then
-                    hatGrip.Position = lGrip1.Position + Vector3.new(1.2, 2.4, 0)
-                end
+                --Fling Stuff
+                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
                 
-                if character1:FindFirstChild("Russo's Sword") then
-                    hatGrip.Position = lGrip1.Position + Vector3.new(-0.1, -0.7, 0)
-                end
-                
-                if character1:FindFirstChild("MeshPartAccessory") then
-                    hatGrip.Position = lGrip1.Position + Vector3.new(1.7, 2.6, 0)
-                end
-                
-                if character1:FindFirstChild("UMAD") then
-                    hatGrip.Position = Vector3.new(0, -0.4, 0.7)
-                end
+                holdingSword = true
             else
-                if character1:FindFirstChild("Dark Matter Sword") then
-                    hatGrip.Position = rGrip1.Position + Vector3.new(1.2, 2.4, 0)
-                end
-                
-                if character1:FindFirstChild("Russo's Sword") then
-                    hatGrip.Position = rGrip1.Position + Vector3.new(-0.1, -0.7, 0)
-                end
-                
-                if character1:FindFirstChild("MeshPartAccessory") then
-                    hatGrip.Position = rGrip1.Position + Vector3.new(1.7, 2.6, 0)
-                end
-                
-                if character1:FindFirstChild("UMAD") then
-                    hatGrip.Position = Vector3.new(0, -0.4, 0.7)
-                end
-            end
-            
-            --Function
-            Hats()
-            
-            --Fling Stuff
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger = Instance.new("BodyAngularVelocity", hrp)
-            flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger.P = 1000000000000000000000000000
-            flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
-            
-            holdingSword = true
-        else
-            --Stop Flinging
-            if leftHand == true then
-                sword.RightGripAttachment.Name = "BodyBackAttachment"
-            else
-                sword.LeftGripAttachment.Name = "BodyBackAttachment"
-            end
-            
-            local hatGrip = sword.BodyBackAttachment
-            
-            --Orientation
-            if leftHand == true then
-                if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
-                    hatGrip.Orientation = Vector3.new(0, 0, 0)
-                end
-                
-                if character1:FindFirstChild("Russo's Sword") then
-                    hatGrip.Orientation = Vector3.new(-0, 180, 215.002)
-                end
-                
-                if character1:FindFirstChild("UMAD") then
-                    hatGrip.Orientation = Vector3.new(-20, -180, 0)
-                end
-            else
-                if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
-                    hatGrip.Orientation = Vector3.new(0, 0, -90)
-                end
-                
-                if character1:FindFirstChild("Russo's Sword") then
-                    hatGrip.Orientation = Vector3.new(-0, 180, 125.002)
-                end
-                
-                if character1:FindFirstChild("UMAD") then
-                    hatGrip.Orientation = Vector3.new(-20, -180, 0)
+                if holdingSword == true and leftHand == false and swordAutoEquip == true and secondaryWeapon == true then
+                    --Stop Flinging
+                    sword.LeftGripAttachment.Name = "BodyBackAttachment"
+                    
+                    local hatGrip = sword.BodyBackAttachment
+                    
+                    hatGrip.Orientation = sHolstRot
+                    hatGrip.Position = sHolstPos
+                    
+                    --Function
+                    Hats(sword)
+                    
+                    --Fling Stuff
+                    flinger.AngularVelocity = Vector3.new(0, 0, 0)
+                    
+                    holdingSword = false
                 end
             end
-            
-            --Position
-            if character1:FindFirstChild("Dark Matter Sword") or character1:FindFirstChild("MeshPartAccessory") then
-                hatGrip.Position = Vector3.new(0, 0, -0.25)
-            end
-            
-            if character1:FindFirstChild("Russo's Sword") then
-                hatGrip.Position = Vector3.new(-0.17, 0.23, 0.21)
-            end
-            
-            if leftHand == true then
-                if character1:FindFirstChild("UMAD") then
-                    hatGrip.Position = Vector3.new(1.08, 0.9, -0.5)
-                end
-            else
-                if character1:FindFirstChild("UMAD") then
-                    hatGrip.Position = Vector3.new(-1.08, 0.9, -0.5)
-                end
-            end
-            
-            --Function
-            Hats()
-            
-            --Fling Stuff
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger = Instance.new("BodyAngularVelocity", hrp)
-            flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger.P = 1000000000000000000000000000
-            flinger.AngularVelocity = Vector3.new(0, 0, 0)
-            
-            holdingSword = false
         end
-    end
-    --------------------------------------------------------------------------------------
-    
-    --VR----------------------------------------------------------------------------------
-    --Right Hand
-    if key.KeyCode == Enum.KeyCode.ButtonR1 and scriptLoaded == true then
-        --Gun
-        if holdingGun == false and leftHand == false then
-            --Start Flinging
-            gun.BodyBackAttachment.Name = rGrip1.Name
+        
+        --Shoot Gun
+        if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == false and holdingGun == true and leftHand == true and scriptLoaded == true and not folder:FindFirstChild("Type-49 Abomindation Back Accessory") then
+            shooting = true 
             
-            local hatGrip = gun.RightGripAttachment
-            
-            --Orientation
-            --Sniper
-            if character1:FindFirstChild("Sniper") then
-                hatGrip.Orientation = Vector3.new(90, -90, 0)
-            end
-            
-            --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                hatGrip.Orientation = Vector3.new(40, -90, 180)
-            end
-            
-            --Festive Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                hatGrip.Orientation = Vector3.new(-1, 164, -135)
-            end
-            
-            --Spooky Cyberpunk Sniper
-            if character1:FindFirstChild("HalloweenSniperAccessory") then
-                hatGrip.Orientation = Vector3.new(45, 86.75, -180)
-            end
-            
-            --Type-49 The Abomination
-            if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                hatGrip.Orientation = Vector3.new(40, 90, 0)
-            end
-            
-            --Blox Rifle 5000
-            if character1:FindFirstChild("Blox Rifle 5000") then
-                hatGrip.Orientation = Vector3.new(45, 180, 180)
-            end
-            
-            --Position
-            --Sniper
-            if character1:FindFirstChild("Sniper") then
-                hatGrip.Position = rGrip1.Position + Vector3.new(-1.8, 0.6, 0)
-            end
-            
-            --Tactical Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/SniperAccessory") then
-                hatGrip.Position = rGrip1.Position + Vector3.new(0.6, -0.7, 0)
-            end
-            
-            --Rainbow Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                hatGrip.Position = rGrip1.Position + Vector3.new(0.8, -0.6, 0)
-            end
-            
-            --Festive Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                hatGrip.Position = rGrip1.Position + Vector3.new(-1.05, -0.3, -0.7)
-            end
-            
-            --Spooky Cyberpunk Sniper
-            if character1:FindFirstChild("HalloweenSniperAccessory") then
-                hatGrip.Position = rGrip1.Position + Vector3.new(-0.8, -0.6, 0.05)
-            end
-            
-            --Type-49 The Abomination
-            if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                hatGrip.Position = rGrip1.Position + Vector3.new(1, 1.2, -0.3)
-            end
-            
-            --Blox Rifle 5000
-            if character1:FindFirstChild("Blox Rifle 5000") then
-                hatGrip.Position = rGrip1.Position + Vector3.new(0, -0.3, 0.5)
+            --Fling Stuff
+            if holdingSword == false then
+                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
             end
             
             --Function
-            Hats()
+            GunShot(680140087, 0.7, 1)
             
-            holdingGun = true
-        else
-            if holdingGun == true and gunAutoEquip == true and leftHand == false then
+            --Wait
+            wait(shootCooldown)
+            
+            shooting = false 
+            
+            --Fling Stuff
+            if holdingSword == false then
+                flinger.AngularVelocity = Vector3.new(0, 0, 0)
+            end
+        end
+        
+        if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == false and holdingGun == true and leftHand == true and scriptLoaded == true and folder:FindFirstChild("Type-49 Abomindation Back Accessory") then
+            shooting = true 
+            
+            --Fling Stuff
+            if holdingSword == false then
+                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+            end
+        end
+        --------------------------------------------------------------------------------------
+    end
+end)
+
+userInputService.InputEnded:Connect(function(key)
+    if character1.Parent == game.Workspace then
+        --Non VR Stop Shooting----------------------------------------------------------------
+        if key.KeyCode == Enum.KeyCode.E and shooting == true and scriptLoaded == true and folder:FindFirstChild("Type-49 Abomindation Back Accessory") then
+            shooting = false 
+            
+            --Fling Stuff
+            if holdingSword == false then
+                flinger.AngularVelocity = Vector3.new(0, 0, 0)
+            end
+        end
+        --------------------------------------------------------------------------------------
+        
+        --VR----------------------------------------------------------------------------------
+        --Unequip
+        --Right Hand
+        if key.KeyCode == Enum.KeyCode.ButtonR1 and scriptLoaded == true then
+            --Gun
+            if holdingGun == true and gunAutoEquip == false and leftHand == false then
                 --Stop Flinging
                 gun.RightGripAttachment.Name = "BodyBackAttachment"
                 
                 local hatGrip = gun.BodyBackAttachment
                 
-                --Orientation
-                --Sniper
-                if character1:FindFirstChild("Sniper") then
-                    hatGrip.Orientation = Vector3.new(180, 0, 133.1329)
-                end
-                
-                --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(180, 180, 94.25939)
-                end
-                
-                --Festive Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(-43.86, -107.33, -135.7)
-                end
-                
-                --Spooky Cyberpunk Sniper
-                if character1:FindFirstChild("HalloweenSniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(-0, -180, -90)
-                end
-                
-                --Type-49 The Abomination
-                if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                    hatGrip.Orientation = Vector3.new(0, 0, 0)
-                end
-                
-                --Blox Rifle 5000
-                if character1:FindFirstChild("Blox Rifle 5000") then
-                    hatGrip.Orientation = Vector3.new(-0, -90, -90)
-                end
-                
-                --Position
-                --Sniper
-                if character1:FindFirstChild("Sniper") then
-                    hatGrip.Position = Vector3.new(-0.5, -0.3, 0.2)
-                end
-                
-                --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                    hatGrip.Position = Vector3.new(0.18, -0.7, -0.26)
-                end
-                
-                --Festive Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                    hatGrip.Position = Vector3.new(-0.3, -0.9, -0.3)
-                end
-                
-                --Spooky Cyberpunk Sniper
-                if character1:FindFirstChild("HalloweenSniperAccessory") then
-                    hatGrip.Position = Vector3.new(-0.5, -0.3, 0.2)
-                end
-                
-                --Type-49 The Abomination
-                if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                    hatGrip.Position = Vector3.new(-0.08, -0.18, -0.53)
-                end
-                
-                --Blox Rifle 5000
-                if character1:FindFirstChild("Blox Rifle 5000") then
-                    hatGrip.Position = Vector3.new(0.2, -0.14, 0.0009)
-                end
+                hatGrip.Orientation = gHolstRot
+                hatGrip.Position = gHolstPos
                 
                 --Function
-                Hats()
+                Hats(gun)
                 
                 holdingGun = false
             end
-        end
-        
-        --Sword
-        if holdingSword == false and leftHand == true and secondaryWeapon == true then
-            --Start Flinging
-            local hatGrip = sword.BodyBackAttachment
             
-            hatGrip.Name = rGrip1.Name
-            hatGrip = sword.RightGripAttachment
-            
-            --Orientation
-            if character1:FindFirstChild("Dark Matter Sword") then
-                hatGrip.Orientation = Vector3.new(50, -90, 0)
-            end
-            
-            if character1:FindFirstChild("Russo's Sword") then
-                hatGrip.Orientation = Vector3.new(-90, 90, 0)
-            end
-            
-            if character1:FindFirstChild("MeshPartAccessory") then
-                hatGrip.Orientation = Vector3.new(45, -90, 0)
-            end
-            
-            if character1:FindFirstChild("UMAD") then
-                hatGrip.Orientation = Vector3.new(-20, 180, 0)
-            end
-            
-            --Position
-            if character1:FindFirstChild("Dark Matter Sword") then
-                hatGrip.Position = rGrip1.Position + Vector3.new(1.3, 2.6, 0)
-            end
-            
-            if character1:FindFirstChild("Russo's Sword") then
-                hatGrip.Position = rGrip1.Position + Vector3.new(0, -0.9, 0)
-            end
-            
-            if character1:FindFirstChild("MeshPartAccessory") then
-                hatGrip.Position = rGrip1.Position + Vector3.new(1.8, 2.8, 0)
-            end
-            
-            if character1:FindFirstChild("UMAD") then
-                hatGrip.Position = Vector3.new(0, -0.3, 0.7)
-            end
-            
-            --Function
-            Hats()
-            
-            --Fling Stuff
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger = Instance.new("BodyAngularVelocity", hrp)
-            flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger.P = 1000000000000000000000000000
-            flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
-            
-            holdingSword = true
-        else
-            if holdingSword == true and leftHand == true and swordAutoEquip == true and secondaryWeapon == true then
-                --Stop Flinging
+            --Sword
+            if holdingSword == true and leftHand == true and swordAutoEquip == false and secondaryWeapon == true then
+               --Stop Flinging
                 sword.RightGripAttachment.Name = "BodyBackAttachment"
                 
                 local hatGrip = sword.BodyBackAttachment
                 
-                --Orientation
-                if character1:FindFirstChild("Dark Matter Sword") then
-                    hatGrip.Orientation = Vector3.new(50, -90, 0)
-                end
-                
-                if character1:FindFirstChild("Russo's Sword") then
-                    hatGrip.Orientation = Vector3.new(-90, 90, 0)
-                end
-                
-                if character1:FindFirstChild("MeshPartAccessory") then
-                    hatGrip.Orientation = Vector3.new(45, -90, 0)
-                end
-                
-                if character1:FindFirstChild("UMAD") then
-                    hatGrip.Orientation = Vector3.new(-20, -180, 0)
-                end
-                
-                --Position
-                if character1:FindFirstChild("Dark Matter Sword") then
-                    hatGrip.Position = Vector3.new(0, 1, -1.2)
-                end
-                
-                if character1:FindFirstChild("Russo's Sword") then
-                    hatGrip.Position = Vector3.new(-0.7, -0.5, 1.1)
-                end
-                
-                if character1:FindFirstChild("MeshPartAccessory") then
-                    hatGrip.Position = Vector3.new(0.3, 1.2, -1.2)
-                end
-                
-                if character1:FindFirstChild("UMAD") then
-                    hatGrip.Position = Vector3.new(1.08, 0.9, -0.5)
-                end
+                hatGrip.Orientation = sHolstRot
+                hatGrip.Position = sHolstPos
                 
                 --Function
-                Hats()
+                Hats(sword)
                 
                 --Fling Stuff
-                if hrp:FindFirstChild("BodyAngularVelocity") then
-                    hrp.BodyAngularVelocity:Destroy()
-                end
-                
-                local flinger = Instance.new("BodyAngularVelocity", hrp)
-                flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-                flinger.P = 1000000000000000000000000000
                 flinger.AngularVelocity = Vector3.new(0, 0, 0)
                 
                 holdingSword = false
             end
         end
-    end
-    
-    --Shoot Gun
-    if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == false and holdingGun == true and leftHand == false and scriptLoaded == true and not character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-        shooting = true 
         
-        --Fling Stuff
-        if holdingSword == false then
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
+        --Stop Shooting
+        if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == true and leftHand == false and scriptLoaded == true and folder:FindFirstChild("Type-49 Abomindation Back Accessory") then
+            shooting = false 
             
-            local flinger1 = Instance.new("BodyAngularVelocity", hrp)
-            flinger1.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger1.P = 1000000000000000000000000000
-            flinger1.AngularVelocity = Vector3.new(10000, 10000, 10000)
+            --Fling Stuff
+            if holdingSword == false then
+                flinger.AngularVelocity = Vector3.new(0, 0, 0)
+            end
         end
         
-        --Function
-        GunShot(680140087, 0.7, 1)
-        
-        --Wait
-        wait(shootCooldown)
-        
-        shooting = false 
-        
-        --Fling Stuff
-        if holdingSword == false then
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger2 = Instance.new("BodyAngularVelocity", hrp)
-            flinger2.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger2.P = 1000000000000000000000000000
-            flinger2.AngularVelocity = Vector3.new(0, 0, 0)
-        end
-    end
-    
-    if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == false and holdingGun == true and leftHand == false and scriptLoaded == true and character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-        shooting = true 
-        
-        --Fling Stuff
-        if holdingSword == false then
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger1 = Instance.new("BodyAngularVelocity", hrp)
-            flinger1.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger1.P = 1000000000000000000000000000
-            flinger1.AngularVelocity = Vector3.new(10000, 10000, 10000)
-        end
-    end
-    
-    --Left Hand
-    if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true then
-        --Gun
-        if holdingGun == false and leftHand == true then
-            --Start Flinging
-            gun.BodyBackAttachment.Name = lGrip1.Name
-            
-            local hatGrip = gun.LeftGripAttachment
-            
-            --Orientation
-            --Sniper
-            if character1:FindFirstChild("Sniper") then
-                hatGrip.Orientation = Vector3.new(90, -90, 0)
-            end
-            
-            --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                hatGrip.Orientation = Vector3.new(40, -90, 180)
-            end
-            
-            --Festive Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                hatGrip.Orientation = Vector3.new(-1, 164, -135)
-            end
-            
-            --Spooky Cyberpunk Sniper
-            if character1:FindFirstChild("HalloweenSniperAccessory") then
-                hatGrip.Orientation = Vector3.new(45, 86.75, -180)
-            end
-            
-            --Type-49 The Abomination
-            if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                hatGrip.Orientation = Vector3.new(40, 90, 0)
-            end
-            
-            --Blox Rifle 5000
-            if character1:FindFirstChild("Blox Rifle 5000") then
-                hatGrip.Orientation = Vector3.new(45, 180, 180)
-            end
-            
-            --Position
-            --Sniper
-            if character1:FindFirstChild("Sniper") then
-                hatGrip.Position = lGrip1.Position + Vector3.new(-1.8, 0.6, 0)
-            end
-            
-            --Tactical Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/SniperAccessory") then
-                hatGrip.Position = lGrip1.Position + Vector3.new(0.6, -0.7, 0)
-            end
-            
-            --Rainbow Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                hatGrip.Position = lGrip1.Position + Vector3.new(0.8, -0.6, 0)
-            end
-            
-            --Festive Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                hatGrip.Position = lGrip1.Position + Vector3.new(-1.05, -0.3, -0.7)
-            end
-            
-            --Spooky Cyberpunk Sniper
-            if character1:FindFirstChild("HalloweenSniperAccessory") then
-                hatGrip.Position = lGrip1.Position + Vector3.new(-0.8, -0.6, 0.05)
-            end
-            
-            --Type-49 The Abomination
-            if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                hatGrip.Position = lGrip1.Position + Vector3.new(1, 1.2, -0.3)
-            end
-            
-            --Blox Rifle 5000
-            if character1:FindFirstChild("Blox Rifle 5000") then
-                hatGrip.Position = lGrip1.Position + Vector3.new(0, -0.3, 0.5)
-            end
-            
-            --Function
-            Hats()
-            
-            holdingGun = true
-        else
-            if holdingGun == true and gunAutoEquip == true and leftHand == true then
+        --Unequip
+        --Left Hand
+        if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true then
+            --Gun
+            if holdingGun == true and gunAutoEquip == false and leftHand == true then
                 --Stop Flinging
                 gun.LeftGripAttachment.Name = "BodyBackAttachment"
                 
                 local hatGrip = gun.BodyBackAttachment
                 
-                --Orientation
-                --Sniper
-                if character1:FindFirstChild("Sniper") then
-                    hatGrip.Orientation = Vector3.new(0, 0, 43.1329)
-                end
-                
-                --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(0, 180, 94.25939)
-                end
-                
-                --Festive Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(46.14, 72.67, 134.3)
-                end
-                
-                --Spooky Cyberpunk Sniper
-                if character1:FindFirstChild("HalloweenSniperAccessory") then
-                    hatGrip.Orientation = Vector3.new(0, 0, 90)
-                end
-                
-                --Type-49 The Abomination
-                if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                    hatGrip.Orientation = Vector3.new(0, 180, 0)
-                end
-                
-                --Blox Rifle 5000
-                if character1:FindFirstChild("Blox Rifle 5000") then
-                    hatGrip.Orientation = Vector3.new(-0, 90, 90)
-                end
-                
-                --Position
-                --Sniper
-                if character1:FindFirstChild("Sniper") then
-                    hatGrip.Position = Vector3.new(0.07, 0.08, -0.19)
-                end
-                
-                --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                    hatGrip.Position = Vector3.new(0.18, -0.70, 0.27)
-                end
-                
-                --Festive Cyberpunk Sniper
-                if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                    hatGrip.Position = Vector3.new(-0.6, -0.3, -0.3)
-                end
-                
-                --Spooky Cyberpunk Sniper
-                if character1:FindFirstChild("HalloweenSniperAccessory") then
-                    hatGrip.Position = Vector3.new(-0.36, -0.66, -0.21)
-                end
-                
-                --Type-49 The Abomination
-                if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                    hatGrip.Position = Vector3.new(-0.08, -0.18, -0.05)
-                end
-                
-                --Blox Rifle 5000
-                if character1:FindFirstChild("Blox Rifle 5000") then
-                    hatGrip.Position = Vector3.new(-0.24, -0.14, 0.0009)
-                end
+                hatGrip.Orientation = gHolstRot
+                hatGrip.Position = gHolstPos
                 
                 --Function
-                Hats()
+                Hats(gun)
                 
                 holdingGun = false
             end
-        end
-        
-        --Sword
-        if holdingSword == false and leftHand == false and secondaryWeapon == true then
-            --Start Flinging
-            local hatGrip = sword.BodyBackAttachment
             
-            hatGrip.Name = lGrip1.Name
-            hatGrip = sword.LeftGripAttachment
-            
-            --Orientation
-            if character1:FindFirstChild("Dark Matter Sword") then
-                hatGrip.Orientation = Vector3.new(50, -90, 0)
-            end
-            
-            if character1:FindFirstChild("Russo's Sword") then
-                hatGrip.Orientation = Vector3.new(-90, -90, 0)
-            end
-            
-            if character1:FindFirstChild("MeshPartAccessory") then
-                hatGrip.Orientation = Vector3.new(45, -90, 0)
-            end
-            
-            if character1:FindFirstChild("UMAD") then
-                hatGrip.Orientation = Vector3.new(-20, 180, 0)
-            end
-            
-            --Position
-            if character1:FindFirstChild("Dark Matter Sword") then
-                hatGrip.Position = lGrip1.Position + Vector3.new(1.3, 2.6, 0)
-            end
-            
-            if character1:FindFirstChild("Russo's Sword") then
-                hatGrip.Position = lGrip1.Position + Vector3.new(-0.1, -0.9, 0)
-            end
-            
-            if character1:FindFirstChild("MeshPartAccessory") then
-                hatGrip.Position = lGrip1.Position + Vector3.new(1.8, 2.8, 0)
-            end
-            
-            if character1:FindFirstChild("UMAD") then
-                hatGrip.Position = Vector3.new(0, -0.3, 0.7)
-            end
-            
-            --Function
-            Hats()
-            
-            --Fling Stuff
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger = Instance.new("BodyAngularVelocity", hrp)
-            flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger.P = 1000000000000000000000000000
-            flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
-            
-            holdingSword = true
-        else
-            if holdingSword == true and leftHand == false and swordAutoEquip == true and secondaryWeapon == true then
+            --Sword
+            if holdingSword == true and leftHand == false and swordAutoEquip == false and secondaryWeapon == true then
                 --Stop Flinging
                 sword.LeftGripAttachment.Name = "BodyBackAttachment"
                 
                 local hatGrip = sword.BodyBackAttachment
                 
-                --Orientation
-                if character1:FindFirstChild("Dark Matter Sword") then
-                    hatGrip.Orientation = Vector3.new(50, -90, 0)
-                end
-                
-                if character1:FindFirstChild("Russo's Sword") then
-                    hatGrip.Orientation = Vector3.new(-90, -90, 0)
-                end
-                
-                if character1:FindFirstChild("MeshPartAccessory") then
-                    hatGrip.Orientation = Vector3.new(45, -90, 0)
-                end
-                
-                if character1:FindFirstChild("UMAD") then
-                    hatGrip.Orientation = Vector3.new(-20, -180, 0)
-                end
-                
-                --Position
-                if character1:FindFirstChild("Dark Matter Sword") then
-                    hatGrip.Position = Vector3.new(0, 1, 1.2)
-                end
-                
-                if character1:FindFirstChild("Russo's Sword") then
-                    hatGrip.Position = Vector3.new(0.7, -0.5, 1.1)
-                end
-                
-                if character1:FindFirstChild("MeshPartAccessory") then
-                    hatGrip.Position = Vector3.new(0.3, 1.2, 1.2)
-                end
-                
-                if character1:FindFirstChild("UMAD") then
-                    hatGrip.Position = Vector3.new(-1.08, 0.9, -0.5)
-                end
+                hatGrip.Orientation = sHolstRot
+                hatGrip.Position = sHolstPos
                 
                 --Function
-                Hats()
+                Hats(sword)
                 
                 --Fling Stuff
-                if hrp:FindFirstChild("BodyAngularVelocity") then
-                    hrp.BodyAngularVelocity:Destroy()
-                end
-                
-                local flinger = Instance.new("BodyAngularVelocity", hrp)
-                flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-                flinger.P = 1000000000000000000000000000
                 flinger.AngularVelocity = Vector3.new(0, 0, 0)
                 
                 holdingSword = false
             end
         end
-    end
-    
-    --Shoot Gun
-    if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == false and holdingGun == true and leftHand == true and scriptLoaded == true and not character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-        shooting = true 
         
-        --Fling Stuff
-        if holdingSword == false then
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger1 = Instance.new("BodyAngularVelocity", hrp)
-            flinger1.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger1.P = 1000000000000000000000000000
-            flinger1.AngularVelocity = Vector3.new(10000, 10000, 10000)
-        end
-        
-        --Function
-        GunShot(680140087, 0.7, 1)
-        
-        --Wait
-        wait(shootCooldown)
-        
-        shooting = false 
-        
-        --Fling Stuff
-        if holdingSword == false then
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger2 = Instance.new("BodyAngularVelocity", hrp)
-            flinger2.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger2.P = 1000000000000000000000000000
-            flinger2.AngularVelocity = Vector3.new(0, 0, 0)
-        end
-    end
-    
-    if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == false and holdingGun == true and leftHand == true and scriptLoaded == true and character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-        shooting = true 
-        
-        --Fling Stuff
-        if holdingSword == false then
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger1 = Instance.new("BodyAngularVelocity", hrp)
-            flinger1.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger1.P = 1000000000000000000000000000
-            flinger1.AngularVelocity = Vector3.new(10000, 10000, 10000)
-        end
-    end
-    --------------------------------------------------------------------------------------
-end)
-
-userInputService.InputEnded:Connect(function(key)
-    --Non VR Stop Shooting----------------------------------------------------------------
-    if key.KeyCode == Enum.KeyCode.E and shooting == true and scriptLoaded == true and character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-        shooting = false 
-        
-        --Fling Stuff
-        if holdingSword == false then
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger2 = Instance.new("BodyAngularVelocity", hrp)
-            flinger2.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger2.P = 1000000000000000000000000000
-            flinger2.AngularVelocity = Vector3.new(0, 0, 0)
-        end
-    end
-    --------------------------------------------------------------------------------------
-    
-    --VR----------------------------------------------------------------------------------
-    --Unequip
-    --Right Hand
-    if key.KeyCode == Enum.KeyCode.ButtonR1 and scriptLoaded == true then
-        --Gun
-        if holdingGun == true and gunAutoEquip == false and leftHand == false then
-            --Stop Flinging
-            gun.RightGripAttachment.Name = "BodyBackAttachment"
-            
-            local hatGrip = gun.BodyBackAttachment
-            
-            --Orientation
-            --Sniper
-            if character1:FindFirstChild("Sniper") then
-                hatGrip.Orientation = Vector3.new(180, 0, 133.1329)
-            end
-            
-            --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                hatGrip.Orientation = Vector3.new(180, 180, 94.25939)
-            end
-            
-            --Festive Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                hatGrip.Orientation = Vector3.new(-43.86, -107.33, -135.7)
-            end
-            
-            --Spooky Cyberpunk Sniper
-            if character1:FindFirstChild("HalloweenSniperAccessory") then
-                hatGrip.Orientation = Vector3.new(-0, -180, -90)
-            end
-            
-            --Type-49 The Abomination
-            if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                hatGrip.Orientation = Vector3.new(0, 0, 0)
-            end
-            
-            --Blox Rifle 5000
-            if character1:FindFirstChild("Blox Rifle 5000") then
-                hatGrip.Orientation = Vector3.new(-0, -90, -90)
-            end
-            
-            --Position
-            --Sniper
-            if character1:FindFirstChild("Sniper") then
-                hatGrip.Position = Vector3.new(-0.5, -0.3, 0.2)
-            end
-            
-            --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                hatGrip.Position = Vector3.new(0.18, -0.7, -0.26)
-            end
-            
-            --Festive Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                hatGrip.Position = Vector3.new(-0.3, -0.9, -0.3)
-            end
-            
-            --Spooky Cyberpunk Sniper
-            if character1:FindFirstChild("HalloweenSniperAccessory") then
-                hatGrip.Position = Vector3.new(-0.5, -0.3, 0.2)
-            end
-            
-            --Type-49 The Abomination
-            if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                hatGrip.Position = Vector3.new(-0.08, -0.18, -0.53)
-            end
-            
-            --Blox Rifle 5000
-            if character1:FindFirstChild("Blox Rifle 5000") then
-                hatGrip.Position = Vector3.new(0.2, -0.14, 0.0009)
-            end
-            
-            --Function
-            Hats()
-            
-            holdingGun = false
-        end
-        
-        --Sword
-        if holdingSword == true and leftHand == true and swordAutoEquip == false and secondaryWeapon == true then
-           --Stop Flinging
-            sword.RightGripAttachment.Name = "BodyBackAttachment"
-            
-            local hatGrip = sword.BodyBackAttachment
-            
-            --Orientation
-            if character1:FindFirstChild("Dark Matter Sword") then
-                hatGrip.Orientation = Vector3.new(50, -90, 0)
-            end
-            
-            if character1:FindFirstChild("Russo's Sword") then
-                hatGrip.Orientation = Vector3.new(-90, 90, 0)
-            end
-            
-            if character1:FindFirstChild("MeshPartAccessory") then
-                hatGrip.Orientation = Vector3.new(45, -90, 0)
-            end
-            
-            if character1:FindFirstChild("UMAD") then
-                hatGrip.Orientation = Vector3.new(-20, -180, 0)
-            end
-            
-            --Position
-            if character1:FindFirstChild("Dark Matter Sword") then
-                hatGrip.Position = Vector3.new(0, 1, -1.2)
-            end
-            
-            if character1:FindFirstChild("Russo's Sword") then
-                hatGrip.Position = Vector3.new(-0.7, -0.5, 1.1)
-            end
-            
-            if character1:FindFirstChild("MeshPartAccessory") then
-                hatGrip.Position = Vector3.new(0.3, 1.2, -1.2)
-            end
-            
-            if character1:FindFirstChild("UMAD") then
-                hatGrip.Position = Vector3.new(1.08, 0.9, -0.5)
-            end
-            
-            --Function
-            Hats()
+        --Stop Shooting
+        if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == true and leftHand == true and scriptLoaded == true and folder:FindFirstChild("Type-49 Abomindation Back Accessory") then
+            shooting = false 
             
             --Fling Stuff
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
+            if holdingSword == false then
+                flinger.AngularVelocity = Vector3.new(0, 0, 0)
             end
-            
-            local flinger = Instance.new("BodyAngularVelocity", hrp)
-            flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger.P = 1000000000000000000000000000
-            flinger.AngularVelocity = Vector3.new(0, 0, 0)
-            
-            holdingSword = false
         end
+        --------------------------------------------------------------------------------------
     end
-    
-    --Stop Shooting
-    if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == true and leftHand == false and scriptLoaded == true and character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-        shooting = false 
-        
-        --Fling Stuff
-        if holdingSword == false then
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger2 = Instance.new("BodyAngularVelocity", hrp)
-            flinger2.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger2.P = 1000000000000000000000000000
-            flinger2.AngularVelocity = Vector3.new(0, 0, 0)
-        end
-    end
-    
-    --Unequip
-    --Left Hand
-    if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true then
-        --Gun
-        if holdingGun == true and gunAutoEquip == false and leftHand == true then
-            --Stop Flinging
-            gun.LeftGripAttachment.Name = "BodyBackAttachment"
-            
-            local hatGrip = gun.BodyBackAttachment
-            
-            --Orientation
-            --Sniper
-            if character1:FindFirstChild("Sniper") then
-                hatGrip.Orientation = Vector3.new(0, 0, 43.1329)
-            end
-            
-            --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                hatGrip.Orientation = Vector3.new(0, 180, 94.25939)
-            end
-            
-            --Festive Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                hatGrip.Orientation = Vector3.new(46.14, 72.67, 134.3)
-            end
-            
-            --Spooky Cyberpunk Sniper
-            if character1:FindFirstChild("HalloweenSniperAccessory") then
-                hatGrip.Orientation = Vector3.new(0, 0, 90)
-            end
-            
-            --Type-49 The Abomination
-            if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                hatGrip.Orientation = Vector3.new(0, 180, 0)
-            end
-            
-            --Blox Rifle 5000
-            if character1:FindFirstChild("Blox Rifle 5000") then
-                hatGrip.Orientation = Vector3.new(-0, 90, 90)
-            end
-            
-            --Position
-            --Sniper
-            if character1:FindFirstChild("Sniper") then
-                hatGrip.Position = Vector3.new(0.07, 0.08, -0.19)
-            end
-            
-            --Tactical Cyberpunk Sniper and Rainbow Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/SniperAccessory") or character1:FindFirstChild("Meshes/RainbowSniperAccessory") then
-                hatGrip.Position = Vector3.new(0.18, -0.70, 0.27)
-            end
-            
-            --Festive Cyberpunk Sniper
-            if character1:FindFirstChild("Meshes/GiftsniperAccessory") then
-                hatGrip.Position = Vector3.new(-0.6, -0.3, -0.3)
-            end
-            
-            --Spooky Cyberpunk Sniper
-            if character1:FindFirstChild("HalloweenSniperAccessory") then
-                hatGrip.Position = Vector3.new(-0.36, -0.66, -0.21)
-            end
-            
-            --Type-49 The Abomination
-            if character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-                hatGrip.Position = Vector3.new(-0.08, -0.18, -0.05)
-            end
-            
-            --Blox Rifle 5000
-            if character1:FindFirstChild("Blox Rifle 5000") then
-                hatGrip.Position = Vector3.new(-0.24, -0.14, 0.0009)
-            end
-            
-            --Function
-            Hats()
-            
-            holdingGun = false
-        end
-        
-        --Sword
-        if holdingSword == true and leftHand == false and swordAutoEquip == false and secondaryWeapon == true then
-            --Stop Flinging
-            sword.LeftGripAttachment.Name = "BodyBackAttachment"
-            
-            local hatGrip = sword.BodyBackAttachment
-            
-            --Orientation
-            if character1:FindFirstChild("Dark Matter Sword") then
-                hatGrip.Orientation = Vector3.new(50, -90, 0)
-            end
-            
-            if character1:FindFirstChild("Russo's Sword") then
-                hatGrip.Orientation = Vector3.new(-90, -90, 0)
-            end
-            
-            if character1:FindFirstChild("MeshPartAccessory") then
-                hatGrip.Orientation = Vector3.new(45, -90, 0)
-            end
-            
-            if character1:FindFirstChild("UMAD") then
-                hatGrip.Orientation = Vector3.new(-20, -180, 0)
-            end
-            
-            --Position
-            if character1:FindFirstChild("Dark Matter Sword") then
-                hatGrip.Position = Vector3.new(0, 1, 1.2)
-            end
-            
-            if character1:FindFirstChild("Russo's Sword") then
-                hatGrip.Position = Vector3.new(0.7, -0.5, 1.1)
-            end
-            
-            if character1:FindFirstChild("MeshPartAccessory") then
-                hatGrip.Position = Vector3.new(0.3, 1.2, 1.2)
-            end
-            
-            if character1:FindFirstChild("UMAD") then
-                hatGrip.Position = Vector3.new(-1.08, 0.9, -0.5)
-            end
-            
-            --Function
-            Hats()
-            
-            --Fling Stuff
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger = Instance.new("BodyAngularVelocity", hrp)
-            flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger.P = 1000000000000000000000000000
-            flinger.AngularVelocity = Vector3.new(0, 0, 0)
-            
-            holdingSword = false
-        end
-    end
-    
-    --Stop Shooting
-    if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == true and leftHand == true and scriptLoaded == true and character1:FindFirstChild("Type-49 Abomindation Back Accessory") then
-        shooting = false 
-        
-        --Fling Stuff
-        if holdingSword == false then
-            if hrp:FindFirstChild("BodyAngularVelocity") then
-                hrp.BodyAngularVelocity:Destroy()
-            end
-            
-            local flinger2 = Instance.new("BodyAngularVelocity", hrp)
-            flinger2.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-            flinger2.P = 1000000000000000000000000000
-            flinger2.AngularVelocity = Vector3.new(0, 0, 0)
-        end
-    end
-    --------------------------------------------------------------------------------------
 end)
 
 -- CLOVR - FE FULL-BODY VR SCRIPT
@@ -2537,7 +1521,7 @@ Script = function()
     local Players = game:GetService("Players")
     local Client = Players.LocalPlayer
     local Character = Client.Character or Client.CharacterAdded:Wait()
-    local WeldBase = Character:WaitForChild("hrpReplacement")
+    local WeldBase = folder:WaitForChild("Replacement HumanoidRootPart")
     local ArmBase = Character:FindFirstChild("RightHand") or Character:FindFirstChild("Right Arm") or WeldBase
     local Backpack = Client:WaitForChild("Backpack")
     local Mouse = Client:GetMouse()
@@ -2639,22 +1623,19 @@ Script = function()
         local Attachment1 = Instance.new("Attachment", Limb)
         local Orientation = Instance.new("AlignOrientation")
         local Position = Instance.new("AlignPosition")
-        
         Orientation.Attachment0 = Attachment1
         Orientation.Attachment1 = Attachment0
         Orientation.RigidityEnabled = false
         Orientation.MaxTorque = 20000
-        Orientation.Responsiveness = 200
-        Orientation.Parent = Character.hrpReplacement
-        
+        Orientation.Responsiveness = 40
+        Orientation.Parent = folder["Replacement HumanoidRootPart"]
         Position.Attachment0 = Attachment1
         Position.Attachment1 = Attachment0
         Position.RigidityEnabled = false
         Position.MaxForce = 40000
-        Position.Responsiveness = 200
-        Position.Parent = Character.hrpReplacement
+        Position.Responsiveness = 40
+        Position.Parent = folder["Replacement HumanoidRootPart"]
         Limb.Massless = false
-        
         local Motor = GetMotorForLimb(Limb)
         if Motor then
             Motor:Destroy()
@@ -2744,7 +1725,7 @@ Script = function()
                 local Handle, RightGrip, HatAtt, HeadAtt, BasePart = CreateAccessory(Accessory)
                 table.insert(HeadAccessories, {Handle, RightGrip, HatAtt, HeadAtt, BasePart})
                 do
-                    Handle.Transparency = 0
+                    Handle.Transparency = 1
                 end
                 if not WearAllAccessories then
                     break
@@ -2770,16 +1751,17 @@ Script = function()
     elseif RagdollEnabled then
         if RagdollHeadMovement then
             Permadeath()
-            MoveHead = CreateAlignment(Character["Head"])
+            MoveHead = CreateAlignment(folder["Replacement Head"])
         end
-        MoveRightArm = CreateAlignment(Character["Right Arm"])
-        MoveLeftArm = CreateAlignment(Character["Left Arm"])
-        MoveRightLeg = CreateAlignment(Character["Right Leg"])
-        MoveLeftLeg = CreateAlignment(Character["Left Leg"])
-        MoveTorso = CreateAlignment(Character["Torso"])
-        MoveRoot = CreateAlignment(Character.hrpReplacement)
+        MoveRightArm = CreateAlignment(folder["Replacement Right Arm"])
+        MoveLeftArm = CreateAlignment(folder["Replacement Left Arm"])
+        MoveRightLeg = CreateAlignment(folder["Replacement Right Leg"])
+        MoveLeftLeg = CreateAlignment(folder["Replacement Left Leg"])
+        MoveTorso = CreateAlignment(folder["Replacement Torso"])
+        MoveRoot = CreateAlignment(folder["Replacement HumanoidRootPart"])
+        --
         if RagdollHeadMovement then
-            for _, Accessory in next, Character:GetChildren() do
+            for _, Accessory in next, folder:GetChildren() do
                 if Accessory:IsA("Accessory") and Accessory:FindFirstChild("Handle") then
                     local Attachment1 = Accessory.Handle:FindFirstChildWhichIsA("Attachment")
                     local Attachment0 = Character:FindFirstChild(tostring(Attachment1), true)
@@ -2787,24 +1769,33 @@ Script = function()
                     local Position = Instance.new("AlignPosition")
                     print(Attachment1, Attachment0, Accessory)
                     
+                    local clone = Attachment0:Clone()
+                    clone.Parent = folder:FindFirstChild("Replacement "..Attachment0.Parent.Name)
+                    Attachment0 = clone
+                    
                     Orientation.Attachment0 = Attachment1
                     Orientation.Attachment1 = Attachment0
-                    Orientation.RigidityEnabled = true
+                    Orientation.RigidityEnabled = false
                     Orientation.ReactionTorqueEnabled = true
                     Orientation.MaxTorque = 20000
-                    Orientation.Responsiveness = 200
-                    Orientation.Parent = Character.Head
+                    Orientation.Responsiveness = 40
+                    Orientation.Parent = folder["Replacement Head"]
+                    Orientation.Name = (Accessory.Name.."'s AlignRot")
                     
                     Position.Attachment0 = Attachment1
                     Position.Attachment1 = Attachment0
-                    Position.RigidityEnabled = true
+                    Position.RigidityEnabled = false
                     Position.ReactionForceEnabled = true
                     Position.MaxForce = 40000
-                    Position.Responsiveness = 200
-                    Position.Parent = Character.Head
+                    Position.Responsiveness = 40
+                    Position.Parent = folder["Replacement Head"]
+                    Position.Name = (Accessory.Name.."'s AlignPos")
+                    
+                    Accessory.Handle:FindFirstChildWhichIsA("Weld"):Destroy()
                 end
             end
         end
+        
     end
     --[[
  Movement
@@ -2882,8 +1873,9 @@ Script = function()
                 if Part:FindFirstChild("HatAttachment") or Part:FindFirstChild("HairAttachment") or Part:FindFirstChild("FaceFrontAttachment") or Part:FindFirstChild("FaceCenterAttachment") then
                     Part.LocalTransparencyModifier = 1
                 end
+                
             elseif Part:IsA("BasePart") and Part.Transparency < 0.5 and Part.Name ~= "Head" then
-                Part.LocalTransparencyModifier = 0
+                Part.LocalTransparencyModifier = bodyTransparency
             elseif Part:IsA("BasePart") and Part.Name == "Head" then
                 Part.LocalTransparencyModifier = 1
             end
@@ -3236,8 +2228,8 @@ Script = function()
         function()
             Camera.CameraSubject = VirtualBody.Humanoid
             if RagdollEnabled then
-                Character.hrpReplacement.CFrame = VirtualRig.UpperTorso.CFrame
-                Character.hrpReplacement.Velocity = Vector3.new(0, 0, 0)
+                folder["Replacement HumanoidRootPart"].CFrame = VirtualRig.UpperTorso.CFrame
+                folder["Replacement HumanoidRootPart"].Velocity = Vector3.new(0, 0, 0)
             end
             if not VRReady then
                 OnUserCFrameChanged(Enum.UserCFrame.Head, CFrame.new(0, 0, 0))
@@ -3261,7 +2253,7 @@ Script = function()
         UserInputService.InputBegan:Connect(
         function(Input, Processed)
             if not Processed then
-                if Input.KeyCode == Enum.KeyCode.LeftControl or Input.KeyCode == Enum.KeyCode.ButtonL2 and (leftHand == false or holdingGun == false) then
+                if Input.KeyCode == Enum.KeyCode.LeftControl or Input.KeyCode == Enum.KeyCode.ButtonL2 then
                     Tween(
                         VirtualBody.Humanoid,
                         "Elastic",
@@ -3313,7 +2305,7 @@ Script = function()
         UserInputService.InputEnded:Connect(
         function(Input, Processed)
             if not Processed then
-                if Input.KeyCode == Enum.KeyCode.LeftControl or Input.KeyCode == Enum.KeyCode.ButtonL2 and (leftHand == false or holdingGun == false)  then
+                if Input.KeyCode == Enum.KeyCode.LeftControl or Input.KeyCode == Enum.KeyCode.ButtonL2 then
                     Tween(
                         VirtualBody.Humanoid,
                         "Elastic",
@@ -3460,19 +2452,6 @@ Permadeath = function()
     game.Players.LocalPlayer.Character = ch
     wait(3)
     warn("100%")
-    
-    game:GetService("RunService").Heartbeat:Connect(function()
-        for i,v in pairs(character1:GetChildren()) do
-            if v:IsA("BasePart") or v:IsA("MeshPart") then
-                v.Velocity = Vector3.new(-17.7, 0, -17.7)
-            end
-            
-            if v:IsA("Accessory") then
-                v.Handle.Velocity = Vector3.new(-17.7, 0, -17.7)
-            end
-        end
-    end)
-    
 end
 Respawn = function()
     local ch = game.Players.LocalPlayer.Character
@@ -3781,71 +2760,147 @@ ViewHUDFunc = function()
     )
     
     ------------------------Part of modification------------------------
-    ----------------This is from FE Sniper by x0rs#4411----------------
-    local bp = Instance.new("BodyPosition", hrp)
-    bp.Position = hrp.Position
-    bp.D = 9999999
-    bp.P = 999999999999999
-    bp.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-    local flinger = Instance.new("BodyAngularVelocity", hrp)
-    flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-    flinger.P = 1000000000000000000000000000
-    flinger.AngularVelocity = Vector3.new(0, 0, 0)
-    -------------------------------------------------------------------
-    
-    --hrpReplacement.Anchored = false
+    for i,v in pairs(character1.Torso:GetChildren()) do
+        if v:IsA("Motor6D") then
+            v:Destroy()
+        end
+    end
     
     if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 then
-        character1.Torso.Anchored = false
-        character1["Right Arm"].Anchored = false
-        character1["Left Arm"].Anchored = false
-        character1["Right Leg"].Anchored = false
-        character1["Left Leg"].Anchored = false
+        character1:BreakJoints()
+    end
+    
+    for i,v in pairs(folder:GetChildren()) do
+        if v:IsA("BasePart") then
+            v.Anchored = false
+        end
+    end
+    
+    game:GetService("RunService").Heartbeat:Connect(function()
+        for i,v in pairs(character1:GetChildren()) do
+            if v:IsA("BasePart") or v:IsA("MeshPart") then
+                v.Velocity = Vector3.new(-17.7, 0, -17.7)
+            end
+            
+            if v:IsA("Accessory") then
+                v.Handle.Velocity = Vector3.new(-17.7, 0, -17.7)
+            end
+        end
+    end)
+    
+    --Attachments (Fake Character)
+    for i,v in pairs(folder:GetChildren()) do
+        if v:IsA("Part") and v.Name ~= "HumanoidRootPart" then
+            local posAtt2 = Instance.new("Attachment", v)
+            posAtt2.Name = "posAtt2"
+            
+            local rotAtt2 = Instance.new("Attachment", v)
+            rotAtt2.Name = "rotAtt2"
+        end
         
-        character1.LeftHand.LeftWrist:Destroy()
-        character1.LeftLowerArm.LeftElbow:Destroy()
-        character1.LeftUpperArm.LeftShoulder:Destroy()
-        character1.RightHand.RightWrist:Destroy()
-        character1.RightLowerArm.RightElbow:Destroy()
-        character1.RightUpperArm.RightShoulder:Destroy()
-        character1.UpperTorso.Waist:Destroy()
-        character1.LeftFoot.LeftAnkle:Destroy()
-        character1.LeftLowerLeg.LeftKnee:Destroy()
-        character1.LeftUpperLeg.LeftHip:Destroy()
-        character1.RightFoot.RightAnkle:Destroy()
-        character1.RightLowerLeg.RightKnee:Destroy()
-        character1.RightUpperLeg.RightHip:Destroy()
-        character1.LowerTorso.Root:Destroy()
+        if v:IsA("Accessory") then
+            local posAtt2 = Instance.new("Attachment", v.Handle)
+            posAtt2.Name = "posAtt2"
+            
+            local rotAtt2 = Instance.new("Attachment", v.Handle)
+            rotAtt2.Name = "rotAtt2"
+        end
+    end
+    
+    --Attachments and Alignments (Real Character)
+    for i,v in pairs(character1:GetChildren()) do
+        if v:IsA("Accessory") or (v:IsA("Part") and v.Name ~= "HumanoidRootPart") then
+            --Creating AlignPosition
+            local alignPosition = Instance.new("AlignPosition")
+            
+            --Creating posAtt1--
+            local posAtt1 = Instance.new("Attachment")
+            if v:IsA("Accessory") then
+                posAtt1.Parent = v.Handle
+            else
+                posAtt1.Parent = v
+            end
+            posAtt1.Name = "posAtt1"
+            
+            --AlignPosition Properties--
+            alignPosition.Attachment0 = posAtt1
+            if v:IsA("Accessory") then
+                alignPosition.Attachment1 = folder:FindFirstChild(v.Name).Handle.posAtt2
+            else
+                alignPosition.Attachment1 = folder:FindFirstChild("Replacement "..v.Name).posAtt2
+            end
+            alignPosition.RigidityEnabled = false
+            alignPosition.ReactionForceEnabled = false
+            alignPosition.MaxForce = 99999999999999999999999999
+            alignPosition.Responsiveness = 200
+            if v:IsA("Accessory") then
+                alignPosition.Parent = v.Handle
+            else
+                alignPosition.Parent = v
+            end
+            
+            -------------------------------------------------
+            
+            --Creating AlignOrientation--
+            local alignOrientation = Instance.new("AlignOrientation")
+            
+            --Creating rotAtt1--
+            local rotAtt1 = Instance.new("Attachment")
+            if v:IsA("Accessory") then
+                rotAtt1.Parent = v.Handle
+            else
+                rotAtt1.Parent = v
+            end
+            rotAtt1.Name = "rotAtt1"
+            
+            --AlignOrientation Properties--
+            alignOrientation.Attachment0 = rotAtt1
+            if v:IsA("Accessory") then
+                alignOrientation.Attachment1 = folder:FindFirstChild(v.Name).Handle.rotAtt2
+            else
+                alignOrientation.Attachment1 = folder:FindFirstChild("Replacement "..v.Name).rotAtt2
+            end
+            alignOrientation.RigidityEnabled = false
+            alignOrientation.ReactionTorqueEnabled = false
+            alignOrientation.MaxTorque = 99999999999999999999999999
+            alignOrientation.MaxAngularVelocity = 99999999999999999999999999
+            alignOrientation.Responsiveness = 200
+            if v:IsA("Accessory") then
+                alignOrientation.Parent = v.Handle
+            else
+                alignOrientation.Parent = v
+            end
+        end
     end
     
     scriptLoaded = true
     
-    while true do
+    while character1.Parent == game.Workspace do
         if shooting == false then
             if secondaryWeapon == true then
-                bp.Position = sword.Position
+                hrp.Position = sword.Position
             else
-                bp.Position = gun.Position
+                hrp.Position = gun.Position
             end
         else
             if mouse.Hit.Position.X <= gun.Position.X + range and mouse.Hit.Position.X >= gun.Position.X - range then
                 if mouse.Hit.Position.Y <= gun.Position.Y + range and mouse.Hit.Position.Y >= gun.Position.Y - range then
                     if mouse.Hit.Position.Z <= gun.Position.Z + range and mouse.Hit.Position.Z >= gun.Position.Z - range then
                         if vrService.VREnabled then
-                            if character1:FindFirstChild("Type-49 Abomindation Back Accessory") and shooting == true then
+                            if folder:FindFirstChild("Type-49 Abomindation Back Accessory") and shooting == true then
                                 GunShot(1583819337, 1, math.random(90,110)/100)
                                 wait(0.1)
                             end
                         else
-                            if shooting == true and not character1:FindFirstChild("Type-49 Abomindation Back Accessory") and not vrService.VREnabled then
-                                bp.Position = mouse.Hit.Position
+                            if shooting == true and not folder:FindFirstChild("Type-49 Abomindation Back Accessory") and not vrService.VREnabled then
+                                hrp.Position = mouse.Hit.Position
                             end
                             
-                            if shooting == true and character1:FindFirstChild("Type-49 Abomindation Back Accessory") and not vrService.VREnabled then
+                            if shooting == true and folder:FindFirstChild("Type-49 Abomindation Back Accessory") and not vrService.VREnabled then
                                 GunShot(1583819337, 1, math.random(90,110)/100)
-                                bp.Position = mouse.Hit.Position
+                                hrp.Position = mouse.Hit.Position
                                 wait(0.05)
-                                bp.Position = gun.Position
+                                hrp.Position = gun.Position
                                 wait(0.05)
                             end
                         end
@@ -3853,9 +2908,9 @@ ViewHUDFunc = function()
                 end
             end
         end
-        wait()
+        game:GetService("RunService").Heartbeat:wait()
     end
-    -------------------------------------------------------------------
+    --------------------------------------------------------------------
     
     wait(9e9)
 end
@@ -3863,26 +2918,26 @@ Script()
 wait(2)
 local Players = game:GetService("Players")
 local lp = Players.LocalPlayer
-local character = lp.Character
-local A0LL = Instance.new("Attachment", character["Left Leg"])
+local character = folder--lp.Character
+local A0LL = Instance.new("Attachment", character["Replacement Left Leg"])
 A0LL.Position = Vector3.new(0, 1, 0)
-local A1LL = Instance.new("Attachment", character["Torso"])
+local A1LL = Instance.new("Attachment", character["Replacement Torso"])
 A1LL.Position = Vector3.new(-0.5, -1, 0)
-local socket1 = Instance.new("BallSocketConstraint", character["Left Leg"])
+local socket1 = Instance.new("BallSocketConstraint", character["Replacement Left Leg"])
 socket1.Attachment0 = A0LL
 socket1.Attachment1 = A1LL
-local A0RL = Instance.new("Attachment", character["Right Leg"])
+local A0RL = Instance.new("Attachment", character["Replacement Right Leg"])
 A0RL.Position = Vector3.new(0, 1, 0)
-local A1RL = Instance.new("Attachment", character["Torso"])
+local A1RL = Instance.new("Attachment", character["Replacement Torso"])
 A1RL.Position = Vector3.new(0.5, -1, 0)
-local socket2 = Instance.new("BallSocketConstraint", character["Right Leg"])
+local socket2 = Instance.new("BallSocketConstraint", character["Replacement Right Leg"])
 socket2.Attachment0 = A0RL
 socket2.Attachment1 = A1RL
-local A0H = Instance.new("Attachment", character["Head"])
+local A0H = Instance.new("Attachment", character["Replacement Head"])
 A0H.Position = Vector3.new(0, -0.5, 0)
-local A1H = Instance.new("Attachment", character["Torso"])
+local A1H = Instance.new("Attachment", character["Replacement Torso"])
 A1H.Position = Vector3.new(0, 1, 0)
-local socket5 = Instance.new("BallSocketConstraint", character["Head"])
+local socket5 = Instance.new("BallSocketConstraint", character["Replacement Head"])
 socket5.Attachment0 = A0H
 socket5.Attachment1 = A1H
 loadstring(game:HttpGet("https://ghostbin.co/paste/krmyf/raw", true))()
