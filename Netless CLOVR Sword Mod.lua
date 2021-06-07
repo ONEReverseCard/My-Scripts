@@ -832,12 +832,20 @@ Script = function()
         Orientation.MaxTorque = 20000
         Orientation.Responsiveness = 40
         Orientation.Parent = folder["Replacement HumanoidRootPart"]
+        
+        Orientation.Name = Limb.Name.."'s AlignRot"
+        Orientation.MaxAngularVelocity = 100
+        
         Position.Attachment0 = Attachment1
         Position.Attachment1 = Attachment0
         Position.RigidityEnabled = false
         Position.MaxForce = 40000
         Position.Responsiveness = 40
         Position.Parent = folder["Replacement HumanoidRootPart"]
+        
+        Position.Name = Limb.Name.."'s AlignPos"
+        Position.MaxVelocity = 100
+        
         Limb.Massless = false
         local Motor = GetMotorForLimb(Limb)
         if Motor then
@@ -2035,6 +2043,7 @@ ViewHUDFunc = function()
             alignPosition.RigidityEnabled = false
             alignPosition.ReactionForceEnabled = false
             alignPosition.MaxForce = 99999999999999999999999999
+            alignPosition.MaxVelocity = 100
             alignPosition.Responsiveness = 200
             if v:IsA("Accessory") then
                 alignPosition.Parent = v.Handle
@@ -2066,7 +2075,7 @@ ViewHUDFunc = function()
             alignOrientation.RigidityEnabled = false
             alignOrientation.ReactionTorqueEnabled = false
             alignOrientation.MaxTorque = 99999999999999999999999999
-            alignOrientation.MaxAngularVelocity = 99999999999999999999999999
+            alignOrientation.MaxAngularVelocity = 100
             alignOrientation.Responsiveness = 200
             if v:IsA("Accessory") then
                 alignOrientation.Parent = v.Handle
