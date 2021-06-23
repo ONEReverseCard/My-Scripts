@@ -148,7 +148,8 @@ Info.Size = UDim2.new(0, 311, 0, 155)
 Info.Font = Enum.Font.SourceSans
 Info.Text = [[- Since there's no hat fling, each reanimation is going to put you into perma death.
 - This only works in R6 currently.
-- You can use Stylish Aviators (as the glasses) with this script (but it's not required).]]
+- You can use Stylish Aviators (as the glasses) with this script (but it's not required).
+- The GUI now won't be destroyed when you die.]]
 Info.TextColor3 = Color3.fromRGB(255, 255, 255)
 Info.TextSize = 20.000
 Info.TextWrapped = true
@@ -356,7 +357,7 @@ local function ServerAdmin()
     --||			   CREATED BY SHACKLUSTER
     --\\====================================================//--
     
-    wait(0.2)
+    --wait(0.2)
     
     Player = game:GetService("Players").LocalPlayer
     PlayerGui = Player.PlayerGui
@@ -1265,7 +1266,7 @@ local function ServerAdmin()
         	end))
         	for i = 1, 12 do
         		local SPOT = CF(RootPart.Position) * ANGLES(RAD(0), RAD(MRANDOM(0,360)), RAD(0)) * CF(0,0,MRANDOM(4,15))
-        		local HITFLOOR,HITPOS = Raycast(RootPart.Position, (CF(RootPart.Position, RootPart.Position + VT(0, -1, 0))).lookVector, 4, Character and character)
+        		local HITFLOOR,HITPOS = Raycast(RootPart.Position, (CF(RootPart.Position, RootPart.Position + VT(0, -1, 0))).lookVector, 4, Character and character and reanimation)
         		if HITFLOOR then
         			coroutine.resume(coroutine.create(function()
         				local BOULDER = CreatePart(3, Effects, HITFLOOR.Material, 0, 0, BRICKC("Cyan"), "Debree", VT(1,1,1)*(MRANDOM(5,25)/10), true)
@@ -1986,6 +1987,10 @@ local function PermaDeath()
     local torso = character.Torso
     permaDeath = true
     
+    if character:FindFirstChild("ClientInputHandler") then
+        character:FindFirstChild("ClientInputHandler"):Destroy()
+    end
+    
     local camera = workspace.CurrentCamera
     
     local reanimFolder = Instance.new("Folder", character)
@@ -2124,6 +2129,9 @@ local function PermaDeath()
                 player.Character = model
                 reanimation:BreakJoints()
                 reanimated = false
+                if player.PlayerGui:FindFirstChild("Weapon GUI") then
+                    player.PlayerGui:FindFirstChild("Weapon GUI"):Destroy()
+                end
             end
         end
     end)
@@ -2230,6 +2238,10 @@ local function Bot()
         NetlessServerAdmin:Destroy()
         
         bot = true
+        
+        if character:FindFirstChild("ClientInputHandler") then
+            character:FindFirstChild("ClientInputHandler"):Destroy()
+        end
         
         local camera = workspace.CurrentCamera
         
@@ -2471,6 +2483,9 @@ local function Bot()
                     player.Character = model
                     reanimation:BreakJoints()
                     reanimated = false
+                    if player.PlayerGui:FindFirstChild("Weapon GUI") then
+                        player.PlayerGui:FindFirstChild("Weapon GUI"):Destroy()
+                    end
                 end
             end
         end)
@@ -2778,17 +2793,3 @@ BotReanimation.MouseButton1Click:Connect(function()
     end
 end)
 ---------------
-
-
-game:GetService("RunService").Stepped:Connect(function()
-    if reanimated == false then
-        --Variables
-        local player = game:GetService("Players").LocalPlayer
-        local character = player.Character
-        if character:FindFirstChild("Humanoid") then
-            if character.Humanoid.Health == 0 then
-                NetlessServerAdmin:Destroy()
-            end
-        end
-    end
-end)
