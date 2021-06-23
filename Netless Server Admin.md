@@ -149,7 +149,7 @@ Info.Font = Enum.Font.SourceSans
 Info.Text = [[- Since there's no hat fling, each reanimation is going to put you into perma death.
 - This only works in R6 currently.
 - You can use Stylish Aviators (as the glasses) with this script (but it's not required).
-- The GUI now won't be destroyed when you die.]]
+- The GUI now won't be destroyed when you die before reanimating.]]
 Info.TextColor3 = Color3.fromRGB(255, 255, 255)
 Info.TextSize = 20.000
 Info.TextWrapped = true
