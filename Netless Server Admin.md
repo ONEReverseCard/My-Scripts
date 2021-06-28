@@ -10,6 +10,7 @@ local EverythingFrame = Instance.new("ScrollingFrame")
 local ReanimationFrame = Instance.new("Frame")
 local PermanentReanimation = Instance.new("TextButton")
 local BotReanimation = Instance.new("TextButton")
+local ReanimInfo = Instance.new("TextLabel")
 local InfoFrame = Instance.new("Frame")
 local Info = Instance.new("TextLabel")
 local CreditsFrame = Instance.new("Frame")
@@ -131,6 +132,19 @@ BotReanimation.TextSize = 20.000
 BotReanimation.TextWrapped = true
 BotReanimation.TextXAlignment = Enum.TextXAlignment.Left
 
+ReanimInfo.Name = "ReanimInfo"
+ReanimInfo.Parent = ReanimationFrame
+ReanimInfo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ReanimInfo.BackgroundTransparency = 1.000
+ReanimInfo.Position = UDim2.new(0.0130000096, 0, 0.611194909, 0)
+ReanimInfo.Size = UDim2.new(0, 311, 0, 61)
+ReanimInfo.Font = Enum.Font.SourceSans
+ReanimInfo.Text = [[Now supports R15 (about time).
+Bot doesn't work with R15.]]
+ReanimInfo.TextColor3 = Color3.fromRGB(255, 255, 255)
+ReanimInfo.TextSize = 20.000
+ReanimInfo.TextWrapped = true
+
 InfoFrame.Name = "InfoFrame"
 InfoFrame.Parent = EverythingFrame
 InfoFrame.Active = true
@@ -147,7 +161,6 @@ Info.Position = UDim2.new(0.0130000003, 0, 0.0199999996, 0)
 Info.Size = UDim2.new(0, 311, 0, 155)
 Info.Font = Enum.Font.SourceSans
 Info.Text = [[- Since there's no hat fling, each reanimation is going to put you into perma death.
-- This only works in R6 currently.
 - You can use Stylish Aviators (as the glasses) with this script (but it's not required).
 - The GUI now won't be destroyed when you die before reanimating.]]
 Info.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -232,7 +245,7 @@ local function ServerAdmin()
     --Reanimated
     reanimated = true
     
-    if permaDeath == true then
+    if permaDeath == true and character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
         torso = character.Torso
     end
         
@@ -308,12 +321,17 @@ local function ServerAdmin()
     local function Positioning()
         --Positioning BodyParts
         for i,v in pairs(character:GetChildren()) do
-            if v:IsA("Part") and v.Name ~= "HumanoidRootPart" then
+            if v:IsA("Part") and v.Name ~= "HumanoidRootPart" and character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
                 v.CFrame = reanimation:FindFirstChild(v.Name).CFrame
             end
         end
         
+        --Flinging
         if flinging == true then
+            if character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+                bodyAngularVelocity.AngularVelocity = Vector3.new(10000, 10000, 10000)
+            end
+            
             if getChild:FindFirstChild("Torso") then
                 hrp.Position = getChild.Torso.Position
             end
@@ -322,9 +340,47 @@ local function ServerAdmin()
                 hrp.Position = getChild.UpperTorso.Position
             end
         else
-            hrp.Position = Vector3.new(reanimation.Torso.Position.X, -100, reanimation.Torso.Position.Z)
+            if character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
+                hrp.Position = Vector3.new(reanimation.Torso.Position.X, -50, reanimation.Torso.Position.Z)
+            else
+                hrp.Position = reanimation.Torso.Position
+                bodyAngularVelocity.AngularVelocity = Vector3.new(0, 0, 0)
+            end
         end
         game:GetService("RunService").Heartbeat:wait()
+        
+        --R15
+        if character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+            --Head
+            character.Head.CFrame = reanimation.Head.CFrame
+            
+            --Torso
+            character.UpperTorso.CFrame = reanimation.Torso.CFrame * CFrame.new(0, 0.185, 0)
+            character.LowerTorso.CFrame = reanimation.Torso.CFrame * CFrame.new(0, -0.8, 0)
+            
+            --HumanoidRootPart
+            --character.HumanoidRootPart.CFrame = cHRP.CFrame
+            
+            --Left Arm
+            character.LeftUpperArm.CFrame = reanimation["Left Arm"].CFrame * CFrame.new(0, 0.4, 0)
+            character.LeftLowerArm.CFrame = reanimation["Left Arm"].CFrame * CFrame.new(0, -0.19, 0)
+            character.LeftHand.CFrame = reanimation["Left Arm"].CFrame * CFrame.new(0, -0.84, 0)
+            
+            --Right Arm
+            character.RightUpperArm.CFrame = reanimation["Right Arm"].CFrame * CFrame.new(0, 0.4, 0)
+            character.RightLowerArm.CFrame = reanimation["Right Arm"].CFrame * CFrame.new(0, -0.19, 0)
+            character.RightHand.CFrame = reanimation["Right Arm"].CFrame * CFrame.new(0, -0.84, 0)
+            
+            --Left Leg
+            character.LeftUpperLeg.CFrame = reanimation["Left Leg"].CFrame * CFrame.new(0, 0.55, 0)
+            character.LeftLowerLeg.CFrame = reanimation["Left Leg"].CFrame * CFrame.new(0, -0.19, 0)
+            character.LeftFoot.CFrame = reanimation["Left Leg"].CFrame * CFrame.new(0, -0.85, 0)
+            
+            --Right Leg
+            character.RightUpperLeg.CFrame = reanimation["Right Leg"].CFrame * CFrame.new(0, 0.55, 0)
+            character.RightLowerLeg.CFrame = reanimation["Right Leg"].CFrame * CFrame.new(0, -0.19, 0)
+            character.RightFoot.CFrame = reanimation["Right Leg"].CFrame * CFrame.new(0, -0.85, 0)
+        end
         
         --Positioning The Hats
         if bot == false then
@@ -433,7 +489,7 @@ local function ServerAdmin()
     local Effects = IT("Folder", Player.Character)
     Effects.Name = "Effects"
     --print("e")
-    local ANIMATOR = Humanoid.Animator
+    --local ANIMATOR = Humanoid.Animator
     --local ANIMATE = Character.Animate
     local UNANCHOR = true
     local SC = false
@@ -1266,7 +1322,7 @@ local function ServerAdmin()
         	end))
         	for i = 1, 12 do
         		local SPOT = CF(RootPart.Position) * ANGLES(RAD(0), RAD(MRANDOM(0,360)), RAD(0)) * CF(0,0,MRANDOM(4,15))
-        		local HITFLOOR,HITPOS = Raycast(RootPart.Position, (CF(RootPart.Position, RootPart.Position + VT(0, -1, 0))).lookVector, 4, Character and character and reanimation)
+        		local HITFLOOR,HITPOS = Raycast(RootPart.Position, (CF(RootPart.Position, RootPart.Position + VT(0, -1, 0))).lookVector, 4, Character and character)
         		if HITFLOOR then
         			coroutine.resume(coroutine.create(function()
         				local BOULDER = CreatePart(3, Effects, HITFLOOR.Material, 0, 0, BRICKC("Cyan"), "Debree", VT(1,1,1)*(MRANDOM(5,25)/10), true)
@@ -1965,28 +2021,31 @@ local function ResetGUI()
     wait(1.5)
     MFReset:TweenPosition(UDim2.new(1.25, 0, 0.01, 0), "In", "Quad", 1, false)
     wait(1.5)
-    character:BreakJoints()
+    if character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
+        character:BreakJoints()
+    end
     character.Humanoid.AutoRotate = false
     reanimation.Humanoid.WalkSpeed = 16
     reanimation.Humanoid.JumpPower = 50
     character.Humanoid.WalkSpeed = 16
     character.Humanoid.JumpPower = 50
+    if character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+        character.Humanoid.BreakJointsOnDeath = false
+        character.Head.Neck:Destroy()
+        character.LowerTorso.Root:Destroy()
+    end
     Resetting:Destroy()
 end
 -------------
 
 --Reanimation Functions--
-local function PermaDeath()
-    --Destroying The GUI
-    NetlessServerAdmin:Destroy()
-    
+local function R6FakeCharacter()----------------------------------------------------------------------
     --Variables
     local player = game:GetService("Players").LocalPlayer
     local character = player.Character
     local hrp = character.HumanoidRootPart
     local torso = character.Torso
-    permaDeath = true
-    
+
     if character:FindFirstChild("ClientInputHandler") then
         character:FindFirstChild("ClientInputHandler"):Destroy()
     end
@@ -1999,9 +2058,6 @@ local function PermaDeath()
     local model = Instance.new("Model", reanimFolder)
     model.Name = "Reanimation"
     --local humanoidClone = Instance.new("Humanoid", model)
-    
-    local userInputService = game:GetService("UserInputService")
-    local movingW, movingA, movingS, movingD, jumping = false
     
     --Making Fake Character
     for i,v in pairs(character:GetChildren()) do
@@ -2021,8 +2077,7 @@ local function PermaDeath()
     local reanimation = reanimFolder.Reanimation
     local cTorso = reanimation.Torso
     local cHRP = reanimation.HumanoidRootPart
-    local cHRPAnchored = true
-    
+
     cTorso["Right Shoulder"].Part0 = cTorso
     cTorso["Right Shoulder"].Part1 = reanimation["Right Arm"]
     
@@ -2060,41 +2115,190 @@ local function PermaDeath()
     end
     
     --Cloning Hats (For Netless)
-    for i,v in pairs(character:GetChildren()) do
-        if v:IsA("Accessory") then
-            local clone = v:Clone()
-            local weld = v.Handle:FindFirstChildWhichIsA("Weld")
-            local weldPart1 = weld.Part1
-            local newWeld = Instance.new("Weld", clone.Handle)
-            local CFrame0 = v.Handle.AccessoryWeld.C0
-            local CFrame1 = v.Handle.AccessoryWeld.C1
-            
-            clone.Parent = reanimation
-            newWeld.Name = "AccessoryWeld"
-            newWeld.C0 = CFrame0
-            newWeld.C1 = CFrame1
-            newWeld.Part0 = clone.Handle
-            newWeld.Part1 = reanimation:FindFirstChild(weldPart1.Name)
-            clone.Handle.Transparency = 1
+    if bot == false then
+        for i,v in pairs(character:GetChildren()) do
+            if v:IsA("Accessory") then
+                local clone = v:Clone()
+                local weld = v.Handle:FindFirstChildWhichIsA("Weld")
+                local weldPart1 = weld.Part1
+                local newWeld = Instance.new("Weld", clone.Handle)
+                local CFrame0 = v.Handle.AccessoryWeld.C0
+                local CFrame1 = v.Handle.AccessoryWeld.C1
+                
+                clone.Parent = reanimation
+                newWeld.Name = "AccessoryWeld"
+                newWeld.C0 = CFrame0
+                newWeld.C1 = CFrame1
+                newWeld.Part0 = clone.Handle
+                newWeld.Part1 = reanimation:FindFirstChild(weldPart1.Name)
+                clone.Handle.Transparency = 1
+            end
+        end
+    end
+end----------------------------------------------------------------------
+
+local function R15FakeCharacter()
+    --Variables
+    local player = game:GetService("Players").LocalPlayer
+    local character = player.Character
+    local hrp = character.HumanoidRootPart
+    --local torso = character.Torso
+    
+    local camera = workspace.CurrentCamera
+    
+    local reanimFolder = Instance.new("Folder", character)
+    reanimFolder.Name = "FakeCharacter"
+    
+    local model = Instance.new("Model", reanimFolder)
+    model.Name = "Reanimation"
+    
+    local userInputService = game:GetService("UserInputService")
+    local movingW, movingA, movingS, movingD, jumping = false
+    
+    --Body Parts--
+    --Head
+    local cHead = Instance.new("Part", model)
+    cHead.Size = Vector3.new(2, 1, 1)
+    cHead.Name = "Head"
+    --cHead.Transparency = 0.5
+    
+    --Torso
+    local cTorso = Instance.new("Part", model)
+    cTorso.Size = Vector3.new(2, 2, 1)
+    cTorso.Name = "Torso"
+    --cTorso.Transparency = 0.5
+    
+    --Left Arm
+    local cLArm = Instance.new("Part", model)
+    cLArm.Size = Vector3.new(1, 2, 1)
+    cLArm.Name = "Left Arm"
+    --cLArm.Transparency = 0.5
+    
+    --Right Arm
+    local cRArm = Instance.new("Part", model)
+    cRArm.Size = Vector3.new(1, 2, 1)
+    cRArm.Name = "Right Arm"
+    --cRArm.Transparency = 0.5
+    
+    --Left Leg
+    local cLLeg = Instance.new("Part", model)
+    cLLeg.Size = Vector3.new(1, 2, 1)
+    cLLeg.Name = "Left Leg"
+    --cLLeg.Transparency = 0.5
+    
+    --Right Leg
+    local cRLeg = Instance.new("Part", model)
+    cRLeg.Size = Vector3.new(1, 2, 1)
+    cRLeg.Name = "Right Leg"
+    --cRLeg.Transparency = 0.5
+    
+    --HumanoidRootPart
+    local cHRP = Instance.new("Part", model)
+    cHRP.Size = Vector3.new(2, 2, 1)
+    cHRP.Name = "HumanoidRootPart"
+    cHRP.Transparency = 1
+    cHRP.CanCollide = false
+    
+    --Transparency
+    for i,v in pairs(model:GetChildren()) do
+        if v:IsA("Part") and v.Name ~= "HumanoidRootPart" then
+            v.Transparency = 1--0.5
         end
     end
     
-    --Permanent Death 
-    if game.CoreGui.ResetGUIValue.Value == false then
-        ResetGUI()
-    else
-        game.Players.LocalPlayer.Character = model
-        wait(2.5)
-        game.Players.LocalPlayer.Character = character
-        wait(3)
-        character:BreakJoints()
-        character.Humanoid.AutoRotate = false
-        reanimation.Humanoid.WalkSpeed = 16
-        reanimation.Humanoid.JumpPower = 50
-        --hrp.Transparency = 0.5
-        character.Humanoid.WalkSpeed = 16
-        character.Humanoid.JumpPower = 50
+    --Joints--
+    --Right Shoulder
+    local rShoulder = Instance.new("Motor6D", cTorso)
+    rShoulder.Part0 = cTorso
+    rShoulder.Part1 = cRArm
+    rShoulder.Name = "Right Shoulder"
+    rShoulder.C0 = CFrame.new(1, 0.5, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+    rShoulder.C1 = CFrame.new(-0.5, 0.5, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+    
+    --Left Shoulder
+    local lShoulder = Instance.new("Motor6D", cTorso)
+    lShoulder.Part0 = cTorso
+    lShoulder.Part1 = cLArm
+    lShoulder.Name = "Left Shoulder"
+    lShoulder.C0 = CFrame.new(-1, 0.5, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+    lShoulder.C1 = CFrame.new(0.5, 0.5, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+    
+    --Right Hip
+    local rHip = Instance.new("Motor6D", cTorso)
+    rHip.Part0 = cTorso
+    rHip.Part1 = cRLeg
+    rHip.Name = "Right Hip"
+    rHip.C0 = CFrame.new(1, -1, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+    rHip.C1 = CFrame.new(0.5, 1, 0, 0, 0, 1, 0, 1, -0, -1, 0, 0)
+    
+    --Left Hip
+    local lHip = Instance.new("Motor6D", cTorso)
+    lHip.Part0 = cTorso
+    lHip.Part1 = cLLeg
+    lHip.Name = "Left Hip"
+    lHip.C0 = CFrame.new(-1, -1, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+    lHip.C1 = CFrame.new(-0.5, 1, 0, 0, 0, -1, 0, 1, 0, 1, 0, 0)
+    
+    --Neck
+    local neck = Instance.new("Motor6D", cTorso)
+    neck.Part0 = cTorso
+    neck.Part1 = cHead
+    neck.Name = "Neck"
+    neck.C0 = CFrame.new(0, 1, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
+    neck.C1 = CFrame.new(0, -0.5, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
+    
+    --RootJoint
+    local rootJoint = Instance.new("Motor6D", cHRP)
+    rootJoint.Part0 = cHRP
+    rootJoint.Part1 = cTorso
+    rootJoint.Name = "RootJoint"
+    rootJoint.C0 = CFrame.new(0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
+    rootJoint.C1 = CFrame.new(0, 0, 0, -1, 0, 0, 0, 0, 1, 0, 1, -0)
+    
+    --Humanoid--
+    local cHumanoid = Instance.new("Humanoid", model)
+    cHumanoid.DisplayDistanceType = "None"
+    
+    --Head Mesh--
+    local headMesh = Instance.new("SpecialMesh", cHead)
+    headMesh.Scale = Vector3.new(1.25, 1.25, 1.25)
+    
+    local reanimation = model
+    
+    --Cloning Hats (For Netless)
+    if permaDeath == true then
+        for i,v in pairs(character:GetChildren()) do
+            if v:IsA("Accessory") then
+                local clone = v:Clone()
+                local weld = v.Handle:FindFirstChildWhichIsA("Weld")
+                local weldPart1 = weld.Part1
+                local newWeld = Instance.new("Weld", clone.Handle)
+                local CFrame0 = v.Handle.AccessoryWeld.C0
+                local CFrame1 = v.Handle.AccessoryWeld.C1
+                
+                clone.Handle:FindFirstChild("AccessoryWeld"):Destroy()
+                clone.Parent = reanimation
+                newWeld.Name = "AccessoryWeld"
+                newWeld.C0 = CFrame0
+                newWeld.C1 = CFrame1
+                newWeld.Part0 = clone.Handle
+                newWeld.Part1 = character:FindFirstChild(weldPart1.Name)
+                clone.Handle.Transparency = 1
+            end
+        end
     end
+    
+    cHRP.CFrame = hrp.CFrame
+end
+
+local function ReanimationMovement()----------------------------------------------------------------------
+    --Variables
+    local player = game:GetService("Players").LocalPlayer
+    local character = player.Character
+    local reanimation = character:WaitForChild("FakeCharacter").Reanimation
+    
+    local userInputService = game:GetService("UserInputService")
+    local movingW, movingA, movingS, movingD, jumping = false
     
     userInputService.InputBegan:Connect(function(key, chatting)
         if reanimated == true then
@@ -2126,7 +2330,7 @@ local function PermaDeath()
             end
             
             if key.KeyCode == Enum.KeyCode.R and not chatting and pressingShift == true then
-                player.Character = model
+                player.Character = reanimation
                 reanimation:BreakJoints()
                 reanimated = false
                 if player.PlayerGui:FindFirstChild("Weapon GUI") then
@@ -2167,20 +2371,14 @@ local function PermaDeath()
         end
     end)
     
+    
     game:GetService('RunService').Stepped:Connect(function()
         if reanimated == true then
-            --Character Collision
-            for i,v in pairs(character:GetChildren()) do
-                if v:IsA("Part") then --  --  and v.Name ~= "HumanoidRootPart"
-                    v.CanCollide = false
-                end
-            end
-            
             --Movement
             if movingW == true or movingA == true or movingS == true or movingD == true then
                 reanimation:FindFirstChildWhichIsA("Humanoid").WalkToPoint = character:FindFirstChildWhichIsA("Humanoid").MoveDirection * 10000
             else
-                reanimation:FindFirstChildWhichIsA("Humanoid").WalkToPoint = torso.Position
+                reanimation:FindFirstChildWhichIsA("Humanoid").WalkToPoint = reanimation.Torso.Position
             end
             
             --Jumping
@@ -2195,6 +2393,23 @@ local function PermaDeath()
             end
         end
     end)
+end----------------------------------------------------------------------
+
+local function Loops()----------------------------------------------------------------------
+    --Variables
+    local player = game:GetService("Players").LocalPlayer
+    local character = player.Character
+    
+    game:GetService('RunService').Stepped:Connect(function()
+        if reanimated == true then
+            --Character Collision
+            for i,v in pairs(character:GetChildren()) do
+                if v:IsA("Part") or v:IsA("MeshPart") then --  --  and v.Name ~= "HumanoidRootPart"
+                    v.CanCollide = false
+                end
+            end
+        end
+    end)
     
     game:GetService("RunService").Heartbeat:Connect(function()
         if reanimated == true then
@@ -2202,7 +2417,7 @@ local function PermaDeath()
             --Flinging
             for i,v in pairs(character:GetChildren()) do
                 --Body Parts
-                if v:IsA("Part") and v.Name ~= "HumanoidRootPart" then
+                if (v:IsA("Part") or v:IsA("MeshPart")) and bot == false then
                     v.Velocity = Vector3.new(-17.7, 0, -17.7)
                 end
                 
@@ -2217,366 +2432,249 @@ local function PermaDeath()
             end
         end
     end)
+end----------------------------------------------------------------------
+
+local function PermaDeath()----------------------------------------------------------------------
+    --Destroying The GUI
+    NetlessServerAdmin:Destroy()
+    
+    --Variables
+    local player = game:GetService("Players").LocalPlayer
+    local character = player.Character
+    local hrp = character.HumanoidRootPart
+    local camera = workspace.CurrentCamera
+    
+    permaDeath = true
+    
+    if character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
+        R6FakeCharacter()
+    else
+        R15FakeCharacter()
+    end
+    
+    local reanimation = character:WaitForChild("FakeCharacter").Reanimation
+    
+    --Permanent Death 
+    if game.CoreGui.ResetGUIValue.Value == false then
+        ResetGUI()
+    else
+        game.Players.LocalPlayer.Character = reanimation
+        wait(2.5)
+        game.Players.LocalPlayer.Character = character
+        wait(3)
+        if character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            character:BreakJoints()
+        end
+        character.Humanoid.AutoRotate = false
+        reanimation.Humanoid.WalkSpeed = 16
+        reanimation.Humanoid.JumpPower = 50
+        --hrp.Transparency = 0.5
+        character.Humanoid.WalkSpeed = 16
+        character.Humanoid.JumpPower = 50
+        if character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+            character.Humanoid.BreakJointsOnDeath = false
+            character.Head.Neck:Destroy()
+            character.LowerTorso.Root:Destroy()
+        end
+    end
+    
+    ReanimationMovement()
+    
+    Loops()
     
     camera.CameraSubject = reanimation:FindFirstChildWhichIsA("Humanoid")
     --character.Torso.Anchored = false
     
     ServerAdmin()
-end
+end----------------------------------------------------------------------
 
-local function Bot()
+local function Bot()----------------------------------------------------------------------
     --Variables
     local player = game:GetService("Players").LocalPlayer
     local character = player.Character
     local hrp = character.HumanoidRootPart
-    local torso = character.Torso
+    local camera = workspace.CurrentCamera
     
     local glassesList = "VarietyShades02", "e"
     
     if character:FindFirstChild("Robloxclassicred") and (character:FindFirstChild("MediHood") or character:FindFirstChild("MeshPartAccessory")) and character:FindFirstChild("Hat1") and character:FindFirstChild("Pal Hair") and character:FindFirstChild("Kate Hair") and character:FindFirstChild("Pink Hair") and character:FindFirstChild("LavanderHair") then
-        --Destroying The GUI
-        NetlessServerAdmin:Destroy()
-        
-        bot = true
-        
-        if character:FindFirstChild("ClientInputHandler") then
-            character:FindFirstChild("ClientInputHandler"):Destroy()
-        end
-        
-        local camera = workspace.CurrentCamera
-        
-        local reanimFolder = Instance.new("Folder", character)
-        reanimFolder.Name = "FakeCharacter"
-        
-        local model = Instance.new("Model", reanimFolder)
-        model.Name = "Reanimation"
-        
-        local userInputService = game:GetService("UserInputService")
-        local movingW, movingA, movingS, movingD, jumping = false
-    
-        --Making Fake Character
-        for i,v in pairs(character:GetChildren()) do
-            if v:IsA("Part") or v:IsA("BodyColors") or v.Name == "Humanoid" then --v.Name ~= --and not v:
-                local clone = v:Clone()
-                clone.Parent = model
-                if clone:FindFirstChildWhichIsA("Decal") then
-                    clone:FindFirstChildWhichIsA("Decal"):Destroy()
-                end
-                if clone:FindFirstChildWhichIsA("Sound") then
-                   clone:FindFirstChildWhichIsA("Sound"):Destroy() 
-                end
-            end
-        end
-        
-        --Fixing Joints For The Fake Character
-        local reanimation = reanimFolder.Reanimation
-        local cTorso = reanimation.Torso
-        local cHRP = reanimation.HumanoidRootPart
-        local cHRPAnchored = true
-        
-        cTorso["Right Shoulder"].Part0 = cTorso
-        cTorso["Right Shoulder"].Part1 = reanimation["Right Arm"]
-        
-        cTorso["Left Shoulder"].Part0 = cTorso
-        cTorso["Left Shoulder"].Part1 = reanimation["Left Arm"]
-        
-        cTorso["Right Hip"].Part0 = cTorso
-        cTorso["Right Hip"].Part1 = reanimation["Right Leg"]
-        
-        cTorso["Left Hip"].Part0 = cTorso
-        cTorso["Left Hip"].Part1 = reanimation["Left Leg"]
-        
-        cTorso.Neck.Part0 = cTorso
-        cTorso.Neck.Part1 = reanimation.Head
-        
-        reanimation.Humanoid.DisplayDistanceType = "None"
-    
-        cHRP.RootJoint.Part0 = cHRP
-        cHRP.RootJoint.Part1 = cTorso
-        
-        reanimation.PrimaryPart = character.Head
-        
-        reanimation.Humanoid.WalkSpeed = 0
-        reanimation.Humanoid.JumpPower = 0
-        character.Humanoid.WalkSpeed = 0
-        character.Humanoid.JumpPower = 0
-        
-        --Attachments and Alignments (Hat Character) [Function]
-        local function HatAlignment(ACCESSORY)
-            if ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh") and ACCESSORY.Name ~= "Head" and ACCESSORY.Name ~= glassesList then
-                    ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh"):Destroy()
-                end
-                if ACCESSORY.Handle:FindFirstChildWhichIsA("Weld") then
-                    ACCESSORY.Handle:FindFirstChildWhichIsA("Weld"):Destroy()
-                end
-                if ACCESSORY.Handle:FindFirstChildWhichIsA("Attachment") then
-                    ACCESSORY.Handle:FindFirstChildWhichIsA("Attachment"):Destroy()
-                end
+        if character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            --Destroying The GUI
+            NetlessServerAdmin:Destroy()
             
-            local alignPosition = Instance.new("AlignPosition")
-                
-            local posAtt1 = Instance.new("Attachment", ACCESSORY.Handle)
-            posAtt1.Name = "posAtt1"
+            bot = true        
             
-            alignPosition.Attachment0 = posAtt1
+            R6FakeCharacter()
             
-            if reanimation:FindFirstChild(ACCESSORY.Name) then
-                alignPosition.Attachment1 = reanimation:FindFirstChild(ACCESSORY.Name).posAtt2
-                if ACCESSORY.Name == "Head" then
-                    if ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh").TextureId == "rbxassetid://617406825" then
-                        posAtt1.Position = Vector3.new(0, 0, -0.23)
+            local reanimation = character.FakeCharacter.Reanimation
+            
+            --Attachments and Alignments (Hat Character) [Function]
+            local function HatAlignment(ACCESSORY)
+                if ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh") and ACCESSORY.Name ~= "Head" and ACCESSORY.Name ~= glassesList then
+                        ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh"):Destroy()
                     end
-                end
-            else
-                if ACCESSORY.Name == "Torso1" then
-                    alignPosition.Attachment1 = reanimation:FindFirstChild("Torso").posAtt2
-                    posAtt1.Position = Vector3.new(0.5, 0, 0)
-                end
-                
-                if ACCESSORY.Name == "Torso2" then
-                    alignPosition.Attachment1 = reanimation:FindFirstChild("Torso").posAtt2
-                    posAtt1.Position = Vector3.new(-0.5, 0, 0)
-                end
-            end
-            
-            alignPosition.RigidityEnabled = false
-            alignPosition.ReactionForceEnabled = false
-            alignPosition.MaxForce = 99999999999999999999999999
-            alignPosition.Responsiveness = 200
-            alignPosition.Parent = ACCESSORY.Handle
-            
-            local alignOrientation = Instance.new("AlignOrientation")
-            
-            local rotAtt1 = Instance.new("Attachment", ACCESSORY.Handle)
-            rotAtt1.Name = "rotAtt1"
-            
-            alignOrientation.Attachment0 = rotAtt1
-            
-            if reanimation:FindFirstChild(ACCESSORY.Name) then
-                alignOrientation.Attachment1 = reanimation:FindFirstChild(ACCESSORY.Name).rotAtt2
-            else
-                if ACCESSORY.Name == "Torso1" then
-                    alignOrientation.Attachment1 = reanimation:FindFirstChild("Torso").rotAtt2
-                end
-                
-                if ACCESSORY.Name == "Torso2" then
-                    alignOrientation.Attachment1 = reanimation:FindFirstChild("Torso").rotAtt2
-                end
-            end
-            
-            if ACCESSORY.Name ~= "Head" and ACCESSORY.Name ~= glassesList then
-                rotAtt1.Orientation = Vector3.new(90, 0, 0)
-            end
-            
-            alignOrientation.RigidityEnabled = false
-            alignOrientation.ReactionTorqueEnabled = false
-            alignOrientation.MaxTorque = 99999999999999999999999999
-            alignOrientation.MaxAngularVelocity = 99999999999999999999999999
-            alignOrientation.Responsiveness = 200
-            alignOrientation.Parent = ACCESSORY.Handle
-        end
-        
-        --Attachments (Fake Character)
-        for i,v in pairs(reanimation:GetChildren()) do
-            if v:IsA("Part") and v.Name ~= "HumanoidRootPart" then
-                local posAtt2 = Instance.new("Attachment", v)
-                posAtt2.Name = "posAtt2"
-                
-                local rotAtt2 = Instance.new("Attachment", v)
-                rotAtt2.Name = "rotAtt2"
-                
-                v.Transparency = 1
-            end
-        end
-        
-        --Permanent Death 
-        if game.CoreGui.ResetGUIValue.Value == false then
-            ResetGUI()
-        else
-            game.Players.LocalPlayer.Character = model
-            wait(2.5)
-            game.Players.LocalPlayer.Character = character
-            wait(3)
-            character:BreakJoints()
-            character.Humanoid.AutoRotate = false
-            reanimation.Humanoid.WalkSpeed = 16
-            reanimation.Humanoid.JumpPower = 50
-            character.Humanoid.WalkSpeed = 16
-            character.Humanoid.JumpPower = 50
-        end
-        
-        --Attachments and Alignments (Hat Character)
-        for i,v in pairs(character:GetChildren()) do
-            if v:IsA("Accessory") then
-                if v.Name == "Robloxclassicred" then
-                    v.Name = "Left Arm"
-                end
-                
-                if v.Name == "MediHood" then
-                    v.Name = "Head"
-                end
-
-                if v.Name == "MeshPartAccessory" and v.Handle.Size == Vector3.new(1.2, 1.2, 1.2) then
-                    v.Name = "Head"
-                end
-                
-                if v.Name == "Hat1" then
-                    v.Name = "Right Arm"
-                end
-                
-                if v.Name == "Pal Hair" then
-                    v.Name = "Left Leg"
-                end
-                
-                if v.Name == "Kate Hair" then
-                    v.Name = "Right Leg"
-                end
-                
-                if v.Name == "Pink Hair" then
-                    v.Name = "Torso1"
-                end
-                
-                if v.Name == "LavanderHair" then
-                    v.Name = "Torso2"
-                end
-                
-                HatAlignment(v)
-            end
-        end
-        
-        for i,v in pairs(character:GetChildren()) do
-            if v:IsA("Part") and v.Name ~= "HumanoidRootPart" then
-                v:Destroy()
-            end
-        end
-        
-        userInputService.InputBegan:Connect(function(key, chatting)
-            if reanimated == true then
-                --Activate Jumping
-                if key.KeyCode == Enum.KeyCode.Space and not chatting then
-                    jumping = true
-                end
-                
-                --Activate Movement
-                if key.KeyCode == Enum.KeyCode.W and not chatting then
-                    movingW = true
-                end
-                
-                if key.KeyCode == Enum.KeyCode.A and not chatting then
-                    movingA = true
-                end
-                
-                if key.KeyCode == Enum.KeyCode.S and not chatting then
-                    movingS = true
-                end
-                 
-                if key.KeyCode == Enum.KeyCode.D and not chatting then
-                    movingD = true
-                end
-                
-                --Resetting
-                if key.KeyCode == Enum.KeyCode.LeftShift and not chatting then
-                    pressingShift = true
-                end
-                
-                if key.KeyCode == Enum.KeyCode.R and not chatting and pressingShift == true then
-                    player.Character = model
-                    reanimation:BreakJoints()
-                    reanimated = false
-                    if player.PlayerGui:FindFirstChild("Weapon GUI") then
-                        player.PlayerGui:FindFirstChild("Weapon GUI"):Destroy()
+                    if ACCESSORY.Handle:FindFirstChildWhichIsA("Weld") then
+                        ACCESSORY.Handle:FindFirstChildWhichIsA("Weld"):Destroy()
                     end
-                end
-            end
-        end)
-        
-        userInputService.InputEnded:Connect(function(key, chatting)
-            if reanimated == true then
-                --Deactivate Jumping
-                if key.KeyCode == Enum.KeyCode.Space and not chatting then
-                    jumping = false
-                end
-                
-                --Deactivate Movement
-                if key.KeyCode == Enum.KeyCode.W and not chatting then
-                    movingW = false
-                end
-                
-                if key.KeyCode == Enum.KeyCode.A and not chatting then
-                    movingA = false
-                end
-                
-                if key.KeyCode == Enum.KeyCode.S and not chatting then
-                    movingS = false
-                end
-                 
-                if key.KeyCode == Enum.KeyCode.D and not chatting then
-                    movingD = false
-                end
-                
-                --Resetting
-                if key.KeyCode == Enum.KeyCode.LeftShift and not chatting then
-                    pressingShift = false
-                end
-            end
-        end)
-        
-        game:GetService('RunService').Stepped:Connect(function()
-            if reanimated == true then
-                --Character Collision
-                for i,v in pairs(character:GetChildren()) do
-                    if v:IsA("Part") then --  --  and v.Name ~= "HumanoidRootPart"
-                        v.CanCollide = false
+                    if ACCESSORY.Handle:FindFirstChildWhichIsA("Attachment") then
+                        ACCESSORY.Handle:FindFirstChildWhichIsA("Attachment"):Destroy()
                     end
-                end
                 
-                --Movement
-                if movingW == true or movingA == true or movingS == true or movingD == true then
-                    reanimation:FindFirstChildWhichIsA("Humanoid").WalkToPoint = character:FindFirstChildWhichIsA("Humanoid").MoveDirection * 10000
+                local alignPosition = Instance.new("AlignPosition")
+                    
+                local posAtt1 = Instance.new("Attachment", ACCESSORY.Handle)
+                posAtt1.Name = "posAtt1"
+                
+                alignPosition.Attachment0 = posAtt1
+                
+                if reanimation:FindFirstChild(ACCESSORY.Name) then
+                    alignPosition.Attachment1 = reanimation:FindFirstChild(ACCESSORY.Name).posAtt2
+                    if ACCESSORY.Name == "Head" then
+                        if ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh").TextureId == "rbxassetid://617406825" then
+                            posAtt1.Position = Vector3.new(0, 0, -0.23)
+                        end
+                    end
                 else
-                    reanimation:FindFirstChildWhichIsA("Humanoid").WalkToPoint = reanimation.Torso.Position
-                end
-                
-                --Jumping
-                if jumping == true then
-                    reanimation:FindFirstChildWhichIsA("Humanoid").Jump = true
-                end
-                
-                --Resetting
-                if not character:FindFirstChild("Humanoid") then
-                    for i,v in pairs(character:GetChildren()) do
-                        player.Character = nil
-                        reanimated = false
-                    end
-                end
-            end
-        end)
-        
-        game:GetService('RunService').Heartbeat:Connect(function()
-            if reanimated == true then
-                --Netless Velocity
-                --Flinging
-                for i,v in pairs(character:GetChildren()) do
-                    if v:IsA("Part") and v.Name == "HumanoidRootPart" then
-                        v.Velocity = Vector3.new(-17.7, 0, -17.7)
+                    if ACCESSORY.Name == "Torso1" then
+                        alignPosition.Attachment1 = reanimation:FindFirstChild("Torso").posAtt2
+                        posAtt1.Position = Vector3.new(0.5, 0, 0)
                     end
                     
-                    --Hats
-                    if v:IsA("Accessory") then
-                        v.Handle.Velocity = Vector3.new(-17.7, 0, -17.7)
+                    if ACCESSORY.Name == "Torso2" then
+                        alignPosition.Attachment1 = reanimation:FindFirstChild("Torso").posAtt2
+                        posAtt1.Position = Vector3.new(-0.5, 0, 0)
                     end
                 end
+                
+                alignPosition.RigidityEnabled = false
+                alignPosition.ReactionForceEnabled = false
+                alignPosition.MaxForce = 99999999999999999999999999
+                alignPosition.Responsiveness = 200
+                alignPosition.Parent = ACCESSORY.Handle
+                
+                local alignOrientation = Instance.new("AlignOrientation")
+                
+                local rotAtt1 = Instance.new("Attachment", ACCESSORY.Handle)
+                rotAtt1.Name = "rotAtt1"
+                
+                alignOrientation.Attachment0 = rotAtt1
+                
+                if reanimation:FindFirstChild(ACCESSORY.Name) then
+                    alignOrientation.Attachment1 = reanimation:FindFirstChild(ACCESSORY.Name).rotAtt2
+                else
+                    if ACCESSORY.Name == "Torso1" then
+                        alignOrientation.Attachment1 = reanimation:FindFirstChild("Torso").rotAtt2
+                    end
+                    
+                    if ACCESSORY.Name == "Torso2" then
+                        alignOrientation.Attachment1 = reanimation:FindFirstChild("Torso").rotAtt2
+                    end
+                end
+                
+                if ACCESSORY.Name ~= "Head" and ACCESSORY.Name ~= glassesList then
+                    rotAtt1.Orientation = Vector3.new(90, 0, 0)
+                end
+                
+                alignOrientation.RigidityEnabled = false
+                alignOrientation.ReactionTorqueEnabled = false
+                alignOrientation.MaxTorque = 99999999999999999999999999
+                alignOrientation.MaxAngularVelocity = 99999999999999999999999999
+                alignOrientation.Responsiveness = 200
+                alignOrientation.Parent = ACCESSORY.Handle
             end
-        end)
-        
-        --Changing Character
-        character.Humanoid.AutoRotate = false
-        
-        camera.CameraSubject = reanimation:FindFirstChildWhichIsA("Humanoid")
-        
-        ServerAdmin()
+            
+            --Attachments (Fake Character)
+            for i,v in pairs(reanimation:GetChildren()) do
+                if v:IsA("Part") and v.Name ~= "HumanoidRootPart" then
+                    local posAtt2 = Instance.new("Attachment", v)
+                    posAtt2.Name = "posAtt2"
+                    
+                    local rotAtt2 = Instance.new("Attachment", v)
+                    rotAtt2.Name = "rotAtt2"
+                end
+            end
+            
+            --Permanent Death 
+            if game.CoreGui.ResetGUIValue.Value == false then
+                ResetGUI()
+            else
+                game.Players.LocalPlayer.Character = reanimation
+                wait(2.5)
+                game.Players.LocalPlayer.Character = character
+                wait(3)
+                if character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
+                    character:BreakJoints()
+                end
+                character.Humanoid.AutoRotate = false
+                reanimation.Humanoid.WalkSpeed = 16
+                reanimation.Humanoid.JumpPower = 50
+                character.Humanoid.WalkSpeed = 16
+                character.Humanoid.JumpPower = 50
+                if character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+                    character.Humanoid.BreakJointsOnDeath = false
+                    character.Head.Neck:Destroy()
+                    character.LowerTorso.Root:Destroy()
+                end
+            end
+            
+            --Attachments and Alignments (Hat Character)
+            for i,v in pairs(character:GetChildren()) do
+                if v:IsA("Accessory") then
+                    if v.Name == "Robloxclassicred" then
+                        v.Name = "Left Arm"
+                    end
+                    
+                    if v.Name == "MediHood" then
+                        v.Name = "Head"
+                    end
+    
+                    if v.Name == "MeshPartAccessory" and v.Handle.Size == Vector3.new(1.2, 1.2, 1.2) then
+                        v.Name = "Head"
+                    end
+                    
+                    if v.Name == "Hat1" then
+                        v.Name = "Right Arm"
+                    end
+                    
+                    if v.Name == "Pal Hair" then
+                        v.Name = "Left Leg"
+                    end
+                    
+                    if v.Name == "Kate Hair" then
+                        v.Name = "Right Leg"
+                    end
+                    
+                    if v.Name == "Pink Hair" then
+                        v.Name = "Torso1"
+                    end
+                    
+                    if v.Name == "LavanderHair" then
+                        v.Name = "Torso2"
+                    end
+                    
+                    HatAlignment(v)
+                end
+            end
+            
+            for i,v in pairs(character:GetChildren()) do
+                if v:IsA("Part") and v.Name ~= "HumanoidRootPart" then
+                    v:Destroy()
+                end
+            end
+            
+            ReanimationMovement()
+            
+            Loops()
+            
+            --Changing Character
+            character.Humanoid.AutoRotate = false
+            
+            camera.CameraSubject = reanimation:FindFirstChildWhichIsA("Humanoid")
+            
+            ServerAdmin()
+        end
     end
-end
+end----------------------------------------------------------------------
 -------------------------
 
 --Tweening and Canvase Position--
