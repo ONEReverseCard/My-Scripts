@@ -2046,8 +2046,10 @@ local function R6FakeCharacter()------------------------------------------------
     local hrp = character.HumanoidRootPart
     local torso = character.Torso
 
-    if character:FindFirstChild("ClientInputHandler") then
-        character:FindFirstChild("ClientInputHandler"):Destroy()
+    for i,v in pairs(character:GetChildren()) do
+        if v:IsA("LocalScript") then
+            v:Destroy()
+        end
     end
     
     local camera = workspace.CurrentCamera
@@ -2143,6 +2145,12 @@ local function R15FakeCharacter()
     local character = player.Character
     local hrp = character.HumanoidRootPart
     --local torso = character.Torso
+
+    for i,v in pairs(character:GetChildren()) do
+        if v:IsA("LocalScript") then
+            v:Destroy()
+        end
+    end
     
     local camera = workspace.CurrentCamera
     
