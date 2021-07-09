@@ -2444,7 +2444,7 @@ local function Loops()----------------------------------------------------------
                 end
                 
                 if v:IsA("Part") and v.Name == "HumanoidRootPart" then
-                    v.Velocity = Vector3.new(29, 0, 20)
+                    v.Velocity = Vector3.new(20, 0, 20)
                 end
                 
                 --Hats
