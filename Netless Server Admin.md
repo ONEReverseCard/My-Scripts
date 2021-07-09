@@ -224,6 +224,7 @@ local permaDeath = false
 local bot = false
 local pressingShift = false
 local reanimated = false
+local botHats = {}
 
 --Resetting GUI Value
 if not game.CoreGui:FindFirstChild("ResetGUIValue") then
@@ -267,45 +268,17 @@ local function ServerAdmin()
     local glassesReady = false
     local glassesList = "VarietyShades02", "e"
     
-    local position = nil
-    local orientation = nil
-    local alignPos = nil
-    local alignRot = nil
-    
     --Glasses
     for i,v in pairs(character:GetChildren()) do
         if v.Name == glassesList then
-            if permaDeath == true then
-                glasses = reanimation:FindFirstChild(v.Name)
-            else
-                glasses = v
-            end
+            glasses = reanimation:FindFirstChild(v.Name)
         end
     end
     
     if character:FindFirstChild("VarietyShades02") then
-        if permaDeath == true then
-            CFrame0 = CFrame.new(0, 0, 0)
-            CFrame1 = CFrame.new(0, 0, 0)
-            GWeld = glasses.Handle:FindFirstChildWhichIsA("Weld")
-        elseif bot == true then
-            position = Vector3.new(0, 0, 0)
-            orientation = Vector3.new(0, 0, 0)
-            alignPos = glasses.Handle:FindFirstChild("AlignPosition")
-            alignRot = glasses.Handle:FindFirstChild("AlignOrientation")
-        end
-    end
-    
-    if bot == true and glasses ~= nil then
-        local posAtt2 = Instance.new("Attachment", cHRP)
-        posAtt2.Name = "posAtt2"
-        
-        local rotAtt2 = Instance.new("Attachment", cHRP)
-        rotAtt2.Name = "rotAtt2"
-        
-        alignPos.Attachment1 = posAtt2
-        alignRot.Attachment1 = rotAtt2
-        posAtt2.Position = Vector3.new(0, -7, 0)
+        CFrame0 = CFrame.new(0, 0, 0)
+        CFrame1 = CFrame.new(0, 0, 0)
+        GWeld = glasses.Handle:FindFirstChildWhichIsA("Weld")
     end
     
     --Flinging (Hats)
@@ -328,7 +301,7 @@ local function ServerAdmin()
         
         --Flinging
         if flinging == true then
-            if character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
+            if character.Humanoid.RigType == Enum.HumanoidRigType.R15 and bodyAngularVelocity.AngularVelocity == Vector3.new(0, 0, 0) then
                 bodyAngularVelocity.AngularVelocity = Vector3.new(10000, 10000, 10000)
             end
             
@@ -344,10 +317,11 @@ local function ServerAdmin()
                 hrp.Position = Vector3.new(reanimation.Torso.Position.X, -50, reanimation.Torso.Position.Z)
             else
                 hrp.Position = reanimation.Torso.Position
-                bodyAngularVelocity.AngularVelocity = Vector3.new(0, 0, 0)
+                if bodyAngularVelocity.AngularVelocity == Vector3.new(10000, 10000, 10000) then
+                    bodyAngularVelocity.AngularVelocity = Vector3.new(0, 0, 0)
+                end
             end
         end
-        game:GetService("RunService").Heartbeat:wait()
         
         --R15
         if character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
@@ -383,30 +357,56 @@ local function ServerAdmin()
         end
         
         --Positioning The Hats
-        if bot == false then
-            if glasses == nil then
-                for i,v in pairs(character:GetChildren()) do
-                    if v:IsA("Accessory") then
-                        v.Handle.CFrame = reanimation:FindFirstChild(v.Name).Handle.CFrame
-                    end
-                end
-            else
-                for i,v in pairs(character:GetChildren()) do
-                    if v:IsA("Accessory") and not v.Name ~= glasses.Name then
-                        v.Handle.CFrame = reanimation:FindFirstChild(v.Name).Handle.CFrame
+        for i,v in pairs(character:GetChildren()) do
+            if v:IsA("Accessory") and not v.Name ~= glasses.Name then
+                if bot == false then
+                    v.Handle.CFrame = reanimation:FindFirstChild(v.Name).Handle.CFrame
+                else
+                    --Arms and Legs
+                    if v.Name ~= "Head" and reanimation:FindFirstChild(v.Name) and v.Name ~= glasses.Name then
+                        v.Handle.CFrame = reanimation:FindFirstChild(v.Name).CFrame * CFrame.Angles(1.5708, 0, 0)
                     end
                     
-                    --Positioning The Glasses
-                    if v.Name == glasses.Name and v:IsA("Accessory") then
-                        if glassesReady == false then
-                            v.Handle.CFrame = CFrame.new(0, -100, 0)
-                        else
-                            v.Handle.CFrame = glasses.Handle.CFrame
+                    --Head
+                    if v.Name == "Head" then
+                        --Medi Hood
+                        if v.Handle:FindFirstChildWhichIsA("SpecialMesh").MeshId == "rbxassetid://617474228" then
+                            v.Handle.CFrame = reanimation:FindFirstChild(v.Name).CFrame * CFrame.new(0, -0.025, 0.23)
                         end
+                        
+                        --Shadowed Head
+                        if v.Handle:FindFirstChildWhichIsA("SpecialMesh").MeshId == "rbxassetid://4904532191" then
+                            v.Handle.CFrame = reanimation:FindFirstChild(v.Name).CFrame
+                        end
+                    end
+                    
+                    --Left Half Of The Torso
+                    if v.Name == "Torso1" then
+                        v.Handle.CFrame = reanimation.Torso.CFrame * CFrame.new(-0.5, 0, 0) * CFrame.Angles(1.5708, 0, 0)
+                    end
+                    
+                    --Right Half Of The Torso
+                    if v.Name == "Torso2" then
+                        v.Handle.CFrame = reanimation.Torso.CFrame * CFrame.new(0.5, 0, 0) * CFrame.Angles(1.5708, 0, 0)
                     end
                 end
             end
         end
+        
+        --Positioning The Glasses
+        if glasses ~= nil then
+            for i,v in pairs(character:GetChildren()) do
+                if v.Name == glasses.Name and v:IsA("Accessory") then
+                    if glassesReady == false then
+                        v.Handle.CFrame = CFrame.new(0, -50, 0)
+                    else
+                        v.Handle.CFrame = glasses.Handle.CFrame
+                    end
+                end
+            end
+        end
+        
+        game:GetService("RunService").Heartbeat:wait()
     end
     
     --//====================================================\\--
@@ -1098,28 +1098,12 @@ local function ServerAdmin()
     			end
     			local GLASSES = CreatePart(3, Effects, "Fabric", 0, 1, BRICKC("Pearl"), "Glasses", VT(0,0,0), false)
     			
-    			if glasses ~= nil and permaDeath == true then
+    			if glasses ~= nil then
         			GWeld.Part1 = GLASSES
         			GWeld.C0 = CFrame0
         			GWeld.C1 = CFrame1
         			glassesReady = true
     			end
-    		    
-    		    if glasses ~= nil and bot == true then
-    		        cHRP:FindFirstChild("posAtt2"):Destroy()
-    		        cHRP:FindFirstChild("rotAtt2"):Destroy()
-    		        
-                    local posAtt2 = Instance.new("Attachment", GLASSES)
-                    posAtt2.Name = "posAtt2"
-                    
-                    local rotAtt2 = Instance.new("Attachment", GLASSES)
-                    rotAtt2.Name = "rotAtt2"
-                    
-    		        alignPos.Attachment1 = posAtt2
-    		        alignRot.Attachment1 = rotAtt2
-    		        glasses.Handle:FindFirstChild("posAtt1").Position = position
-    		        glasses.Handle:FindFirstChild("rotAtt1").Orientation = orientation
-    		    end
     			
     			CreateMesh("SpecialMesh", GLASSES, "FileMesh", "1577360", "1577349", VT(1, 1.3, 1), VT(0,0,0))
     			local HELDWELD = CreateWeldOrSnapOrMotor("Weld", RightArm, RightArm, GLASSES, CF(0,-1.4,0) * ANGLES(RAD(90), RAD(0), RAD(180)), CF(0,0,0))
@@ -2031,8 +2015,15 @@ local function ResetGUI()
     character.Humanoid.JumpPower = 50
     if character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
         character.Humanoid.BreakJointsOnDeath = false
-        character.Head.Neck:Destroy()
-        character.LowerTorso.Root:Destroy()
+        for i,v in pairs(character:GetDescendants()) do
+            if v:IsA("Motor6D") and v.Parent.Parent.Name ~= "Reanimation" then
+                v:Destroy()
+            end
+            
+            if v.Name == "Handle" and v.Parent.Parent.Name ~= "Reanimation" then
+                v:FindFirstChildWhichIsA("Weld"):Destroy()
+            end
+        end
     end
     Resetting:Destroy()
 end
@@ -2045,6 +2036,7 @@ local function R6FakeCharacter()------------------------------------------------
     local character = player.Character
     local hrp = character.HumanoidRootPart
     local torso = character.Torso
+    local glassesList = "VarietyShades02", "e"
 
     for i,v in pairs(character:GetChildren()) do
         if v:IsA("LocalScript") then
@@ -2136,6 +2128,22 @@ local function R6FakeCharacter()------------------------------------------------
                 clone.Handle.Transparency = 1
             end
         end
+    elseif character:FindFirstChild(glassesList) then
+        local g = character:FindFirstChild(glassesList)
+        local clone = g:Clone()
+        local weld = g.Handle:FindFirstChildWhichIsA("Weld")
+        local weldPart1 = weld.Part1
+        local newWeld = Instance.new("Weld", clone.Handle)
+        local CFrame0 = g.Handle.AccessoryWeld.C0
+        local CFrame1 = g.Handle.AccessoryWeld.C1
+        
+        clone.Parent = reanimation
+        newWeld.Name = "AccessoryWeld"
+        newWeld.C0 = CFrame0
+        newWeld.C1 = CFrame1
+        newWeld.Part0 = clone.Handle
+        newWeld.Part1 = reanimation:FindFirstChild(weldPart1.Name)
+        clone.Handle.Transparency = 1
     end
 end----------------------------------------------------------------------
 
@@ -2304,6 +2312,7 @@ local function ReanimationMovement()--------------------------------------------
     local player = game:GetService("Players").LocalPlayer
     local character = player.Character
     local reanimation = character:WaitForChild("FakeCharacter").Reanimation
+    local camera = workspace.CurrentCamera
     
     local userInputService = game:GetService("UserInputService")
     local movingW, movingA, movingS, movingD, jumping = false
@@ -2343,6 +2352,11 @@ local function ReanimationMovement()--------------------------------------------
                 reanimated = false
                 if player.PlayerGui:FindFirstChild("Weapon GUI") then
                     player.PlayerGui:FindFirstChild("Weapon GUI"):Destroy()
+                end
+                if bot == false and character.Humanoid.RigType ~= Enum.HumanoidRigType.R15 then
+                    if character:FindFirstChild("Head") then
+                        camera.CameraSubject = character.Head
+                    end
                 end
             end
         end
@@ -2430,12 +2444,26 @@ local function Loops()----------------------------------------------------------
                 end
                 
                 if v:IsA("Part") and v.Name == "HumanoidRootPart" then
-                    v.Velocity = Vector3.new(-17.7, 0, -17.7)
+                    v.Velocity = Vector3.new(29, 0, 20)
                 end
                 
                 --Hats
                 if v:IsA("Accessory") then
-                    v.Handle.Velocity = Vector3.new(-17.7, 0, -17.7)
+                    if bot == false then
+                        if character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
+                            v.Handle.Velocity = Vector3.new(20, 0, 20)
+                        else
+                            v.Handle.Velocity = Vector3.new(40, 0, 40)
+                        end
+                    else
+                        if v.Name == botHats[1] or v.Name == botHats[2] or v.Name == botHats[3] or v.Name == botHats[4] or v.Name == botHats[7] or v.Name == botHats[8] then
+                            v.Handle.Velocity = Vector3.new(50, 0, 50)
+                        end
+                        
+                        if v.Name == botHats[5] or v.Name == botHats[6] then
+                            v.Handle.Velocity = Vector3.new(75, 0, 75)
+                        end
+                    end
                 end
             end
         end
@@ -2481,8 +2509,15 @@ local function PermaDeath()-----------------------------------------------------
         character.Humanoid.JumpPower = 50
         if character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
             character.Humanoid.BreakJointsOnDeath = false
-            character.Head.Neck:Destroy()
-            character.LowerTorso.Root:Destroy()
+            for i,v in pairs(character:GetDescendants()) do
+                if v:IsA("Motor6D") and v.Parent.Parent.Name ~= "Reanimation" then
+                    v:Destroy()
+                end
+                
+                if v.Name == "Handle" and v.Parent.Parent.Name ~= "Reanimation" then
+                    v:FindFirstChildWhichIsA("Weld"):Destroy()
+                end
+            end
         end
     end
     
@@ -2518,87 +2553,15 @@ local function Bot()------------------------------------------------------------
             
             --Attachments and Alignments (Hat Character) [Function]
             local function HatAlignment(ACCESSORY)
-                if ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh") and ACCESSORY.Name ~= "Head" and ACCESSORY.Name ~= glassesList then
-                        ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh"):Destroy()
-                    end
-                    if ACCESSORY.Handle:FindFirstChildWhichIsA("Weld") then
-                        ACCESSORY.Handle:FindFirstChildWhichIsA("Weld"):Destroy()
-                    end
-                    if ACCESSORY.Handle:FindFirstChildWhichIsA("Attachment") then
-                        ACCESSORY.Handle:FindFirstChildWhichIsA("Attachment"):Destroy()
-                    end
-                
-                local alignPosition = Instance.new("AlignPosition")
-                    
-                local posAtt1 = Instance.new("Attachment", ACCESSORY.Handle)
-                posAtt1.Name = "posAtt1"
-                
-                alignPosition.Attachment0 = posAtt1
-                
-                if reanimation:FindFirstChild(ACCESSORY.Name) then
-                    alignPosition.Attachment1 = reanimation:FindFirstChild(ACCESSORY.Name).posAtt2
-                    if ACCESSORY.Name == "Head" then
-                        if ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh").TextureId == "rbxassetid://617406825" then
-                            posAtt1.Position = Vector3.new(0, 0, -0.23)
-                        end
-                    end
-                else
-                    if ACCESSORY.Name == "Torso1" then
-                        alignPosition.Attachment1 = reanimation:FindFirstChild("Torso").posAtt2
-                        posAtt1.Position = Vector3.new(0.5, 0, 0)
-                    end
-                    
-                    if ACCESSORY.Name == "Torso2" then
-                        alignPosition.Attachment1 = reanimation:FindFirstChild("Torso").posAtt2
-                        posAtt1.Position = Vector3.new(-0.5, 0, 0)
-                    end
+                local name = ACCESSORY.Name
+                if ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh") and ACCESSORY.Name ~= "Head" and (name == botHats[1] or name == botHats[4] or name == botHats[5] or name == botHats[6] or name == botHats[7] or name == botHats[8]) then
+                    ACCESSORY.Handle:FindFirstChildWhichIsA("SpecialMesh"):Destroy()
                 end
-                
-                alignPosition.RigidityEnabled = false
-                alignPosition.ReactionForceEnabled = false
-                alignPosition.MaxForce = 99999999999999999999999999
-                alignPosition.Responsiveness = 200
-                alignPosition.Parent = ACCESSORY.Handle
-                
-                local alignOrientation = Instance.new("AlignOrientation")
-                
-                local rotAtt1 = Instance.new("Attachment", ACCESSORY.Handle)
-                rotAtt1.Name = "rotAtt1"
-                
-                alignOrientation.Attachment0 = rotAtt1
-                
-                if reanimation:FindFirstChild(ACCESSORY.Name) then
-                    alignOrientation.Attachment1 = reanimation:FindFirstChild(ACCESSORY.Name).rotAtt2
-                else
-                    if ACCESSORY.Name == "Torso1" then
-                        alignOrientation.Attachment1 = reanimation:FindFirstChild("Torso").rotAtt2
-                    end
-                    
-                    if ACCESSORY.Name == "Torso2" then
-                        alignOrientation.Attachment1 = reanimation:FindFirstChild("Torso").rotAtt2
-                    end
+                if ACCESSORY.Handle:FindFirstChildWhichIsA("Weld") then
+                    ACCESSORY.Handle:FindFirstChildWhichIsA("Weld"):Destroy()
                 end
-                
-                if ACCESSORY.Name ~= "Head" and ACCESSORY.Name ~= glassesList then
-                    rotAtt1.Orientation = Vector3.new(90, 0, 0)
-                end
-                
-                alignOrientation.RigidityEnabled = false
-                alignOrientation.ReactionTorqueEnabled = false
-                alignOrientation.MaxTorque = 99999999999999999999999999
-                alignOrientation.MaxAngularVelocity = 99999999999999999999999999
-                alignOrientation.Responsiveness = 200
-                alignOrientation.Parent = ACCESSORY.Handle
-            end
-            
-            --Attachments (Fake Character)
-            for i,v in pairs(reanimation:GetChildren()) do
-                if v:IsA("Part") and v.Name ~= "HumanoidRootPart" then
-                    local posAtt2 = Instance.new("Attachment", v)
-                    posAtt2.Name = "posAtt2"
-                    
-                    local rotAtt2 = Instance.new("Attachment", v)
-                    rotAtt2.Name = "rotAtt2"
+                if ACCESSORY.Handle:FindFirstChildWhichIsA("Attachment") then
+                    ACCESSORY.Handle:FindFirstChildWhichIsA("Attachment"):Destroy()
                 end
             end
             
@@ -2620,8 +2583,15 @@ local function Bot()------------------------------------------------------------
                 character.Humanoid.JumpPower = 50
                 if character.Humanoid.RigType == Enum.HumanoidRigType.R15 then
                     character.Humanoid.BreakJointsOnDeath = false
-                    character.Head.Neck:Destroy()
-                    character.LowerTorso.Root:Destroy()
+                    for i,v in pairs(character:GetDescendants()) do
+                        if v:IsA("Motor6D") and v.Parent.Parent.Name ~= "Reanimation" then
+                            v:Destroy()
+                        end
+                        
+                        if v.Name == "Handle" and v.Parent.Parent.Name ~= "Reanimation" then
+                            v:FindFirstChildWhichIsA("Weld"):Destroy()
+                        end
+                    end
                 end
             end
             
@@ -2630,34 +2600,42 @@ local function Bot()------------------------------------------------------------
                 if v:IsA("Accessory") then
                     if v.Name == "Robloxclassicred" then
                         v.Name = "Left Arm"
+                        botHats[1] = v.Name
                     end
                     
                     if v.Name == "MediHood" then
                         v.Name = "Head"
+                        botHats[2] = v.Name
                     end
     
-                    if v.Name == "MeshPartAccessory" and v.Handle.Size == Vector3.new(1.2, 1.2, 1.2) then
+                    if v.Name == "MeshPartAccessory" and v.Handle:FindFirstChildWhichIsA("SpecialMesh").MeshId == "rbxassetid://4904532191" then
                         v.Name = "Head"
+                        botHats[3] = v.Name
                     end
                     
                     if v.Name == "Hat1" then
                         v.Name = "Right Arm"
+                        botHats[4] = v.Name
                     end
                     
                     if v.Name == "Pal Hair" then
                         v.Name = "Left Leg"
+                        botHats[5] = v.Name
                     end
                     
                     if v.Name == "Kate Hair" then
                         v.Name = "Right Leg"
+                        botHats[6] = v.Name
                     end
                     
                     if v.Name == "Pink Hair" then
                         v.Name = "Torso1"
+                        botHats[7] = v.Name
                     end
                     
                     if v.Name == "LavanderHair" then
                         v.Name = "Torso2"
+                        botHats[8] = v.Name
                     end
                     
                     HatAlignment(v)
