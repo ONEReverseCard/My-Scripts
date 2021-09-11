@@ -222,6 +222,8 @@ local bot = false
 local pressingShift = false
 local reanimated = false
 local botHats = {}
+local moveZAxis = 0
+local moveXAxis = 0
 
 --Resetting GUI Value
 if not game.CoreGui:FindFirstChild("ResetGUIValue") then
@@ -2770,104 +2772,94 @@ local function ReanimationMovement()--------------------------------------------
     local camera = workspace.CurrentCamera
     
     local userInputService = game:GetService("UserInputService")
-    local movingW, movingA, movingS, movingD, jumping = false
+    local jumping = false
     
     userInputService.InputBegan:Connect(function(key, chatting)
-        if reanimated == true then
-            --Activate Jumping
-            if key.KeyCode == Enum.KeyCode.Space and not chatting then
-                jumping = true
-            end
-            
-            --Activate Movement
-            if key.KeyCode == Enum.KeyCode.W and not chatting then
-                movingW = true
-            end
-            
-            if key.KeyCode == Enum.KeyCode.A and not chatting then
-                movingA = true
-            end
-            
-            if key.KeyCode == Enum.KeyCode.S and not chatting then
-                movingS = true
-            end
-             
-            if key.KeyCode == Enum.KeyCode.D and not chatting then
-                movingD = true
-            end
-            
-            --Resetting
-            if key.KeyCode == Enum.KeyCode.LeftShift and not chatting then
-                pressingShift = true
-            end
-            
-            if key.KeyCode == Enum.KeyCode.R and not chatting and pressingShift == true then
-                player.Character = reanimation
-                reanimation:BreakJoints()
-                reanimated = false
-                if player.PlayerGui:FindFirstChild("SB_Blind_Reaper") then
-                    player.PlayerGui:FindFirstChild("SB_Blind_Reaper"):Destroy()
-                end
-                if bot == false and character.Humanoid.RigType ~= Enum.HumanoidRigType.R15 then
-                    if character:FindFirstChild("Head") then
-                        camera.CameraSubject = character.Head
-                    end
+        --Activate Jumping
+        if key.KeyCode == Enum.KeyCode.Space and not chatting then
+            jumping = true
+        end
+        
+        --Activate Movement
+        if key.KeyCode == Enum.KeyCode.W and not chatting and moveZAxis > -1 then
+            moveZAxis = moveZAxis - 1
+        end
+        
+        if key.KeyCode == Enum.KeyCode.A and not chatting and moveXAxis > -1 then
+            moveXAxis = moveXAxis - 1
+        end
+        
+        if key.KeyCode == Enum.KeyCode.S and not chatting and moveZAxis < 1 then
+            moveZAxis = moveZAxis + 1
+        end
+         
+        if key.KeyCode == Enum.KeyCode.D and not chatting and moveXAxis < 1 then
+            moveXAxis = moveXAxis + 1
+        end
+        
+        --Resetting
+        if key.KeyCode == Enum.KeyCode.LeftShift and not chatting then
+            pressingShift = true
+        end
+        
+        if key.KeyCode == Enum.KeyCode.R and not chatting and pressingShift == true and reanimated == true then
+            player.Character = reanimation
+            reanimation:BreakJoints()
+            reanimated = false
+            if bot == false and character.Humanoid.RigType == Enum.HumanoidRigType.R6 then
+                if character:FindFirstChild("Head") then
+                    camera.CameraSubject = character.Head
                 end
             end
         end
     end)
     
     userInputService.InputEnded:Connect(function(key, chatting)
-        if reanimated == true then
-            --Deactivate Jumping
-            if key.KeyCode == Enum.KeyCode.Space and not chatting then
-                jumping = false
-            end
-            
-            --Deactivate Movement
-            if key.KeyCode == Enum.KeyCode.W and not chatting then
-                movingW = false
-            end
-            
-            if key.KeyCode == Enum.KeyCode.A and not chatting then
-                movingA = false
-            end
-            
-            if key.KeyCode == Enum.KeyCode.S and not chatting then
-                movingS = false
-            end
-             
-            if key.KeyCode == Enum.KeyCode.D and not chatting then
-                movingD = false
-            end
-            
-            --Resetting
-            if key.KeyCode == Enum.KeyCode.LeftShift and not chatting then
-                pressingShift = false
-            end
+        --Deactivate Jumping
+        if key.KeyCode == Enum.KeyCode.Space and not chatting then
+            jumping = false
+        end
+        
+        --Deactivate Movement
+        if key.KeyCode == Enum.KeyCode.W and not chatting then
+            moveZAxis = moveZAxis + 1
+        end
+        
+        if key.KeyCode == Enum.KeyCode.A and not chatting then
+            moveXAxis = moveXAxis + 1
+        end
+        
+        if key.KeyCode == Enum.KeyCode.S and not chatting then
+            moveZAxis = moveZAxis - 1
+        end
+         
+        if key.KeyCode == Enum.KeyCode.D and not chatting then
+            moveXAxis = moveXAxis - 1
+        end
+        
+        --Resetting
+        if key.KeyCode == Enum.KeyCode.LeftShift and not chatting then
+            pressingShift = false
         end
     end)
     
+    userInputService.WindowFocusReleased:Connect(function()
+        wait()
+        moveXAxis = 0
+        moveZAxis = 0
+    end)
     
     game:GetService('RunService').Stepped:Connect(function()
-        if reanimated == true then
-            --Movement
-            if movingW == true or movingA == true or movingS == true or movingD == true then
-                reanimation:FindFirstChildWhichIsA("Humanoid").WalkToPoint = character:FindFirstChildWhichIsA("Humanoid").MoveDirection * 10000
-            else
-                reanimation:FindFirstChildWhichIsA("Humanoid").WalkToPoint = reanimation.Torso.Position
-            end
-            
-            --Jumping
-            if jumping == true then
-                reanimation:FindFirstChildWhichIsA("Humanoid").Jump = true
-            end
-            
-            --Resetting
-            if not character:FindFirstChild("Humanoid") then
-                player.Character = nil
-                reanimated = false
-            end
+        --Jumping
+        if jumping == true then
+            reanimation:FindFirstChildWhichIsA("Humanoid").Jump = true
+        end
+        
+        --Resetting
+        if not character:FindFirstChild("Humanoid") then
+            player.Character = nil
+            reanimated = false
+            DisconnectStuff()
         end
     end)
 end----------------------------------------------------------------------
@@ -2876,6 +2868,7 @@ local function Loops()----------------------------------------------------------
     --Variables
     local player = game:GetService("Players").LocalPlayer
     local character = player.Character
+    local reanimation = character:WaitForChild("FakeCharacter").Reanimation
     
     game:GetService('RunService').Stepped:Connect(function()
         if reanimated == true then
@@ -2885,6 +2878,8 @@ local function Loops()----------------------------------------------------------
                     v.CanCollide = false
                 end
             end
+        
+            reanimation:FindFirstChildWhichIsA("Humanoid"):Move(Vector3.new(moveXAxis, 0, moveZAxis), true)
         end
     end)
     
