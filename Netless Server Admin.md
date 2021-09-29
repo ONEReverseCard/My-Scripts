@@ -139,10 +139,9 @@ ReanimInfo.BackgroundTransparency = 1.000
 ReanimInfo.Position = UDim2.new(0.0130000096, 0, 0.411194909, 0)
 ReanimInfo.Size = UDim2.new(0, 311, 0, 91)
 ReanimInfo.Font = Enum.Font.SourceSans
-ReanimInfo.Text = [[Hey everyone. So my Discord server was destroyed and everyone got banned. But it's been fixed now. If you were in the server, you're probably not anymore. So you can get the link to the server in the
-<--- Credits tab.]]
+ReanimInfo.Text = [[Have Fun :)]]
 ReanimInfo.TextColor3 = Color3.fromRGB(255, 255, 255)
-ReanimInfo.TextScaled = true
+ReanimInfo.TextScaled = false
 ReanimInfo.TextSize = 20.000
 ReanimInfo.TextWrapped = true
 
@@ -359,7 +358,7 @@ local function ServerAdmin()
         
         --Positioning The Hats
         for i,v in pairs(character:GetChildren()) do
-            if v:IsA("Accessory") and not v.Name ~= glasses.Name then
+            if v:IsA("Accessory") and not v.Name ~= glasses then
                 if bot == false then
                     v.Handle.CFrame = reanimation:FindFirstChild(v.Name).Handle.CFrame
                 else
