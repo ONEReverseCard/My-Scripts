@@ -75,7 +75,7 @@ local hatVelocity = {-17.7, 0, -17.7} --Change all of your accessories' velocity
 --
 --   Type-49 The Abomination - https://www.roblox.com/catalog/4962455546/Type-49-The-Abomination
 --   Blox Rifle 5000 - https://www.roblox.com/catalog/5168118559/Blox-Rifle-5000
---   --[Pistols]--
+--   --[--Pistols--]--
 --     LEO Mk.45 [Right Hip] - https://www.roblox.com/catalog/6995534747/LEO-Mk-45-Right-Hip
 --
 -- --[--Swords--]--
