@@ -38,14 +38,16 @@
 --VR Only
 local gunAutoEquip = false --(VR only setting) If this is true, instead of holding down the grip button to hold the gun, you just have to press it to equip and unequip it.
 local swordAutoEquip = false --(VR only setting) If this is true, instead of holding down the grip button to hold the sword, you just have to press it to equip and unequip it.
+local changeSomeStuff = false --(VR only setting) (Recommended to be true if leftHand is true) If this is true, it will lock your camera to first person, change the sprint keybind to the right thumbstick, and change the crouch keybind to the left thumbstick.
 
 --Non VR Only
 local range = 1000 --(Non VR only setting) How far you want to be able to shoot (measured in studs).
 
 --Universal
 local leftHand = false --If you're left handed and are using VR, put this to true (or if you want the gun to be held on your left hand).
-local shootCooldown = 0.5 --How much time do you want to wait after shooting to shoot again.
+local sniperShootCooldown = 0.5 --How much time do you want to wait after shooting to shoot again (snipers only).
 local secondaryWeapon = true --If you don't want to use a sword/knife or can't afford it, put this to false.
+local pistolShootCooldown = 0.25 --How much time do you want to wait after shooting to shoot again (pistols only).
 
 --Velocity
 local bodyVelocity = {-17.7, 0, -17.7} --Change your body parts' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
@@ -73,6 +75,8 @@ local hatVelocity = {-17.7, 0, -17.7} --Change all of your accessories' velocity
 --
 --   Type-49 The Abomination - https://www.roblox.com/catalog/4962455546/Type-49-The-Abomination
 --   Blox Rifle 5000 - https://www.roblox.com/catalog/5168118559/Blox-Rifle-5000
+--   --[Pistols]--
+--     LEO Mk.45 [Right Hip] - https://www.roblox.com/catalog/6995534747/LEO-Mk-45-Right-Hip
 --
 -- --[--Swords--]--
 --   Galaxy Sword - https://www.roblox.com/catalog/5355685721/Galaxy-Sword
@@ -84,6 +88,7 @@ local hatVelocity = {-17.7, 0, -17.7} --Change all of your accessories' velocity
 --    Golden Demonic Greatsword - https://www.roblox.com/catalog/4794315940/Golden-Demonic-Greatsword
 --  --[--Knifes--]--
 --    UMAD? - https://www.roblox.com/catalog/743692483/UMAD
+--    Red Swag Knife - https://www.roblox.com/catalog/7170689370/Red-Swag-Knife
 --[[--------------------------]]--
 
 --[[---------KeyBinds---------]]--
@@ -320,7 +325,7 @@ if reanimation:FindFirstChild("WavySniper") then
 end
 
 --Checks to see if you have one of the swords--
-if secondaryWeapon == true and not reanimation:FindFirstChild("Dark Matter Sword") and not reanimation:FindFirstChild("Russo's Sword") and not reanimation:FindFirstChild("MeshPartAccessory") and not reanimation:FindFirstChild("UMAD") then
+if secondaryWeapon == true and not reanimation:FindFirstChild("Dark Matter Sword") and not reanimation:FindFirstChild("Russo's Sword") and not reanimation:FindFirstChild("MeshPartAccessory") and not reanimation:FindFirstChild("UMAD") and not reanimation:FindFirstChild("Red SS") then
     local errorSound = Instance.new("Sound")
     errorSound.SoundId = "rbxassetid://3041205264"
     errorSound.PlaybackSpeed = 1
@@ -338,15 +343,22 @@ if secondaryWeapon == true and not reanimation:FindFirstChild("Dark Matter Sword
             Text = "You need one of the supported swords to use this script."
         }
     )
+    wait(0.5)
+    StarterGUI:SetCore("SendNotification",
+        {
+            Title = "Other Option",
+            Text = [[Or, make "secondaryWeapon" false in the settings.]]
+        }
+    )
     
-    wait(1.4)
+    wait(0.9)
     errorSound:Destroy()
     error("You don't have a sword")
 end
 -----------------------------------------------
 
 --Checks to see if you have one of the guns--
-if not reanimation:FindFirstChild("Sniper") and not reanimation:FindFirstChild("Meshes/SniperAccessory") and not reanimation:FindFirstChild("Meshes/RainbowSniperAccessory") and not reanimation:FindFirstChild("Meshes/GiftsniperAccessory") and not reanimation:FindFirstChild("HalloweenSniperAccessory") and not reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") and not reanimation:FindFirstChild("Blox Rifle 5000") then
+if not reanimation:FindFirstChild("Sniper") and not reanimation:FindFirstChild("Meshes/SniperAccessory") and not reanimation:FindFirstChild("Meshes/RainbowSniperAccessory") and not reanimation:FindFirstChild("Meshes/GiftsniperAccessory") and not reanimation:FindFirstChild("HalloweenSniperAccessory") and not reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") and not reanimation:FindFirstChild("Blox Rifle 5000") and not reanimation:FindFirstChild("Meshes/1911RightAccessory") then
     local errorSound = Instance.new("Sound")
     errorSound.SoundId = "rbxassetid://3041205264"
     errorSound.PlaybackSpeed = 1
@@ -361,7 +373,7 @@ if not reanimation:FindFirstChild("Sniper") and not reanimation:FindFirstChild("
     StarterGUI:SetCore("SendNotification",
         {
             Title = "Gun Needed",
-            Text = "You need one of the supported Guns to use this script."
+            Text = "You need one of the supported guns to use this script."
         }
     )
     
@@ -393,6 +405,11 @@ local gHoldRot = nil
 local sHoldPos = nil
 local sHoldRot = nil
 
+--Default Camera Stuff
+local maxZoom = player1.CameraMaxZoomDistance
+local minZoom = player1.CameraMinZoomDistance
+local cameraMode = player1.CameraMode
+
 local userInputService = game:GetService("UserInputService")
 local vrService = game:GetService("VRService")
 
@@ -413,6 +430,10 @@ end
 
 if secondaryWeapon == true and reanimation:FindFirstChild("UMAD") then
     sword = reanimation.UMAD.Handle
+end
+
+if secondaryWeapon == true and reanimation:FindFirstChild("Red SS") then
+    sword = reanimation["Red SS"].Handle
 end
 
 --Snipers
@@ -443,6 +464,10 @@ end
 --Other Guns
 if reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") then
     gun = reanimation["Type-49 Abomindation Back Accessory"].Handle
+end
+
+if reanimation:FindFirstChild("Meshes/1911RightAccessory") then
+    gun = reanimation["Meshes/1911RightAccessory"].Handle
 end
 
 --The part that will determine if you are shooting at a player or not (VR)--
@@ -551,12 +576,16 @@ if vrService.VREnabled then
     if reanimation:FindFirstChild("Blox Rifle 5000") then
         VRAimerPlacement(1000, Vector3.new(1000, 1 ,1), Vector3.new(0, 355.15, -355), Vector3.new(0, 90, 45))
     end
+    
+    if reanimation:FindFirstChild("Meshes/1911RightAccessory") then
+        VRAimerPlacement(1000, Vector3.new(1000, 0.25, 0.25), Vector3.new(0, -500.5, 0.3), Vector3.new(0, 0, 90))
+    end
 end
 
 function Touching()
     touchedFunction = vrAimer.Touched:Connect(function(part)
         --Snipers
-        print("---------------"..math.random(1, 10))
+        --print("---------------"..math.random(1, 10))
         if part.Parent:FindFirstChild("Humanoid") and part.Parent.Name ~= player1.Name and not character1:FindFirstChild("Type-49 Abomindation Back Accessory") and part.Parent.Name ~= "VirtualRig" and part.Parent.Name ~= "VirtualBody" then
             if part.Parent:FindFirstChild("Humanoid").RigType == Enum.HumanoidRigType.R6 then
                 hrp.Position = part.Parent:FindFirstChild("Torso").Position
@@ -578,6 +607,11 @@ function Touching()
     end)
 end
 ----------------------------------------------------------------------------
+
+--Setting Camera To First Person (VR)
+if vrService.VREnabled and changeSomeStuff == true then
+    player1.CameraMode = Enum.CameraMode.LockFirstPerson
+end
 
 if leftHand == true then
     --Gun
@@ -684,7 +718,23 @@ if leftHand == true then
         sHoldPos = Vector3.new(0, -0.4, 0.7) --Position
     end
     
-    --Sword
+    --LEO Mk.45 [Right Hip]
+    if reanimation:FindFirstChild("Meshes/1911RightAccessory") then
+        gun.WaistCenterAttachment.Name = "BodyBackAttachment"
+        gun.BodyBackAttachment.Orientation = Vector3.new(-180, 0, -180) --Orientation
+        gun.BodyBackAttachment.Position = Vector3.new(-1.10212, 1.1, -0.5) --Position
+        
+        --Holster
+        gHolstRot = Vector3.new(-180, 0, -180) --Orientation
+        gHolstPos = Vector3.new(-1.10212, 1.1, -0.5) --Position
+        
+        --Holding
+        gHoldRot = Vector3.new(-180, 0, -180) --Orientation
+        gHoldPos = Vector3.new(0, 0.45, -0.25) --Position
+    end
+    
+    --Sword/Knifes
+    --VR
     if vrService.VREnabled then
         --Dark Matter Sword
         if secondaryWeapon == true and reanimation:FindFirstChild("Dark Matter Sword") then
@@ -727,7 +777,22 @@ if leftHand == true then
             sHoldRot = Vector3.new(45, -90, 0) --Orientation
             sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(1.8, 2.8, 0) --Position
         end
-    else
+        
+        --Red Swag Knife
+        if reanimation:FindFirstChild("Red SS") then
+            sword.WaistCenterAttachment.Name = "BodyBackAttachment"
+            sword.BodyBackAttachment.Orientation = Vector3.new(0, 180, 0) --Orientation
+            sword.BodyBackAttachment.Position = Vector3.new(1.07686, 1, -0.5) --Position
+            
+            --Holster
+            sHolstRot = Vector3.new(0, 180, 0) --Orientation
+            sHolstPos = Vector3.new(1.07686, 1, -0.5) --Position
+            
+            --Holding
+            sHoldRot = Vector3.new(135, 0, -180) --Orientation
+            sHoldPos = Vector3.new(0, 0.455, 0.555) --Position
+        end
+    else --No VR
         --Dark Matter Sword/Greatswords
         if secondaryWeapon == true and reanimation:FindFirstChild("Dark Matter Sword") or reanimation:FindFirstChild("MeshPartAccessory") then
             sword.BodyBackAttachment.Orientation = Vector3.new(0, 0, 0) --Orientation
@@ -758,8 +823,23 @@ if leftHand == true then
             sHoldRot = Vector3.new(45, 90, -180) --Orientation
             sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(-0.1, -0.7, 0) --Position
         end
+        
+        --Red Swag Knife
+        if reanimation:FindFirstChild("Red SS") then
+            sword.WaistCenterAttachment.Name = "BodyBackAttachment"
+            sword.BodyBackAttachment.Orientation = Vector3.new(0, 180, 0) --Orientation
+            sword.BodyBackAttachment.Position = Vector3.new(1.07686, 1, -0.5) --Position
+            
+            --Holster
+            sHolstRot = Vector3.new(0, 180, 0) --Orientation
+            sHolstPos = Vector3.new(1.07686, 1, -0.5) --Position
+            
+            --Holding
+            sHoldRot = Vector3.new(-45, 0, 0) --Orientation
+            sHoldPos = Vector3.new(0, 0.455, 0.555) --Position
+        end
     end
-else
+else --Right Hand
     --Gun
     --Sniper
     if reanimation:FindFirstChild("Sniper") then
@@ -864,7 +944,23 @@ else
         sHoldPos = Vector3.new(0, -0.4, 0.7) --Position
     end
     
-    --Sword
+    --LEO Mk.45 [Right Hip]
+    if reanimation:FindFirstChild("Meshes/1911RightAccessory") then
+        gun.WaistCenterAttachment.Name = "BodyBackAttachment"
+        gun.BodyBackAttachment.Orientation = Vector3.new(-180, 0, -180) --Orientation
+        gun.BodyBackAttachment.Position = Vector3.new(1.10212, 1.1, -0.5) --Position
+        
+        --Holster
+        gHolstRot = Vector3.new(-180, 0, -180) --Orientation
+        gHolstPos = Vector3.new(1.10212, 1.1, -0.5) --Position
+        
+        --Holding
+        gHoldRot = Vector3.new(-180, 0, -180) --Orientation
+        gHoldPos = Vector3.new(0, 0.45, -0.25) --Position
+    end
+    
+    --Sword/Knifes
+    --VR
     if vrService.VREnabled then
         --Dark Matter Sword
         if secondaryWeapon == true and reanimation:FindFirstChild("Dark Matter Sword") then
@@ -907,7 +1003,22 @@ else
             sHoldRot = Vector3.new(45, -90, 0) --Orientation
             sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(1.8, 2.8, 0) --Position
         end
-    else
+        
+        --Red Swag Knife
+        if reanimation:FindFirstChild("Red SS") then
+            sword.WaistCenterAttachment.Name = "BodyBackAttachment"
+            sword.BodyBackAttachment.Orientation = Vector3.new(0, 180, 0) --Orientation
+            sword.BodyBackAttachment.Position = Vector3.new(-1.07686, 1, -0.5) --Position
+            
+            --Holster
+            sHolstRot = Vector3.new(0, 180, 0) --Orientation
+            sHolstPos = Vector3.new(-1.07686, 1, -0.5) --Position
+            
+            --Holding
+            sHoldRot = Vector3.new(135, 0, -180) --Orientation
+            sHoldPos = Vector3.new(0, 0.455, 0.555) --Position
+        end
+    else --No VR
         --Dark Matter Sword
         if secondaryWeapon == true and reanimation:FindFirstChild("Dark Matter Sword") or reanimation:FindFirstChild("MeshPartAccessory") then
             sword.BodyBackAttachment.Orientation = Vector3.new(0, 0, -90) --Orientation
@@ -937,6 +1048,21 @@ else
             --Holding
             sHoldRot = Vector3.new(45, 90, -180) --Orientation
             sHoldPos = Vector3.new(0, -1, 0) + Vector3.new(-0.1, -0.7, 0) --Position
+        end
+        
+        --Red Swag Knife
+        if reanimation:FindFirstChild("Red SS") then
+            sword.WaistCenterAttachment.Name = "BodyBackAttachment"
+            sword.BodyBackAttachment.Orientation = Vector3.new(0, 180, 0) --Orientation
+            sword.BodyBackAttachment.Position = Vector3.new(-1.07686, 1, -0.5) --Position
+            
+            --Holster
+            sHolstRot = Vector3.new(0, 180, 0) --Orientation
+            sHolstPos = Vector3.new(-1.07686, 1, -0.5) --Position
+            
+            --Holding
+            sHoldRot = Vector3.new(-45, 0, 0) --Orientation
+            sHoldPos = Vector3.new(0, 0.455, 0.555) --Position
         end
     end
 end
@@ -1068,22 +1194,35 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
         if key.KeyCode == Enum.KeyCode.E and shooting == false and holdingGun == true and not vrService.VREnabled and scriptLoaded == true and not reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") and not gameProcessedEvent then
             shooting = true 
             
-            --Fling Stuff
-            if holdingSword == false then
-                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
-            end
-            
-            --Function
-            GunShot(680140087, 0.7, 1)
-            
-            --Wait
-            wait(shootCooldown)
-            
-            shooting = false 
-            
-            --Fling Stuff
-            if holdingSword == false then
-                flinger.AngularVelocity = Vector3.new(0, 0, 0)
+            if not reanimation:FindFirstChild("Meshes/1911RightAccessory") then
+                --Fling Stuff
+                if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+                end
+                
+                --Function
+                GunShot(680140087, 0.7, 1)
+                
+                --Wait
+                wait(sniperShootCooldown)
+                
+                shooting = false 
+                
+                --Fling Stuff
+                if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(0, 0, 0)
+                end
+            else
+                --Function
+                GunShot(5298232020, 1, math.random(90,110)/100)
+                if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+                end
+                wait(pistolShootCooldown)
+                shooting = false
+                if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(0, 0, 0)
+                end
             end
         end
         
@@ -1220,24 +1359,37 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
         
         --Shoot Gun
         if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == false and holdingGun == true and leftHand == false and scriptLoaded == true and not reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") then
-            shooting = true 
+            shooting = true  
             
-            --Fling Stuff
-            if holdingSword == false then
-                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
-            end
-            
-            --Function
-            GunShot(680140087, 0.7, 1)
-            
-            --Wait
-            wait(shootCooldown)
-            
-            shooting = false 
-            
-            --Fling Stuff
-            if holdingSword == false then
-                flinger.AngularVelocity = Vector3.new(0, 0, 0)
+            if not reanimation:FindFirstChild("Meshes/1911RightAccessory") then
+                --Fling Stuff
+                if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+                end
+                
+                --Function
+                GunShot(680140087, 0.7, 1)
+                
+                --Wait
+                wait(sniperShootCooldown)
+                
+                shooting = false 
+                
+                --Fling Stuff
+                if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(0, 0, 0)
+                end
+            else
+                --Function
+                GunShot(5298232020, 1, math.random(90,110)/100)
+                if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+                end
+                wait(pistolShootCooldown)
+                shooting = false
+                if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(0, 0, 0)
+                end
             end
         end
         
@@ -1326,22 +1478,35 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
         if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == false and holdingGun == true and leftHand == true and scriptLoaded == true and not reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") then
             shooting = true 
             
-            --Fling Stuff
-            if holdingSword == false then
-                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
-            end
-            
-            --Function
-            GunShot(680140087, 0.7, 1)
-            
-            --Wait
-            wait(shootCooldown)
-            
-            shooting = false 
-            
-            --Fling Stuff
-            if holdingSword == false then
-                flinger.AngularVelocity = Vector3.new(0, 0, 0)
+            if not reanimation:FindFirstChild("Meshes/1911RightAccessory") then
+                --Fling Stuff
+                if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+                end
+                
+                --Function
+                GunShot(680140087, 0.7, 1)
+                
+                --Wait
+                wait(sniperShootCooldown)
+                
+                shooting = false 
+                
+                --Fling Stuff
+                if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(0, 0, 0)
+                end
+            else
+                --Function
+                GunShot(5298232020, 1, math.random(90,110)/100)
+                if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+                end
+                wait(pistolShootCooldown)
+                shooting = false
+                if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(0, 0, 0)
+                end
             end
         end
         
@@ -2265,16 +2430,30 @@ Script = function()
         UserInputService.InputBegan:Connect(
         function(Input, Processed)
             if not Processed then
-                if Input.KeyCode == Enum.KeyCode.LeftControl or Input.KeyCode == Enum.KeyCode.ButtonL2 then
-                    Tween(
-                        VirtualBody.Humanoid,
-                        "Elastic",
-                        "Out",
-                        1,
-                        {
-                            CameraOffset = Vector3.new(0, StudsOffset - 1.5, 0)
-                        }
-                    )
+                if changeSomeStuff == false then
+                    if Input.KeyCode == Enum.KeyCode.LeftControl or Input.KeyCode == Enum.KeyCode.ButtonL2 then
+                        Tween(
+                            VirtualBody.Humanoid,
+                            "Elastic",
+                            "Out",
+                            1,
+                            {
+                                CameraOffset = Vector3.new(0, StudsOffset - 1.5, 0)
+                            }
+                        )
+                    end
+                else
+                    if Input.KeyCode == Enum.KeyCode.LeftControl or Input.KeyCode == Enum.KeyCode.ButtonL3 then
+                        Tween(
+                            VirtualBody.Humanoid,
+                            "Elastic",
+                            "Out",
+                            1,
+                            {
+                                CameraOffset = Vector3.new(0, StudsOffset - 1.5, 0)
+                            }
+                        )
+                    end
                 end
                 if Input.KeyCode == Enum.KeyCode.X then
                     if RagdollEnabled and RagdollHeadMovement then
@@ -2287,16 +2466,30 @@ Script = function()
                     VirtualRig:MoveTo(Mouse.Hit.p)
                 end
             end
-            if Input.KeyCode == Enum.KeyCode.LeftShift or Input.KeyCode == Enum.KeyCode.ButtonR2 then
-                Tween(
-                    VirtualBody.Humanoid,
-                    "Sine",
-                    "Out",
-                    1,
-                    {
-                        WalkSpeed = 16
-                    }
-                )
+            if changeSomeStuff == false then
+                if Input.KeyCode == Enum.KeyCode.LeftShift or Input.KeyCode == Enum.KeyCode.ButtonR2 then
+                    Tween(
+                        VirtualBody.Humanoid,
+                        "Sine",
+                        "Out",
+                        1,
+                        {
+                            WalkSpeed = 16
+                        }
+                    )
+                end
+            else
+                if Input.KeyCode == Enum.KeyCode.LeftShift or Input.KeyCode == Enum.KeyCode.ButtonR3 then
+                    Tween(
+                        VirtualBody.Humanoid,
+                        "Sine",
+                        "Out",
+                        1,
+                        {
+                            WalkSpeed = 16
+                        }
+                    )
+                end
             end
             if not VRReady and Input.UserInputType == Enum.UserInputType.MouseButton1 then
                 Point1 = true
@@ -2307,6 +2500,11 @@ Script = function()
             if VRReady and Input.KeyCode == Enum.KeyCode.ButtonY then
                 Character:BreakJoints()
                 if RagdollEnabled and RagdollHeadMovement then
+                    if changeSomeStuff == true then
+                        player1.CameraMaxZoomDistance = maxZoom
+                        player1.CameraMinZoomDistance = minZoom
+                        player1.CameraMode = cameraMode
+                    end
                     --Network:Unclaim()
                     Respawn()
                 end
@@ -2317,28 +2515,56 @@ Script = function()
         UserInputService.InputEnded:Connect(
         function(Input, Processed)
             if not Processed then
-                if Input.KeyCode == Enum.KeyCode.LeftControl or Input.KeyCode == Enum.KeyCode.ButtonL2 then
+                if changeSomeStuff == false then
+                    if Input.KeyCode == Enum.KeyCode.LeftControl or Input.KeyCode == Enum.KeyCode.ButtonL2 then
+                        Tween(
+                            VirtualBody.Humanoid,
+                            "Elastic",
+                            "Out",
+                            1,
+                            {
+                                CameraOffset = Vector3.new(0, StudsOffset, 0)
+                            }
+                        )
+                    end
+                else
+                    if Input.KeyCode == Enum.KeyCode.LeftControl or Input.KeyCode == Enum.KeyCode.ButtonL3 then
+                        Tween(
+                            VirtualBody.Humanoid,
+                            "Elastic",
+                            "Out",
+                            1,
+                            {
+                                CameraOffset = Vector3.new(0, StudsOffset, 0)
+                            }
+                        )
+                    end
+                end
+            end
+            if changeSomeStuff == false then
+                if Input.KeyCode == Enum.KeyCode.LeftShift or Input.KeyCode == Enum.KeyCode.ButtonR2 then
                     Tween(
                         VirtualBody.Humanoid,
-                        "Elastic",
+                        "Sine",
                         "Out",
                         1,
                         {
-                            CameraOffset = Vector3.new(0, StudsOffset, 0)
+                            WalkSpeed = 8
                         }
                     )
                 end
-            end
-            if Input.KeyCode == Enum.KeyCode.LeftShift or Input.KeyCode == Enum.KeyCode.ButtonR2 then
-                Tween(
-                    VirtualBody.Humanoid,
-                    "Sine",
-                    "Out",
-                    1,
-                    {
-                        WalkSpeed = 8
-                    }
-                )
+            else
+                if Input.KeyCode == Enum.KeyCode.LeftShift or Input.KeyCode == Enum.KeyCode.ButtonR3 then
+                    Tween(
+                        VirtualBody.Humanoid,
+                        "Sine",
+                        "Out",
+                        1,
+                        {
+                            WalkSpeed = 8
+                        }
+                    )
+                end
             end
             if not VRReady and Input.UserInputType == Enum.UserInputType.MouseButton1 then
                 Point1 = false
@@ -2913,7 +3139,7 @@ ViewHUDFunc = function()
                                 ]]
                             end
                         else
-                            if shooting == true and not reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") and not vrService.VREnabled then
+                            if shooting == true and not reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") and not vrService.VREnabled then --Snipers and Pistols
                                 hrp.Position = mouse.Hit.Position
                             end
                             
