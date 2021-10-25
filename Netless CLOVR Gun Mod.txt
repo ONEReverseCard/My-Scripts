@@ -39,7 +39,7 @@
 local gunAutoEquip = false --If this is true, instead of holding down the grip button to hold the gun, you just have to press it to equip and unequip it.
 local swordAutoEquip = false --If this is true, instead of holding down the grip button to hold the sword, you just have to press it to equip and unequip it.
 local changeSomeStuff = false --(Recommended to be true if leftHand is true) If this is true, it will lock your camera to first person, change the sprint keybind to the right thumbstick, and change the crouch keybind to the left thumbstick.
-local knifeMode = true --If this is true, you will hold your sword/knife to where the blade is pointing inward towards your body and will be holsted on the side of your body.
+local knifeMode = true --If this is true, you will hold your sword/knife to where the blade is pointing inward towards your body and will be holstered on the side of your body.
 
 --[--Universal--]--
 local leftHand = false --If you're left handed and are using VR, put this to true (or if you want the gun to be held on your left hand).
