@@ -35,21 +35,25 @@
 ]]
 
 --[[---------Settings---------]]--
---VR Only
-local gunAutoEquip = false --(VR only setting) If this is true, instead of holding down the grip button to hold the gun, you just have to press it to equip and unequip it.
-local swordAutoEquip = false --(VR only setting) If this is true, instead of holding down the grip button to hold the sword, you just have to press it to equip and unequip it.
-local changeSomeStuff = false --(VR only setting) (Recommended to be true if leftHand is true) If this is true, it will lock your camera to first person, change the sprint keybind to the right thumbstick, and change the crouch keybind to the left thumbstick.
+--[--VR Only--]--
+local gunAutoEquip = false --If this is true, instead of holding down the grip button to hold the gun, you just have to press it to equip and unequip it.
+local swordAutoEquip = false --If this is true, instead of holding down the grip button to hold the sword, you just have to press it to equip and unequip it.
+local changeSomeStuff = false --(Recommended to be true if leftHand is true) If this is true, it will lock your camera to first person, change the sprint keybind to the right thumbstick, and change the crouch keybind to the left thumbstick.
+local knifeMode = true --If this is true, you will hold your sword/knife to where the blade is pointing inward towards your body and will be holsted on the side of your body.
 
---Non VR Only
-local range = 1000 --(Non VR only setting) How far you want to be able to shoot (measured in studs).
-
---Universal
+--[--Universal--]--
 local leftHand = false --If you're left handed and are using VR, put this to true (or if you want the gun to be held on your left hand).
-local sniperShootCooldown = 0.5 --How much time do you want to wait after shooting to shoot again (snipers only).
-local secondaryWeapon = true --If you don't want to use a sword/knife or can't afford it, put this to false.
+local secondaryWeapon = true --If you don't want to use a sword/knife or can't afford it, put this to false
+--Cooldown
+local sniperShootCooldown = 0.5 --How much time do you want to wait after shooting to shoot again (snipers only)..
 local pistolShootCooldown = 0.25 --How much time do you want to wait after shooting to shoot again (pistols only).
+--Bullet Stuff
+local bulletColor = {255, 255, 255} --The color of the bullets (in RGB form).
+local sniperLifetime = 10 --The amount of time the bullet will last before getting deleted (snipers).
+local automaticLifetime = 5 --The amount of time the bullet will last before getting deleted (automatics).
+local pistolLifetime = 2.5 --The amount of time the bullet will last before getting deleted (pistols).
 
---Velocity
+--[--Velocity--]--
 local bodyVelocity = {-17.7, 0, -17.7} --Change your body parts' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
 local hrpVelocity = {-17.7, 0, -17.7} --Change your hrp's velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
 local hatVelocity = {-17.7, 0, -17.7} --Change all of your accessories' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
@@ -77,6 +81,8 @@ local hatVelocity = {-17.7, 0, -17.7} --Change all of your accessories' velocity
 --   Blox Rifle 5000 - https://www.roblox.com/catalog/5168118559/Blox-Rifle-5000
 --   --[--Pistols--]--
 --     LEO Mk.45 [Right Hip] - https://www.roblox.com/catalog/6995534747/LEO-Mk-45-Right-Hip
+--     Halloween Gun - https://www.roblox.com/catalog/7542631784/Halloween-Gun
+--     White Mk.45 [Left Hip] - https://www.roblox.com/catalog/7604371176/White-Mk-45-Left-Hip
 --
 -- --[--Swords--]--
 --   Galaxy Sword - https://www.roblox.com/catalog/5355685721/Galaxy-Sword
@@ -89,6 +95,7 @@ local hatVelocity = {-17.7, 0, -17.7} --Change all of your accessories' velocity
 --  --[--Knifes--]--
 --    UMAD? - https://www.roblox.com/catalog/743692483/UMAD
 --    Red Swag Knife - https://www.roblox.com/catalog/7170689370/Red-Swag-Knife
+--    White Swag Knife - https://www.roblox.com/catalog/7170680556/White-Swag-Knife
 --[[--------------------------]]--
 
 --[[---------KeyBinds---------]]--
@@ -106,6 +113,15 @@ local hatVelocity = {-17.7, 0, -17.7} --Change all of your accessories' velocity
 local player1 = game.Players.LocalPlayer
 local character1 = player1.Character
 local StarterGUI = game:GetService("StarterGui")
+settings().Physics.AllowSleep = false
+
+--Guns
+local snipers = {"Sniper", "Meshes/Sniper_rbxAccessory", "Meshes/SniperAccessory", "Meshes/cowsniperAccessory", "Meshes/RainbowSniperAccessory", "WavySniper", "Meshes/GiftsniperAccessory", "HalloweenSniperAccessory", "Blox Rifle 5000"}
+local automaticGuns = {"Type-49 Abomindation Back Accessory"}
+local pistols = {"Meshes/1911RightAccessory", "Meshes/恶魔枪Accessory"}
+local swords = {"Dark Matter Sword", "Russo's Sword", "MeshPartAccessory"}
+local knives = {"UMAD", "Red SS", "White SS"}
+
 
 --Fake Character--
 --Create Attachment Function
@@ -123,12 +139,6 @@ local player1 = game:GetService("Players").LocalPlayer
 local character1 = player1.Character
 local hrp = character1.HumanoidRootPart
 --local torso = character.Torso
-
-for i,v in pairs(character1:GetChildren()) do
-    if v:IsA("LocalScript") then
-        v:Destroy()
-    end
-end
 
 local camera = workspace.CurrentCamera
 
@@ -277,11 +287,6 @@ CreateAttachment(cLLeg, Vector3.new(0,-1,0), Vector3.new(-0,0,0), Vector3.new(1,
 CreateAttachment(cRLeg, Vector3.new(0,-1,0), Vector3.new(-0,0,0), Vector3.new(1,0,0), Vector3.new(0,1,0), "RightFootAttachment")
 CreateAttachment(cHRP, Vector3.new(0,0,0), Vector3.new(-0,0,0), Vector3.new(1,0,0), Vector3.new(0,1,0), "RootAttachment")
 
-local flinger = Instance.new("BodyAngularVelocity", character1.HumanoidRootPart)
-flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
-flinger.P = 1000000000000000000000000000
-flinger.AngularVelocity = Vector3.new(0, 0, 0)
-
 --Cloning Hats (For Netless)
 for i,v in pairs(character1:GetChildren()) do
     if v:IsA("Accessory") then
@@ -306,26 +311,18 @@ end
 cHRP.CFrame = hrp.CFrame
 ----------------------------------------
 
---Multiple Snipers
-if reanimation:FindFirstChild("Meshes/Sniper_rbxAccessory") then
-    game.Players.LocalPlayer.Character["Meshes/Sniper_rbxAccessory"].Name = "Sniper"
-    reanimation["Meshes/Sniper_rbxAccessory"].Name = "Sniper"
-end
-
---Pink Cow Cyberpunk Sniper
-if reanimation:FindFirstChild("Meshes/cowsniperAccessory") then
-    game.Players.LocalPlayer.Character["Meshes/cowsniperAccessory"].Name = "Meshes/SniperAccessory"
-    reanimation["Meshes/cowsniperAccessory"].Name = "Meshes/SniperAccessory"
-end
-
---Wavy Cyberpunk Sniper
-if reanimation:FindFirstChild("WavySniper") then
-    game.Players.LocalPlayer.Character.WavySniper.Name = "Meshes/RainbowSniperAccessory"
-    reanimation.WavySniper.Name = "Meshes/RainbowSniperAccessory"
-end
-
 --Checks to see if you have one of the swords--
-if secondaryWeapon == true and not reanimation:FindFirstChild("Dark Matter Sword") and not reanimation:FindFirstChild("Russo's Sword") and not reanimation:FindFirstChild("MeshPartAccessory") and not reanimation:FindFirstChild("UMAD") and not reanimation:FindFirstChild("Red SS") then
+local meeleWeaponFound = false
+
+for i,v in pairs(character1:GetChildren()) do
+    if v:IsA("Accessory") then
+        if table.find(swords, v.Name) or table.find(knives, v.Name) then
+            meeleWeaponFound = true
+        end
+    end
+end
+
+if secondaryWeapon == true and meeleWeaponFound == false then
     local errorSound = Instance.new("Sound")
     errorSound.SoundId = "rbxassetid://3041205264"
     errorSound.PlaybackSpeed = 1
@@ -353,12 +350,23 @@ if secondaryWeapon == true and not reanimation:FindFirstChild("Dark Matter Sword
     
     wait(0.9)
     errorSound:Destroy()
+    reanimFolder:Destroy()
     error("You don't have a sword")
 end
 -----------------------------------------------
 
 --Checks to see if you have one of the guns--
-if not reanimation:FindFirstChild("Sniper") and not reanimation:FindFirstChild("Meshes/SniperAccessory") and not reanimation:FindFirstChild("Meshes/RainbowSniperAccessory") and not reanimation:FindFirstChild("Meshes/GiftsniperAccessory") and not reanimation:FindFirstChild("HalloweenSniperAccessory") and not reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") and not reanimation:FindFirstChild("Blox Rifle 5000") and not reanimation:FindFirstChild("Meshes/1911RightAccessory") then
+local rangedWeaponFound = false
+
+for i,v in pairs(character1:GetChildren()) do
+    if v:IsA("Accessory") then
+        if table.find(snipers, v.Name) or table.find(automaticGuns, v.Name) or table.find(pistols, v.Name) then
+            rangedWeaponFound = true
+        end
+    end
+end
+
+if rangedWeaponFound == false then
     local errorSound = Instance.new("Sound")
     errorSound.SoundId = "rbxassetid://3041205264"
     errorSound.PlaybackSpeed = 1
@@ -379,9 +387,23 @@ if not reanimation:FindFirstChild("Sniper") and not reanimation:FindFirstChild("
     
     wait(1.4)
     errorSound:Destroy()
+    reanimFolder:Destroy()
     error("You don't have a gun")
 end
 ------------------------------------------------
+
+--Deleting all LocalScripts in your character
+for i,v in pairs(character1:GetChildren()) do
+    if v:IsA("LocalScript") then
+        v:Destroy()
+    end
+end
+
+--Making The Flinger
+local flinger = Instance.new("BodyAngularVelocity", character1.HumanoidRootPart)
+flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+flinger.P = 1000000000000000000000000000
+flinger.AngularVelocity = Vector3.new(0, 0, 0)
 
 local gun = nil
 local sword = nil
@@ -412,10 +434,29 @@ local cameraMode = player1.CameraMode
 
 local userInputService = game:GetService("UserInputService")
 local vrService = game:GetService("VRService")
+local debris = game:GetService("Debris")
 
 hrp.Transparency = 0.5
 
---Swords/Knifes
+--Multiple Snipers
+if reanimation:FindFirstChild("Meshes/Sniper_rbxAccessory") then
+    game.Players.LocalPlayer.Character["Meshes/Sniper_rbxAccessory"].Name = "Sniper"
+    reanimation["Meshes/Sniper_rbxAccessory"].Name = "Sniper"
+end
+
+--Pink Cow Cyberpunk Sniper
+if reanimation:FindFirstChild("Meshes/cowsniperAccessory") then
+    game.Players.LocalPlayer.Character["Meshes/cowsniperAccessory"].Name = "Meshes/SniperAccessory"
+    reanimation["Meshes/cowsniperAccessory"].Name = "Meshes/SniperAccessory"
+end
+
+--Wavy Cyberpunk Sniper
+if reanimation:FindFirstChild("WavySniper") then
+    game.Players.LocalPlayer.Character.WavySniper.Name = "Meshes/RainbowSniperAccessory"
+    reanimation.WavySniper.Name = "Meshes/RainbowSniperAccessory"
+end
+
+--Swords
 if secondaryWeapon == true and reanimation:FindFirstChild("Dark Matter Sword") then
     sword = reanimation["Dark Matter Sword"].Handle
 end
@@ -428,12 +469,17 @@ if secondaryWeapon == true and reanimation:FindFirstChild("MeshPartAccessory") t
     sword = reanimation.MeshPartAccessory.Handle
 end
 
+--Knifes
 if secondaryWeapon == true and reanimation:FindFirstChild("UMAD") then
     sword = reanimation.UMAD.Handle
 end
 
 if secondaryWeapon == true and reanimation:FindFirstChild("Red SS") then
     sword = reanimation["Red SS"].Handle
+end
+
+if secondaryWeapon == true and reanimation:FindFirstChild("White SS") then
+    sword = reanimation["White SS"].Handle
 end
 
 --Snipers
@@ -462,19 +508,24 @@ if reanimation:FindFirstChild("Blox Rifle 5000") then
 end
 
 --Other Guns
+--Automatic
 if reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") then
     gun = reanimation["Type-49 Abomindation Back Accessory"].Handle
 end
 
+--Pistols
 if reanimation:FindFirstChild("Meshes/1911RightAccessory") then
     gun = reanimation["Meshes/1911RightAccessory"].Handle
 end
 
---The part that will determine if you are shooting at a player or not (VR)--
+if reanimation:FindFirstChild("Meshes/恶魔枪Accessory") then
+    gun = reanimation["Meshes/恶魔枪Accessory"].Handle
+end
+
+--The Part That Will Determine Where The Bullet Is Shot From--
 local vrAimer = nil
 
-local function VRAimerPlacement(RANGE, SIZE, POSITION, ORIENTATION)
-    range = RANGE
+local function VRAimerPlacement(SIZE, POSITION, ORIENTATION)
     --Aimer
     local part = Instance.new("Part")
     part.Parent = game.Workspace
@@ -502,8 +553,8 @@ local function VRAimerPlacement(RANGE, SIZE, POSITION, ORIENTATION)
     gun.Orientation = Vector3.new (0, 0, 0)
     
     --Aimer Pos and Rot
-    VRAimer.Position = gun.Position + POSITION
-    VRAimer.Orientation = gun.Orientation + ORIENTATION
+    VRAimer.Position = POSITION
+    VRAimer.Orientation = ORIENTATION
     
     --Gun Pos and Rot
     gun.Position = savePos
@@ -514,99 +565,177 @@ local function VRAimerPlacement(RANGE, SIZE, POSITION, ORIENTATION)
     vrAimer = VRAimer
 end
 
-if vrService.VREnabled then
-    if reanimation:FindFirstChild("Sniper") then
-        VRAimerPlacement(1000, Vector3.new(1000, 1 ,1), Vector3.new(500, 0, 0), Vector3.new(0, 0, 0))
-    end
+if reanimation:FindFirstChild("Sniper") then
+    VRAimerPlacement(Vector3.new(0.25, 0.25, 0.25), Vector3.new(3.205, 0.15, 0), Vector3.new(0, -90, 0))
+end
+
+if reanimation:FindFirstChild("Meshes/SniperAccessory") then
+    VRAimerPlacement(Vector3.new(0.25, 0.25, 0.25), Vector3.new(-1.9025, 2.6, 0), Vector3.new(51, 90, 0))
+end
+
+if reanimation:FindFirstChild("Meshes/RainbowSniperAccessory") then
+    VRAimerPlacement(Vector3.new(0.25, 0.25, 0.25), Vector3.new(-2.125, 2.46, 0.0675), Vector3.new(51, 90, 0))
+end
+
+if reanimation:FindFirstChild("Meshes/GiftsniperAccessory") then
+    VRAimerPlacement(Vector3.new(0.25, 0.25, 0.25), Vector3.new(2.063, 2.185, 0.918), Vector3.new(45.15, -107, -89))
+end
+
+if reanimation:FindFirstChild("HalloweenSniperAccessory") then
+    VRAimerPlacement(Vector3.new(0.25, 0.25, 0.25), Vector3.new(2.188, 2.3475, 0.005), Vector3.new(45, -90, 0))
+end
+
+if reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") then
+    VRAimerPlacement(Vector3.new(0.25, 0.25, 0.25), Vector3.new(-1.6, -1.75, -0.288), Vector3.new(-50, 90, 90))
     
-    if reanimation:FindFirstChild("Meshes/SniperAccessory") then
-        VRAimerPlacement(1000, Vector3.new(1000, 1 ,1), Vector3.new(-305.25, 398, 0), Vector3.new(0, 0, -52.5))
-    end
+    --Laser
+    local laser = Instance.new("Part")
+    laser.Parent = game.Workspace
+    laser.CanCollide = false
+    laser.Anchored = false
+    laser.Massless = true
+    laser.Size = Vector3.new(10, 0.1, 0.1)
+    laser.Transparency = 0
+    laser.Material = "Neon"
+    laser.BrickColor = BrickColor.new("Really red")
+    laser.Shape = "Cylinder"
+    laser.Name = "VRLaser"
     
-    if reanimation:FindFirstChild("Meshes/RainbowSniperAccessory") then
-        VRAimerPlacement(1000, Vector3.new(1000, 1 ,1), Vector3.new(-335.3, 372.6, 5.9), Vector3.new(0, 1, -48))
-    end
+    --Laser Weld
+    local lWeld = Instance.new("Weld")
+    lWeld.Parent = laser
+    lWeld.Part0 = laser
+    lWeld.Part1 = gun
     
-    if reanimation:FindFirstChild("Meshes/GiftsniperAccessory") then
-        VRAimerPlacement(1000, Vector3.new(1000, 1 ,1), Vector3.new(334, 361.2, 97.67), Vector3.new(43.89, 76.6, 91.98))
-    end
+    local savePos = gun.Position
+    local saveRot = gun.Orientation
     
-    if reanimation:FindFirstChild("HalloweenSniperAccessory") then
-        VRAimerPlacement(1000, Vector3.new(1000, 1 ,1), Vector3.new(342.25, 367, 0), Vector3.new(0, 0, 47))
-    end
+    --Gun Pos and Rot
+    gun.Position = Vector3.new(0, 0, 0)
+    gun.Orientation = Vector3.new (0, 0, 0)
     
-    if reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") then
-        VRAimerPlacement(500, Vector3.new(500, 0.3, 0.3), Vector3.new(-168.6, -187.2, -0.3), Vector3.new(0, 0, 48))
-        
-        --Laser
-        local laser = Instance.new("Part")
-        laser.Parent = game.Workspace
-        laser.CanCollide = false
-        laser.Anchored = false
-        laser.Massless = true
-        laser.Size = Vector3.new(10, 0.1, 0.1)
-        laser.Transparency = 0
-        laser.Material = "Neon"
-        laser.BrickColor = BrickColor.new("Really red")
-        laser.Shape = "Cylinder"
-        laser.Name = "VRLaser"
-        
-        --Laser Weld
-        local lWeld = Instance.new("Weld")
-        lWeld.Parent = laser
-        lWeld.Part0 = laser
-        lWeld.Part1 = gun
-        
-        local savePos = gun.Position
-        local saveRot = gun.Orientation
-        
-        --Gun Pos and Rot
-        gun.Position = Vector3.new(0, 0, 0)
-        gun.Orientation = Vector3.new (0, 0, 0)
-        
-        --Laser Pos and Rot
-        laser.Position = gun.Position + Vector3.new(-4.585, -5.255, -0.286)
-        laser.Orientation = gun.Orientation + Vector3.new(0, 0, 48)
-        
-        --Gun Pos and Rot
-        gun.Position = savePos
-        gun.Orientation = saveRot
-    end
+    --Laser Pos and Rot
+    laser.Position = gun.Position + Vector3.new(-4.585, -5.255, -0.286)
+    laser.Orientation = gun.Orientation + Vector3.new(0, 0, 48)
     
-    if reanimation:FindFirstChild("Blox Rifle 5000") then
-        VRAimerPlacement(1000, Vector3.new(1000, 1 ,1), Vector3.new(0, 355.15, -355), Vector3.new(0, 90, 45))
-    end
-    
-    if reanimation:FindFirstChild("Meshes/1911RightAccessory") then
-        VRAimerPlacement(1000, Vector3.new(1000, 0.25, 0.25), Vector3.new(0, -500.5, 0.3), Vector3.new(0, 0, 90))
+    --Gun Pos and Rot
+    gun.Position = savePos
+    gun.Orientation = saveRot
+end
+
+if reanimation:FindFirstChild("Blox Rifle 5000") then
+    VRAimerPlacement(Vector3.new(0.25, 0.25, 0.25), Vector3.new(0, 2.163, -2.017), Vector3.new(45, 0, 0))
+end
+
+if reanimation:FindFirstChild("Meshes/1911RightAccessory") then
+    if gun:FindFirstChild("SpecialMesh").MeshId == "rbxassetid://6995200499" then
+        VRAimerPlacement(Vector3.new(0.25, 0.25, 0.25), Vector3.new(0, -0.75, 0.3), Vector3.new(-90, 0, 0))
+    elseif gun:FindFirstChildWhichIsA("SpecialMesh").MeshId == "rbxassetid://6995561576" then
+        VRAimerPlacement(Vector3.new(0.25, 0.25, 0.25), Vector3.new(-0.3, -0.75, 0), Vector3.new(-90, 0, 0))
     end
 end
 
-function Touching()
-    touchedFunction = vrAimer.Touched:Connect(function(part)
-        --Snipers
-        --print("---------------"..math.random(1, 10))
-        if part.Parent:FindFirstChild("Humanoid") and part.Parent.Name ~= player1.Name and not character1:FindFirstChild("Type-49 Abomindation Back Accessory") and part.Parent.Name ~= "VirtualRig" and part.Parent.Name ~= "VirtualBody" then
-            if part.Parent:FindFirstChild("Humanoid").RigType == Enum.HumanoidRigType.R6 then
-                hrp.Position = part.Parent:FindFirstChild("Torso").Position
-            else
-                hrp.Position = part.Parent:FindFirstChild("UpperTorso").Position
-            end
-        end
-        
-        --Type-49 Abomindation
-        if character1:FindFirstChild("Type-49 Abomindation Back Accessory") and part.Parent.Name ~= "VirtualRig" and part.Parent.Name ~= "VirtualBody" then
-            if part.Parent:FindFirstChild("Humanoid") and part.Parent.Name ~= player1.Name then
-                if part.Parent:FindFirstChild("Humanoid").RigType == Enum.HumanoidRigType.R6 then
-                    hrp.Position = part.Parent:FindFirstChild("Torso").Position
-                else
-                    hrp.Position = part.Parent:FindFirstChild("UpperTorso").Position
+if reanimation:FindFirstChild("Meshes/恶魔枪Accessory") then
+    VRAimerPlacement(Vector3.new(0.25, 0.25, 0.25), Vector3.new(0, -0.125, 0.8), Vector3.new(-21, 180, 180))
+end
+----------------------------------------------------------------------------
+
+local function hrpAlignment(torso)
+    --Checking For Other Alignments
+    if hrp:FindFirstChild("AlignPosition") then
+        hrp:FindFirstChild("AlignPosition"):Destroy()
+    end
+    if hrp:FindFirstChild("PosAtt0") then
+        hrp:FindFirstChild("PosAtt0"):Destroy()
+    end
+    
+    --Creating AlignPosition
+    local alignPosition = Instance.new("AlignPosition")
+    
+    --Creating PosAtt0
+    local posAtt0 = Instance.new("Attachment", hrp)
+    posAtt0.Name = "PosAtt0"
+    
+    --Creating PosAtt1
+    local posAtt1 = Instance.new("Attachment", torso)
+    posAtt1.Name = "PosAtt1"
+    
+    --AlignPosition Properties--
+    alignPosition.Attachment0 = posAtt0
+    alignPosition.Attachment1 = posAtt1
+    alignPosition.RigidityEnabled = false
+    alignPosition.ReactionForceEnabled = false
+    alignPosition.MaxForce = 99999999999999999999999999
+    alignPosition.Responsiveness = 200
+    alignPosition.Parent = hrp
+    
+    --Debris
+    debris:AddItem(alignPosition, 1)
+    debris:AddItem(posAtt0, 1)
+    debris:AddItem(posAtt1, 1)
+end
+
+
+--Making The Bullet
+function Bullet(lifetime)
+    --Bullet
+    local bullet = Instance.new("Part", workspace)
+	bullet.Color = Color3.fromRGB(bulletColor[1], bulletColor[2], bulletColor[3])
+	if not vrService.VREnabled then
+        bullet.CFrame = CFrame.new(vrAimer.CFrame.Position + ((bullet.Size.Z/2) * vrAimer.CFrame.LookVector), mouse.Hit.Position)
+    else
+        bullet.CFrame = vrAimer.CFrame
+    end
+	bullet.Material = Enum.Material.Neon
+	bullet.Size = Vector3.new(0.25, 0.25, 7)
+	bullet.CanCollide = false
+	debris:AddItem(bullet, lifetime)
+	
+	--BodyVelocity
+    local bodyVelocity = Instance.new("BodyVelocity", bullet)
+    bodyVelocity.MaxForce = Vector3.new(10000, 10000, 10000)
+    if not vrService.VREnabled then
+        bodyVelocity.Velocity = mouse.Hit.LookVector * 500
+    else
+        bodyVelocity.Velocity = vrAimer.CFrame.LookVector * 500
+    end
+	
+	--Touched
+	bullet.Touched:Connect(function(part)
+        if part.Name ~= "VRAimer" and part.Name ~= "VRLaser" then
+            if part.Parent.ClassName == "Model" then
+                if part.Parent.Name ~= "VirtualRig" and part.Parent.Name ~= "VirtualBody" and part.Parent.Name ~= player1.Name and part.Parent.Name ~= reanimation.Name then
+                    if part.Parent:FindFirstChild("Humanoid") then
+                        if part.Parent:FindFirstChild("Humanoid").RigType == Enum.HumanoidRigType.R6 then
+                            hrpAlignment(part.Parent:FindFirstChild("Torso"))
+                        else
+                            hrpAlignment(part.Parent:FindFirstChild("UpperTorso"))
+                        end
+                    end
+                    --wait(0.1)
+                    bullet:Destroy()
                 end
+            elseif part.ClassName == "Accessory" then
+                if part.Parent.Parent.Name ~= "VirtualRig" and part.Parent.Parent.Name ~= "VirtualBody" and part.Parent.Parent.Name ~= player1.Namee and part.Parent.Parent.Name ~= reanimation.Name then
+                    if part.Parent.Parent:FindFirstChild("Humanoid") then
+                        if part.Parent.Parent:FindFirstChild("Humanoid").RigType == Enum.HumanoidRigType.R6 then
+                            hrpAlignment(part.Parent.Parent:FindFirstChild("Torso"))
+                        else
+                            hrpAlignment(part.Parent.Parent:FindFirstChild("UpperTorso"))
+                        end
+                    end
+                    --wait(0.1)
+                    bullet:Destroy()
+                end
+            end
+            
+            if part.Parent == workspace and part.CanCollide == true then
+                --wait(0.1)
+                bullet:Destroy()
             end
         end
     end)
 end
-----------------------------------------------------------------------------
 
 --Setting Camera To First Person (VR)
 if vrService.VREnabled and changeSomeStuff == true then
@@ -721,21 +850,49 @@ if leftHand == true then
     --LEO Mk.45 [Right Hip]
     if reanimation:FindFirstChild("Meshes/1911RightAccessory") then
         gun.WaistCenterAttachment.Name = "BodyBackAttachment"
-        gun.BodyBackAttachment.Orientation = Vector3.new(-180, 0, -180) --Orientation
-        gun.BodyBackAttachment.Position = Vector3.new(-1.10212, 1.1, -0.5) --Position
+        if gun:FindFirstChildWhichIsA("SpecialMesh").MeshId == "rbxassetid://6995200499" then
+            gun.BodyBackAttachment.Orientation = Vector3.new(-180, 0, -180) --Orientation
+            gun.BodyBackAttachment.Position = Vector3.new(-1.10212, 1.1, -0.5) --Position
+            
+            --Holster
+            gHolstRot = Vector3.new(-180, 0, -180) --Orientation
+            gHolstPos = Vector3.new(-1.10212, 1.1, -0.5) --Position
+            
+            --Holding
+            gHoldRot = Vector3.new(-180, 0, -180) --Orientation
+            gHoldPos = Vector3.new(0, 0.45, -0.25) --Position
+        elseif gun:FindFirstChildWhichIsA("SpecialMesh").MeshId == "rbxassetid://6995561576" then
+            gun.BodyBackAttachment.Orientation = Vector3.new(-180, -90, -180) --Orientation
+            gun.BodyBackAttachment.Position = Vector3.new(0.5, 1.1, -1.1) --Position
+            
+            --Holster
+            gHolstRot = Vector3.new(-180, -90, -180) --Orientation
+            gHolstPos = Vector3.new(0.5, 1.1, -1.1) --Position
+            
+            --Holding
+            gHoldRot = Vector3.new(-180, -90, -180) --Orientation
+            gHoldPos = Vector3.new(0.25, 0.45, 0) --Position
+        end
+    end
+    
+    --Halloween Gun
+    if reanimation:FindFirstChild("Meshes/恶魔枪Accessory") then
+        gun.WaistCenterAttachment.Name = "BodyBackAttachment"
+        gun.BodyBackAttachment.Orientation = Vector3.new(60, 180, 0) --Orientation
+        gun.BodyBackAttachment.Position = Vector3.new(-1.16053, -0.1, -1.2) --Position
         
         --Holster
-        gHolstRot = Vector3.new(-180, 0, -180) --Orientation
-        gHolstPos = Vector3.new(-1.10212, 1.1, -0.5) --Position
+        gHolstRot = Vector3.new(60, 180, 0) --Orientation
+        gHolstPos = Vector3.new(-1.16053, -0.1, -1.2) --Position
         
         --Holding
-        gHoldRot = Vector3.new(-180, 0, -180) --Orientation
-        gHoldPos = Vector3.new(0, 0.45, -0.25) --Position
+        gHoldRot = Vector3.new(69, -180, 0) --Orientation
+        gHoldPos = Vector3.new(0, -0.175, -0.6) --Position
     end
     
     --Sword/Knifes
     --VR
-    if vrService.VREnabled then
+    if vrService.VREnabled and knifeMode == true then
         --Dark Matter Sword
         if secondaryWeapon == true and reanimation:FindFirstChild("Dark Matter Sword") then
             sword.BodyBackAttachment.Orientation = Vector3.new(50, -90, 0) --Orientation
@@ -779,7 +936,7 @@ if leftHand == true then
         end
         
         --Red Swag Knife
-        if reanimation:FindFirstChild("Red SS") then
+        if reanimation:FindFirstChild("Red SS") or reanimation:FindFirstChild("White SS") then
             sword.WaistCenterAttachment.Name = "BodyBackAttachment"
             sword.BodyBackAttachment.Orientation = Vector3.new(0, 180, 0) --Orientation
             sword.BodyBackAttachment.Position = Vector3.new(1.07686, 1, -0.5) --Position
@@ -825,7 +982,7 @@ if leftHand == true then
         end
         
         --Red Swag Knife
-        if reanimation:FindFirstChild("Red SS") then
+        if reanimation:FindFirstChild("Red SS") or reanimation:FindFirstChild("White SS") then
             sword.WaistCenterAttachment.Name = "BodyBackAttachment"
             sword.BodyBackAttachment.Orientation = Vector3.new(0, 180, 0) --Orientation
             sword.BodyBackAttachment.Position = Vector3.new(1.07686, 1, -0.5) --Position
@@ -947,21 +1104,49 @@ else --Right Hand
     --LEO Mk.45 [Right Hip]
     if reanimation:FindFirstChild("Meshes/1911RightAccessory") then
         gun.WaistCenterAttachment.Name = "BodyBackAttachment"
-        gun.BodyBackAttachment.Orientation = Vector3.new(-180, 0, -180) --Orientation
-        gun.BodyBackAttachment.Position = Vector3.new(1.10212, 1.1, -0.5) --Position
+        if gun:FindFirstChildWhichIsA("SpecialMesh").MeshId == "rbxassetid://6995200499" then
+            gun.BodyBackAttachment.Orientation = Vector3.new(-180, 0, -180) --Orientation
+            gun.BodyBackAttachment.Position = Vector3.new(1.10212, 1.1, -0.5) --Position
+            
+            --Holster
+            gHolstRot = Vector3.new(-180, 0, -180) --Orientation
+            gHolstPos = Vector3.new(1.10212, 1.1, -0.5) --Position
+            
+            --Holding
+            gHoldRot = Vector3.new(-180, 0, -180) --Orientation
+            gHoldPos = Vector3.new(0, 0.45, -0.25) --Position
+        elseif gun:FindFirstChildWhichIsA("SpecialMesh").MeshId == "rbxassetid://6995561576" then
+            gun.BodyBackAttachment.Orientation = Vector3.new(-180, -90, -180) --Orientation
+            gun.BodyBackAttachment.Position = Vector3.new(0.5, 1.1, 1.1) --Position
+            
+            --Holster
+            gHolstRot = Vector3.new(-180, -90, -180) --Orientation
+            gHolstPos = Vector3.new(0.5, 1.1, 1.1) --Position
+            
+            --Holding
+            gHoldRot = Vector3.new(-180, -90, -180) --Orientation
+            gHoldPos = Vector3.new(0.25, 0.45, 0) --Position
+        end
+    end
+    
+    --Halloween Gun
+    if reanimation:FindFirstChild("Meshes/恶魔枪Accessory") then
+        gun.WaistCenterAttachment.Name = "BodyBackAttachment"
+        gun.BodyBackAttachment.Orientation = Vector3.new(60, 180, 0) --Orientation
+        gun.BodyBackAttachment.Position = Vector3.new(1.16053, -0.1, -1.2) --Position
         
         --Holster
-        gHolstRot = Vector3.new(-180, 0, -180) --Orientation
-        gHolstPos = Vector3.new(1.10212, 1.1, -0.5) --Position
+        gHolstRot = Vector3.new(60, 180, 0) --Orientation
+        gHolstPos = Vector3.new(1.16053, -0.1, -1.2) --Position
         
         --Holding
-        gHoldRot = Vector3.new(-180, 0, -180) --Orientation
-        gHoldPos = Vector3.new(0, 0.45, -0.25) --Position
+        gHoldRot = Vector3.new(69, -180, 0) --Orientation
+        gHoldPos = Vector3.new(0, -0.175, -0.6) --Position
     end
     
     --Sword/Knifes
     --VR
-    if vrService.VREnabled then
+    if vrService.VREnabled and knifeMode == true then
         --Dark Matter Sword
         if secondaryWeapon == true and reanimation:FindFirstChild("Dark Matter Sword") then
             sword.BodyBackAttachment.Orientation = Vector3.new(50, -90, 0) --Orientation
@@ -1005,7 +1190,7 @@ else --Right Hand
         end
         
         --Red Swag Knife
-        if reanimation:FindFirstChild("Red SS") then
+        if reanimation:FindFirstChild("Red SS") or reanimation:FindFirstChild("White SS") then
             sword.WaistCenterAttachment.Name = "BodyBackAttachment"
             sword.BodyBackAttachment.Orientation = Vector3.new(0, 180, 0) --Orientation
             sword.BodyBackAttachment.Position = Vector3.new(-1.07686, 1, -0.5) --Position
@@ -1051,7 +1236,7 @@ else --Right Hand
         end
         
         --Red Swag Knife
-        if reanimation:FindFirstChild("Red SS") then
+        if reanimation:FindFirstChild("Red SS") or reanimation:FindFirstChild("White SS") then
             sword.WaistCenterAttachment.Name = "BodyBackAttachment"
             sword.BodyBackAttachment.Orientation = Vector3.new(0, 180, 0) --Orientation
             sword.BodyBackAttachment.Position = Vector3.new(-1.07686, 1, -0.5) --Position
@@ -1083,16 +1268,7 @@ end
 --From - The Zenith Battle Rifle 70 by CKbackup (Modified)--
 function GunShot(id, vol, pitch)
     local sou = Instance.new("Sound")
-    if leftHand == true and vrService.VREnabled then
-        sou.Parent = lArm1
-    else
-        if leftHand == false and vrService.VREnabled then
-            sou.Parent = rArm1
-        end
-    end
-    if not vrService.VREnabled then
-        sou.Parent = game.Workspace
-    end
+    sou.Parent = vrAimer
     sou.Volume = vol
     sou.Pitch = pitch
     sou.SoundId = "rbxassetid://"..id
@@ -1191,17 +1367,18 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
         end
         
         --Shoot Gun
-        if key.KeyCode == Enum.KeyCode.E and shooting == false and holdingGun == true and not vrService.VREnabled and scriptLoaded == true and not reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") and not gameProcessedEvent then
+        if key.KeyCode == Enum.KeyCode.E and shooting == false and holdingGun == true and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent then
             shooting = true 
             
-            if not reanimation:FindFirstChild("Meshes/1911RightAccessory") then
+            if table.find(snipers, gun.Parent.Name) then
                 --Fling Stuff
                 if holdingSword == false then
                     flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
                 end
                 
-                --Function
+                --Functions
                 GunShot(680140087, 0.7, 1)
+                Bullet(sniperLifetime)
                 
                 --Wait
                 wait(sniperShootCooldown)
@@ -1209,29 +1386,33 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
                 shooting = false 
                 
                 --Fling Stuff
-                if holdingSword == false then
+                if holdingSword == false and not hrp:FindFirstChild("AlignPosition") then
                     flinger.AngularVelocity = Vector3.new(0, 0, 0)
                 end
-            else
-                --Function
-                GunShot(5298232020, 1, math.random(90,110)/100)
+            elseif table.find(automaticGuns, gun.Parent.Name) then
+                --Fling Stuff
                 if holdingSword == false then
                     flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
                 end
-                wait(pistolShootCooldown)
-                shooting = false
+            elseif table.find(pistols, gun.Parent.Name) then
+                --Fling Stuff
                 if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+                end
+                
+                --Functions
+                GunShot(5298232020, 1, math.random(90,110)/100)
+                Bullet(pistolLifetime)
+                
+                --Wait
+                wait(pistolShootCooldown)
+                
+                shooting = false
+                
+                --Fling Stuff
+                if holdingSword == false and not hrp:FindFirstChild("AlignPosition") then
                     flinger.AngularVelocity = Vector3.new(0, 0, 0)
                 end
-            end
-        end
-        
-        if key.KeyCode == Enum.KeyCode.E and shooting == false and holdingGun == true and not vrService.VREnabled and scriptLoaded == true and reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") and not gameProcessedEvent then
-            shooting = true 
-            
-            --Fling Stuff
-            if holdingSword == false then
-                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
             end
         end
         
@@ -1358,17 +1539,18 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
         end
         
         --Shoot Gun
-        if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == false and holdingGun == true and leftHand == false and scriptLoaded == true and not reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") then
-            shooting = true  
+        if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == false and holdingGun == true and leftHand == false and scriptLoaded == true then
+            shooting = true 
             
-            if not reanimation:FindFirstChild("Meshes/1911RightAccessory") then
+            if table.find(snipers, gun.Parent.Name) then
                 --Fling Stuff
                 if holdingSword == false then
                     flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
                 end
                 
-                --Function
+                --Functions
                 GunShot(680140087, 0.7, 1)
+                Bullet(sniperLifetime)
                 
                 --Wait
                 wait(sniperShootCooldown)
@@ -1376,29 +1558,33 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
                 shooting = false 
                 
                 --Fling Stuff
-                if holdingSword == false then
+                if holdingSword == false and not hrp:FindFirstChild("AlignPosition") then
                     flinger.AngularVelocity = Vector3.new(0, 0, 0)
                 end
-            else
-                --Function
-                GunShot(5298232020, 1, math.random(90,110)/100)
+            elseif table.find(automaticGuns, gun.Parent.Name) then
+                --Fling Stuff
                 if holdingSword == false then
                     flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
                 end
-                wait(pistolShootCooldown)
-                shooting = false
+            elseif table.find(pistols, gun.Parent.Name) then
+                --Fling Stuff
                 if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+                end
+                
+                --Functions
+                GunShot(5298232020, 1, math.random(90,110)/100)
+                Bullet(pistolLifetime)
+                
+                --Wait
+                wait(pistolShootCooldown)
+                
+                shooting = false
+                
+                --Fling Stuff
+                if holdingSword == false and not hrp:FindFirstChild("AlignPosition") then
                     flinger.AngularVelocity = Vector3.new(0, 0, 0)
                 end
-            end
-        end
-        
-        if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == false and holdingGun == true and leftHand == false and scriptLoaded == true and reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") then
-            shooting = true 
-            
-            --Fling Stuff
-            if holdingSword == false then
-                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
             end
         end
         
@@ -1475,17 +1661,18 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
         end
         
         --Shoot Gun
-        if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == false and holdingGun == true and leftHand == true and scriptLoaded == true and not reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") then
+        if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == false and holdingGun == true and leftHand == true and scriptLoaded == true then
             shooting = true 
             
-            if not reanimation:FindFirstChild("Meshes/1911RightAccessory") then
+            if table.find(snipers, gun.Parent.Name) then
                 --Fling Stuff
                 if holdingSword == false then
                     flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
                 end
                 
-                --Function
+                --Functions
                 GunShot(680140087, 0.7, 1)
+                Bullet(sniperLifetime)
                 
                 --Wait
                 wait(sniperShootCooldown)
@@ -1493,29 +1680,33 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
                 shooting = false 
                 
                 --Fling Stuff
-                if holdingSword == false then
+                if holdingSword == false and not hrp:FindFirstChild("AlignPosition") then
                     flinger.AngularVelocity = Vector3.new(0, 0, 0)
                 end
-            else
-                --Function
-                GunShot(5298232020, 1, math.random(90,110)/100)
+            elseif table.find(automaticGuns, gun.Parent.Name) then
+                --Fling Stuff
                 if holdingSword == false then
                     flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
                 end
-                wait(pistolShootCooldown)
-                shooting = false
+            elseif table.find(pistols, gun.Parent.Name) then
+                --Fling Stuff
                 if holdingSword == false then
+                    flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
+                end
+                
+                --Functions
+                GunShot(5298232020, 1, math.random(90,110)/100)
+                Bullet(pistolLifetime)
+                
+                --Wait
+                wait(pistolShootCooldown)
+                
+                shooting = false
+                
+                --Fling Stuff
+                if holdingSword == false and not hrp:FindFirstChild("AlignPosition") then
                     flinger.AngularVelocity = Vector3.new(0, 0, 0)
                 end
-            end
-        end
-        
-        if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == false and holdingGun == true and leftHand == true and scriptLoaded == true and reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") then
-            shooting = true 
-            
-            --Fling Stuff
-            if holdingSword == false then
-                flinger.AngularVelocity = Vector3.new(10000, 10000, 10000)
             end
         end
         --------------------------------------------------------------------------------------
@@ -1525,11 +1716,11 @@ end)
 userInputService.InputEnded:Connect(function(key)
     if character1.Parent == game.Workspace then
         --Non VR Stop Shooting----------------------------------------------------------------
-        if key.KeyCode == Enum.KeyCode.E and shooting == true and scriptLoaded == true and reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") then
+        if key.KeyCode == Enum.KeyCode.E and shooting == true and scriptLoaded == true and table.find(automaticGuns, gun.Parent.Name) then
             shooting = false 
             
             --Fling Stuff
-            if holdingSword == false then
+            if holdingSword == false and not hrp:FindFirstChild("AlignPosition") then
                 flinger.AngularVelocity = Vector3.new(0, 0, 0)
             end
         end
@@ -1576,11 +1767,11 @@ userInputService.InputEnded:Connect(function(key)
         end
         
         --Stop Shooting
-        if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == true and leftHand == false and scriptLoaded == true and reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") then
+        if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == true and leftHand == false and scriptLoaded == true and table.find(automaticGuns, gun.Parent.Name) then
             shooting = false 
             
             --Fling Stuff
-            if holdingSword == false then
+            if holdingSword == false and not hrp:FindFirstChild("AlignPosition") then
                 flinger.AngularVelocity = Vector3.new(0, 0, 0)
             end
         end
@@ -1625,11 +1816,11 @@ userInputService.InputEnded:Connect(function(key)
         end
         
         --Stop Shooting
-        if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == true and leftHand == true and scriptLoaded == true and reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") then
+        if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == true and leftHand == true and scriptLoaded == true and table.find(automaticGuns, gun.Parent.Name) then
             shooting = false 
             
             --Fling Stuff
-            if holdingSword == false then
+            if holdingSword == false and not hrp:FindFirstChild("AlignPosition") then
                 flinger.AngularVelocity = Vector3.new(0, 0, 0)
             end
         end
@@ -3106,53 +3297,24 @@ ViewHUDFunc = function()
     scriptLoaded = true
     
     while character1.Parent == game.Workspace do
-        if shooting == false then
+        if shooting == false and not hrp:FindFirstChild("AlignPosition") then
             if secondaryWeapon == true then
                 hrp.Position = sword.Position
             else
                 hrp.Position = gun.Position
             end
+            if holdingSword == false and flinger.AngularVelocity == Vector3.new(10000, 10000, 10000) then
+                flinger.AngularVelocity = Vector3.new(0, 0, 0)
+            end
         else
-            if mouse.Hit.Position.X <= gun.Position.X + range and mouse.Hit.Position.X >= gun.Position.X - range then
-                if mouse.Hit.Position.Y <= gun.Position.Y + range and mouse.Hit.Position.Y >= gun.Position.Y - range then
-                    if mouse.Hit.Position.Z <= gun.Position.Z + range and mouse.Hit.Position.Z >= gun.Position.Z - range then
-                        if vrService.VREnabled then
-                            if reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") and shooting == true then
-                                GunShot(1583819337, 1, math.random(90,110)/100)
-                                wait(0.1)
-                            end
-                            
-                            if shooting == true then
-                                if touchedFunction == nil then
-                                    vrAimer.CanTouch = true
-                                    Touching()
-                                end
-                            else
-                                vrAimer.CanTouch = false
-                                touchedFunction:Disconnect()
-                                touchedFunction = nil
-                                --[[
-                                if touchedFunction ~= nil then
-                                    touchedFunction:Disconnect()
-                                end
-                                touchedFunction = nil
-                                ]]
-                            end
-                        else
-                            if shooting == true and not reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") and not vrService.VREnabled then --Snipers and Pistols
-                                hrp.Position = mouse.Hit.Position
-                            end
-                            
-                            if shooting == true and reanimation:FindFirstChild("Type-49 Abomindation Back Accessory") and not vrService.VREnabled then
-                                GunShot(1583819337, 1, math.random(90,110)/100)
-                                hrp.Position = mouse.Hit.Position
-                                wait(0.05)
-                                hrp.Position = gun.Position
-                                wait(0.05)
-                            end
-                        end
-                    end
-                end
+            if table.find(automaticGuns, gun.Parent.Name) and shooting == true then
+                GunShot(1583819337, 1, math.random(90,110)/100)
+                Bullet(automaticLifetime)
+                wait(0.1)
+            end
+            
+            if shooting == true and not table.find(automaticGuns, gun.Parent.Name) and not vrService.VREnabled then --Snipers and Pistols
+                --hrp.Position = mouse.Hit.Position
             end
         end
         game:GetService("RunService").Heartbeat:wait()
