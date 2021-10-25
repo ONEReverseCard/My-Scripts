@@ -312,17 +312,17 @@ cHRP.CFrame = hrp.CFrame
 ----------------------------------------
 
 --Checks to see if you have one of the swords--
-local meeleWeaponFound = false
+local meleeWeaponFound = false
 
 for i,v in pairs(character1:GetChildren()) do
     if v:IsA("Accessory") then
         if table.find(swords, v.Name) or table.find(knives, v.Name) then
-            meeleWeaponFound = true
+            meleeWeaponFound = true
         end
     end
 end
 
-if secondaryWeapon == true and meeleWeaponFound == false then
+if secondaryWeapon == true and meleeWeaponFound == false then
     local errorSound = Instance.new("Sound")
     errorSound.SoundId = "rbxassetid://3041205264"
     errorSound.PlaybackSpeed = 1
