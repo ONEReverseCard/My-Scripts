@@ -1,7 +1,8 @@
+
 --[[
   _______________________________________________________________
 //                                                               \\
-||             CLOVR - Modified by: ONEReverseCard                ||
+||       CLOVR - Modified by: ONEReverseCard and ShownApe         ||
 ||        Original VR script made by Abacaxl on YouTube           ||
 || NOTE: Everything that I put into this script wasn't made by me ||
 ||            I will give credit where credit is due              ||
@@ -83,6 +84,18 @@
 --[[--------------------------]]--
 
 
+local character = game.Players.LocalPlayer.Character
+local tools = {}
+for i, v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
+    if v:IsA("Tool") 
+        then v.Parent = character
+        table.insert(tools,v)
+    end
+end
+wait()
+for i, v in pairs(tools) do
+    v.Parent = game.Players.LocalPlayer.Backpack
+end
 
 local player1 = game.Players.LocalPlayer
 local character1 = player1.Character
@@ -175,7 +188,6 @@ if rangedWeaponFound == false then
     
     wait(1.4)
     errorSound:Destroy()
-    reanimFolder:Destroy()
     error("You don't have a gun")
 end
 ------------------------------------------------
@@ -326,6 +338,7 @@ headMesh.Scale = Vector3.new(1.25, 1.25, 1.25)
 --CreateAttachment(cHead, CFrame.new(0, 0.600000024, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1), Vector3.new(1, 0, 0), Vector3.new(0, 1, 0), "")
 
 local reanimation = model
+reanimation.Humanoid.BreakJointsOnDeath = false
 
 --Creating Attachments
 CreateAttachment(cHead, Vector3.new(0,0.60000002384186,0), Vector3.new(-0,0,0), Vector3.new(1,0,0), Vector3.new(0,1,0), "HairAttachment")
@@ -3022,7 +3035,7 @@ ViewHUDFunc = function()
         end
             
         for i,v in pairs(character1:GetChildren()) do
-            if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" then
+            if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" and v.Name ~= "fake" and reanimation:FindFirstChild(v.Name) then
                 v.Velocity = Vector3.new(_G.bodyVelocity[1], _G.bodyVelocity[2], _G.bodyVelocity[3])
                 if character1.Humanoid.RigType == Enum.HumanoidRigType.R6 then
                     v.CFrame = reanimation:FindFirstChild(v.Name).CFrame
@@ -3039,9 +3052,12 @@ ViewHUDFunc = function()
                 v.Handle.CFrame = reanimation:FindFirstChild(v.Name).Handle.CFrame
             end
             
+            if v.Name == "fake" then
+                v.Velocity = Vector3.new(0,0,0)
+            end
+            
             if v:IsA("Tool") then
                 v.Handle.Velocity = Vector3.new(_G.toolVelocity[1], _G.toolVelocity[2], _G.toolVelocity[3])
-                v.Handle.CFrame = character1["Right Arm"].CFrame * v.Grip
                 if v.Handle.CanCollide == true then
                     v.Handle.CanCollide = false
                 end
@@ -3086,8 +3102,6 @@ ViewHUDFunc = function()
         game:GetService("RunService").Heartbeat:wait()
     end
     --------------------------------------------------------------------
-    
-    wait(9e9)
 end
 Script()
 wait(2)
@@ -3115,6 +3129,63 @@ A1H.Position = Vector3.new(0, 1, 0)
 local socket5 = Instance.new("BallSocketConstraint", character["Head"])
 socket5.Attachment0 = A0H
 socket5.Attachment1 = A1H
---loadstring(game:HttpGet("https://ghostbin.co/paste/krmyf/raw", true))()
 -----------------------------------------------------------
-wait(9e9)
+
+local character = game.Players.LocalPlayer.Character
+print(character.Humanoid:GetFullName())
+character.Humanoid.BreakJointsOnDeath = false
+
+local function Align(Part1,Part0,CFrameOffset) 
+	local AlignPos = Instance.new('AlignPosition', Part1);
+	AlignPos.Parent.CanCollide = false;
+	AlignPos.ApplyAtCenterOfMass = false;
+	AlignPos.MaxForce = 67752;
+	AlignPos.MaxVelocity = math.huge/9e110;
+	AlignPos.ReactionForceEnabled = false;
+	AlignPos.Responsiveness = 200;
+	AlignPos.RigidityEnabled = true;
+	local AlignOri = Instance.new('AlignOrientation', Part1);
+	AlignOri.MaxAngularVelocity = math.huge/9e110;
+	AlignOri.MaxTorque = 67752;
+	AlignOri.PrimaryAxisOnly = false;
+	AlignOri.ReactionTorqueEnabled = false;
+	AlignOri.Responsiveness = 200;
+	AlignOri.RigidityEnabled = true;
+	local AttachmentA=Instance.new('Attachment',Part1);
+	local AttachmentB=Instance.new('Attachment',Part0);
+	AttachmentB.CFrame = AttachmentA.CFrame * CFrameOffset
+	AlignPos.Attachment0 = AttachmentA;
+	AlignPos.Attachment1 = AttachmentB;
+	AlignOri.Attachment0 = AttachmentA;
+	AlignOri.Attachment1 = AttachmentB;
+end
+
+character.ChildAdded:Connect(function(v)
+    if not v:IsA("Tool") then return end
+    wait(0.2)
+    local fake = v.Handle:Clone()
+    fake.Name = "fake"
+    fake.Parent = character
+    fake.Massless = true
+    fake.Transparency = 0.5
+    for i = 1,10 do
+        v.Handle.CFrame = fake.CFrame
+    end
+    wait()
+    local weld = Instance.new("Weld",fake)
+    weld.C0 = CFrame.new(0, -1, 0, 1, 0, -0, 0, 0, 1, 0, -1, -0)
+    weld.C1 = v.Grip
+    weld.Part0 = cRArm
+    weld.Part1 = fake
+    for i,v in pairs(v.Handle:GetChildren()) do if v:IsA("AlignPosition") or v:IsA("AlignOrientation") or v:IsA("Attachment") then v:remove() end end
+    Align(v.Handle, fake, CFrame.new(0,0,0))
+    v.AncestryChanged:Connect(function()
+        fake:remove()
+    end)
+end)
+
+game.Players.LocalPlayer.Character["Right Arm"].Touched:Connect(function(t)
+    if t:IsA("BasePart") and t.Parent.Parent == workspace and t.Parent:IsA("Tool") then
+        game.Players.LocalPlayer.Character.Humanoid:EquipTool(t.Parent)
+    end
+end)
