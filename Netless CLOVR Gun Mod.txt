@@ -33,7 +33,9 @@
  /__________/ /_________/ /_/          \__/       /_/                      \_\ \____________/ /_____________/
  -----------------------------------------------------------------------------------------------------------
 
------------Settings-----------
+]]
+
+--[[---------Settings---------]]--
 --[--VR Only--]--
 _G.gunAutoEquip = false --If this is true, instead of holding down the grip button to hold the gun, you just have to press it to equip and unequip it.
 _G.swordAutoEquip = false --If this is true, instead of holding down the grip button to hold the sword, you just have to press it to equip and unequip it.
@@ -44,7 +46,7 @@ _G.knifeMode = true --If this is true, you will hold your sword/knife to where t
 _G.leftHand = false --If you're left handed and are using VR, put this to true (or if you want the gun to be held on your left hand).
 _G.flinging = true --If this is true, you'll be able to fling people.
 _G.hideCharacter = true --If this and hatCLOVR is true, then it will hide your character.
-_G.hatCLOVR = false --You will use hats instead of your body parts if this is true.
+_G.hatCLOVR = true --You will use hats instead of your body parts if this is true.
     --HATS REQUIRED FOR HAT CLOVR:
     --  Head:
     --      Any Accessory That Goes On Your Head
@@ -74,12 +76,10 @@ _G.pistolLifetime = 2.5 --The amount of time the bullet will last before getting
 --[--Velocity--]--
 _G.bodyVelocity = {-17.7, 0, -17.7} --Change your body parts' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
 _G.hrpVelocity = {-17.7, 0, -17.7} --Change your hrp's velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
-_G.hatVelocity = {-17.7, 0, -17.7} --Change all of your accessories' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
-_G.toolVelocity = {-17.7, 0, -17.7} --Change all of your tools' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
+_G.hatVelocity = {100, 0, 100} --Change all of your accessories' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
+_G.toolVelocity = {100, 0, 100} --Change all of your tools' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
 --Velocity is not recommended to be (-17.7, 0, -17.7) in R15 since body parts often fall in R15.
-------------------------------
-
-]]
+--[[--------------------------]]--
 
 --[[------Hats Supported------]]--
 -- --[--Guns--]-- (Primary Weapons)
@@ -151,7 +151,7 @@ end
 local player1 = game.Players.LocalPlayer
 local character1 = player1.Character
 local StarterGUI = game:GetService("StarterGui")
-settings().Physics.AllowSleep = false
+--settings().Physics.AllowSleep = false
 
 --Guns
 local snipers = {"Sniper", "Meshes/Sniper_rbxAccessory", "Meshes/SniperAccessory", "Meshes/cowsniperAccessory", "Meshes/RainbowSniperAccessory", "WavySniper", "Meshes/GiftsniperAccessory", "HalloweenSniperAccessory", "Blox Rifle 5000"}
@@ -164,6 +164,11 @@ local knives = {"UMAD", "Red SS", "White SS"}
 
 --Hats
 local hats = {}
+local originalHats = {"Robloxclassicred", "Hat1", "Pal Hair", "Kate Hair", "LavanderHair", "Pink Hair"}
+
+--Loops
+local netlessLoop = nil
+local collisionLoop = nil
 
 
 --Checks to see if you have one of the swords--
@@ -1804,11 +1809,11 @@ Script = function()
     Anchor.Parent = workspace
     if RagdollEnabled then
         print("RagdollEnabled, thank you for using CLOVR!")
-        --[[
         local NetworkAccess =
             coroutine.create(
             function()
                 settings().Physics.AllowSleep = false
+                --[[
                 while true do
                     game:GetService("RunService").RenderStepped:Wait()
                     for _, Players in next, game:GetService("Players"):GetChildren() do
@@ -1820,10 +1825,10 @@ Script = function()
                     game:GetService("Players").LocalPlayer.MaximumSimulationRadius = math.pow(math.huge, math.huge)
                     game:GetService("Players").LocalPlayer.SimulationRadius = math.huge * math.huge
                 end
+                ]]
             end
         )
         coroutine.resume(NetworkAccess)
-        ]]
     end
     StarterGui:SetCore("VRLaserPointerMode", 3)
     --[[
@@ -2113,7 +2118,8 @@ Script = function()
     Camera.CameraSubject = VirtualBody.Humanoid
 
     if _G.hideCharacter == true and _G.hatCLOVR == true then
-        hrp.CFrame = CFrame.new(50000000, 0, 50000000)
+        hrp:FindFirstChildWhichIsA("Motor6D"):Destroy()
+        character1.Torso.CFrame = CFrame.new(50000000, 0, 50000000)
         wait(0.1) 
         character1.Torso.Anchored = true
         for i,v in pairs(character1:GetChildren()) do
@@ -2713,6 +2719,8 @@ Script = function()
             OnMoving:Disconnect()
             OnInput:Disconnect()
             OnInputEnded:Disconnect()
+            netlessLoop:Disconnect()
+            collisionLoop:Disconnect()
             VirtualRig:Destroy()
             VirtualBody:Destroy()
             if RagdollEnabled then
@@ -2841,6 +2849,8 @@ Respawn = function()
         character1:BreakJoints()
         player1.Character = reanimation
     end
+    netlessLoop:Disconnect()
+    collisionLoop:Disconnect()
 end
 ChatHUDFunc = function()
     --[[
@@ -3157,7 +3167,7 @@ ViewHUDFunc = function()
             if v:IsA("Accessory") then
                 v.Handle:FindFirstChildWhichIsA("Weld"):Destroy()
                 
-                if table.find(hats, v.Name) then
+                if table.find(originalHats, v.Name) then
                     v.Handle:FindFirstChildWhichIsA("SpecialMesh"):Destroy()
                     if v.Name == "Robloxclassicred" then
                         v.Name = "Left Arm"
@@ -3183,9 +3193,10 @@ ViewHUDFunc = function()
         end
         --player1.Character = reanimation
     end
-    
+    --wait()
+    --print(hats[1], ",", hats[2], ",", hats[3], ",", hats[4], ",", hats[5], ",", hats[6])
     --Netless
-    game:GetService("RunService").Heartbeat:Connect(function()
+    netlessLoop = game:GetService("RunService").Heartbeat:Connect(function()
         if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 and _G.hatCLOVR == false then
             --Head
             if character1:FindFirstChild("Head") then
@@ -3265,7 +3276,7 @@ ViewHUDFunc = function()
             end
             
             --HumanoidRootPart
-            if v.Name == "HumanoidRootPart" and _G.hatCLOVR == false then
+            if v.Name == "HumanoidRootPart" then
                 --hrp.Position = sword.Position
                 v.Velocity = Vector3.new(_G.hrpVelocity[1], _G.hrpVelocity[2], _G.hrpVelocity[3])
             end
@@ -3275,25 +3286,26 @@ ViewHUDFunc = function()
                 v.Handle.Velocity = Vector3.new(_G.hatVelocity[1], _G.hatVelocity[2], _G.hatVelocity[3])
                 if _G.hatCLOVR == false then
                     v.Handle.CFrame = reanimation:FindFirstChild(v.Name).Handle.CFrame
-                end
-                
-                if not table.find(hats, v.Name) then
-                    v.Handle.CFrame = reanimation:FindFirstChild(v.Name).Handle.CFrame
                 else
-                    --Positioning The Body Hats
-                    --Arms and Legs
-                    if reanimation:FindFirstChild(v.Name) then
-                        v.Handle.CFrame = reanimation:FindFirstChild(v.Name).CFrame * CFrame.Angles(1.5708, 0, 0)
-                    end
-                    
-                    --Left Half Of The Torso
-                    if v.Name == "Torso1" then
-                        v.Handle.CFrame = reanimation.Torso.CFrame * CFrame.new(-0.5, 0, 0) * CFrame.Angles(math.rad(90), 0, 0)
-                    end
-                    
-                    --Right Half Of The Torso
-                    if v.Name == "Torso2" then
-                        v.Handle.CFrame = reanimation.Torso.CFrame * CFrame.new(0.5, 0, 0) * CFrame.Angles(math.rad(90), 0, 0)
+                    if not table.find(hats, v.Name) then
+                        --print(v.Name)
+                        v.Handle.CFrame = reanimation:FindFirstChild(v.Name).Handle.CFrame
+                    else
+                        --Positioning The Body Hats
+                        --Arms and Legs
+                        if reanimation:FindFirstChild(v.Name) then
+                            v.Handle.CFrame = reanimation:FindFirstChild(v.Name).CFrame * CFrame.Angles(1.5708, 0, 0)
+                        end
+                        
+                        --Left Half Of The Torso
+                        if v.Name == "Torso1" then
+                            v.Handle.CFrame = reanimation.Torso.CFrame * CFrame.new(-0.5, 0, 0) * CFrame.Angles(math.rad(90), 0, 0)
+                        end
+                        
+                        --Right Half Of The Torso
+                        if v.Name == "Torso2" then
+                            v.Handle.CFrame = reanimation.Torso.CFrame * CFrame.new(0.5, 0, 0) * CFrame.Angles(math.rad(90), 0, 0)
+                        end
                     end
                 end
             end
@@ -3317,7 +3329,7 @@ ViewHUDFunc = function()
     end)
     
     --Collision
-    game:GetService("RunService").Stepped:Connect(function()
+    collisionLoop = game:GetService("RunService").Stepped:Connect(function()
         for i,v in pairs(reanimation:GetChildren()) do
             if v:IsA("BasePart") then
                 v.CanCollide = false
@@ -3327,28 +3339,32 @@ ViewHUDFunc = function()
     
     scriptLoaded = true
     
-    while character1.Parent == game.Workspace and _G.hatCLOVR == false do
-        if shooting == false and not hrp:FindFirstChild("AlignPosition") then
-            if _G.secondaryWeapon == true and _G.flinging == true then
-                hrp.Position = sword.Position
-            elseif _G.primaryWeapon == true and _G.flinging == true then
-                hrp.Position = gun.Position
-            else
-                if _G.flinging == true then
-                    hrp.Position = reanimation.Torso.Position
+    while character1.Parent == game.Workspace do
+        if _G.hatCLOVR == false then
+            if shooting == false and not hrp:FindFirstChild("AlignPosition") then
+                if _G.secondaryWeapon == true and _G.flinging == true then
+                    hrp.Position = sword.Position
+                elseif _G.primaryWeapon == true and _G.flinging == true then
+                    hrp.Position = gun.Position
                 else
-                    hrp.CFrame = reanimation.Torso.CFrame
+                    if _G.flinging == true then
+                        hrp.Position = reanimation.Torso.Position
+                    else
+                        hrp.CFrame = reanimation.Torso.CFrame
+                    end
+                end
+                if holdingSword == false and flinger.AngularVelocity == Vector3.new(10000, 10000, 10000) and _G.flinging == true then
+                    flinger.AngularVelocity = Vector3.new(0, 0, 0)
+                end
+            else
+                if table.find(automaticGuns, gun.Parent.Name) and shooting == true and _G.primaryWeapon == true then
+                    GunShot(1583819337, 1, math.random(90,110)/100)
+                    Bullet(_G.automaticLifetime)
+                    wait(0.1)
                 end
             end
-            if holdingSword == false and flinger.AngularVelocity == Vector3.new(10000, 10000, 10000) and _G.flinging == true then
-                flinger.AngularVelocity = Vector3.new(0, 0, 0)
-            end
         else
-            if table.find(automaticGuns, gun.Parent.Name) and shooting == true and _G.primaryWeapon == true then
-                GunShot(1583819337, 1, math.random(90,110)/100)
-                Bullet(_G.automaticLifetime)
-                wait(0.1)
-            end
+            hrp.CFrame = reanimation.Torso.CFrame
         end
         game:GetService("RunService").Heartbeat:wait()
     end
