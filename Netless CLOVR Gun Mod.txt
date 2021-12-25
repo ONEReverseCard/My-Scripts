@@ -33,9 +33,7 @@
  /__________/ /_________/ /_/          \__/       /_/                      \_\ \____________/ /_____________/
  -----------------------------------------------------------------------------------------------------------
 
-]]
-
---[[---------Settings---------]]--
+-----------Settings-----------
 --[--VR Only--]--
 _G.gunAutoEquip = false --If this is true, instead of holding down the grip button to hold the gun, you just have to press it to equip and unequip it.
 _G.swordAutoEquip = false --If this is true, instead of holding down the grip button to hold the sword, you just have to press it to equip and unequip it.
@@ -123,7 +121,9 @@ _G.toolVelocity = {-17.7, 0, -17.7} --Change all of your tools' velocity. First 
 --    UMAD? - https://www.roblox.com/catalog/743692483/UMAD
 --    Red Swag Knife - https://www.roblox.com/catalog/7170689370/Red-Swag-Knife
 --    White Swag Knife - https://www.roblox.com/catalog/7170680556/White-Swag-Knife
---[[--------------------------]]--
+------------------------------
+
+]]
 
 --[[---------KeyBinds---------]]--
 -- --[--Non VR--]--
