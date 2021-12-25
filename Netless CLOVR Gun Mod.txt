@@ -208,6 +208,32 @@ local rightMelee = nil
 local leftMelee = nil
 
 
+--Checks to see if you have both dual wield settings on--
+if _G.dualWieldGuns == true and _G.dualWieldMelee == true then
+    local errorSound = Instance.new("Sound")
+    errorSound.SoundId = "rbxassetid://3041205264"
+    errorSound.PlaybackSpeed = 1
+    errorSound.Looped = false
+    errorSound.RollOffMaxDistance = 1000
+    errorSound.RollOffMinDistance = 0
+    errorSound.Volume = 1
+    errorSound.Parent = game.Workspace
+    errorSound.Name = "Error"
+    errorSound:Play()
+    
+    StarterGUI:SetCore("SendNotification",
+        {
+            Title = "Turn One To False",
+            Text = "You can't have both dual wield settings to true. Turn one of them to false."
+        }
+    )
+    
+    wait(1.4)
+    errorSound:Destroy()
+    error("You can't have both dual wield settings to true")
+end
+---------------------------------------------------------
+
 --Checks to see if you have one of the swords--
 local meleeWeaponFound = false
 
@@ -366,7 +392,6 @@ if _G.secondaryWeapon == true and meleeWeaponFound == false then
     
     wait(0.9)
     errorSound:Destroy()
-    reanimFolder:Destroy()
     error("You don't have a sword")
 end
 -----------------------------------------------
