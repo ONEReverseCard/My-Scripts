@@ -44,6 +44,8 @@ _G.knifeMode = true --If this is true, you will hold your sword/knife to where t
 _G.leftHand = false --If you're left handed and are using VR, put this to true (or if you want the gun to be held on your left hand). Can also be used to switch which weapon goes on which hand when dual wielding.
 _G.flinging = true --If this is true, you'll be able to fling people.
 _G.toolHolding = true --If this is true, you'll be able to hold tools.
+_G.bodyTransparency = 0 --How transparent you want your body to be. (Least 0 - 1 Most)
+_G.hatTransparency = 0 --How transparent you want your hats to be. (Least 0 - 1 Most)
 --Hat CLOVR
 _G.hideCharacter = true --If this and hatCLOVR is true, then it will hide your character.
 _G.hideCharacterPosition = {50000000, 0, 50000000} --The position at which your character will be hid at. (X-Value, Y-Value, Z-Value)
@@ -78,7 +80,7 @@ _G.pistolLifetime = 2.5 --The amount of time the bullet will last before getting
 
 --[--Velocity--]--
 _G.bodyVelocity = {-17.7, 0, -17.7} --Change your body parts' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
-_G.hrpVelocity = {-17.7, 0, -17.7} --Change your hrp's velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
+_G.flingPartVelocity = {-17.7, 0, -17.7} --Change your hrp's velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
 _G.hatVelocity = {-17.7, 0, -17.7} --Change all of your accessories' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
 _G.toolVelocity = {-17.7, 0, -17.7} --Change all of your tools' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
 --Velocity is not recommended to be (-17.7, 0, -17.7) in R15 since body parts often fall in R15.
@@ -152,12 +154,12 @@ if _G.toolHolding == true then
     end
 end
 
-if _G.hatCLOVR == true then
-    _G.primaryWeapon = false
-    _G.secondaryWeapon = false
-    _G.dualWieldGuns = false
-    _G.dualWieldMelee = false
-end
+--if _G.hatCLOVR == true then
+    --_G.primaryWeapon = false
+    --_G.secondaryWeapon = false
+    --_G.dualWieldGuns = false
+    --_G.dualWieldMelee = false
+--end
 
 if _G.dualWieldGuns == true then
     if _G.secondaryWeapon == true then
@@ -185,7 +187,7 @@ local StarterGUI = game:GetService("StarterGui")
 --Guns
 local snipers = {"Sniper", "Meshes/Sniper_rbxAccessory", "Meshes/SniperAccessory", "Meshes/cowsniperAccessory", "Meshes/RainbowSniperAccessory", "WavySniper", "Meshes/GiftsniperAccessory", "HalloweenSniperAccessory", "Blox Rifle 5000"}
 local automaticGuns = {"Type-49 Abomindation Back Accessory"}
-local pistols = {"Meshes/1911RightAccessory", "Meshes/恶魔枪Accessory"}
+local pistols = {"Meshes/1911RightAccessory", "Meshes/恶魔枪Accessory", "Meshes/1911RightAccessory 1"}
 
 --Melee Weapons
 local swords = {"Dark Matter Sword", "Russo's Sword", "MeshPartAccessory"}
@@ -412,6 +414,9 @@ else
     for i,v in pairs(character1:GetChildren()) do
         if v:IsA("Accessory") then
             if table.find(snipers, v.Name) or table.find(automaticGuns, v.Name) or table.find(pistols, v.Name) then
+                if v.Name == "Meshes/1911RightAccessory" then
+                    v.Name = v.Name.." 1"
+                end
                 if _G.leftHand == false then
                     rightGun = v
                 else
@@ -748,8 +753,16 @@ end
 
 --Making The Flinger
 local flingVelocity = Vector3.new(10000, 10000, 10000)
-local flinger = Instance.new("BodyAngularVelocity", character1.HumanoidRootPart)
+local flingPart = nil
+local flinger = Instance.new("BodyAngularVelocity")
 if _G.hatCLOVR == false then
+    flinger.Parent = character1.HumanoidRootPart
+    flingPart = character1.HumanoidRootPart
+else
+    flinger.Parent = character1["Left Leg"]
+    flingPart = character1["Left Leg"]
+end
+if _G.flinging == true then
     flinger.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
 else
     flinger.MaxTorque = Vector3.new(0, 0, 0)
@@ -1008,7 +1021,7 @@ local function findingGunForVRAimer(gun)
         gun.Orientation = saveRot
     elseif gun.Parent.Name == "Blox Rifle 5000" then
         VRAimerPlacement(Vector3.new(0.25, 0.25, 0.25), Vector3.new(0, 2.163, -2.017), Vector3.new(45, 0, 0), gun)
-    elseif gun.Parent.Name == "Meshes/1911RightAccessory" then
+    elseif gun.Parent.Name == "Meshes/1911RightAccessory" or gun.Parent.Name == "Meshes/1911RightAccessory 1" then
         if gun:FindFirstChild("SpecialMesh").MeshId == "rbxassetid://6995200499" then
             VRAimerPlacement(Vector3.new(0.25, 0.25, 0.25), Vector3.new(0, -0.75, 0.3), Vector3.new(-90, 0, 0), gun)
         elseif gun:FindFirstChildWhichIsA("SpecialMesh").MeshId == "rbxassetid://6995561576" then
@@ -1028,19 +1041,21 @@ end
 ----------------------------------------------------------------------------
 
 local function hrpAlignment(torso)
+    flingPart.Position = torso.Position
+    
     --Checking For Other Alignments
-    if hrp:FindFirstChild("AlignPosition") then
-        hrp:FindFirstChild("AlignPosition"):Destroy()
+    if flingPart:FindFirstChild("AlignPosition") then
+        flingPart:FindFirstChild("AlignPosition"):Destroy()
     end
-    if hrp:FindFirstChild("PosAtt0") then
-        hrp:FindFirstChild("PosAtt0"):Destroy()
+    if flingPart:FindFirstChild("PosAtt0") then
+        flingPart:FindFirstChild("PosAtt0"):Destroy()
     end
     
     --Creating AlignPosition
     local alignPosition = Instance.new("AlignPosition")
     
     --Creating PosAtt0
-    local posAtt0 = Instance.new("Attachment", hrp)
+    local posAtt0 = Instance.new("Attachment", flingPart)
     posAtt0.Name = "PosAtt0"
     
     --Creating PosAtt1
@@ -1054,7 +1069,7 @@ local function hrpAlignment(torso)
     alignPosition.ReactionForceEnabled = false
     alignPosition.MaxForce = 99999999999999999999999999
     alignPosition.Responsiveness = 200
-    alignPosition.Parent = hrp
+    alignPosition.Parent = flingPart
     
     --Debris
     debris:AddItem(alignPosition, 1)
@@ -1232,7 +1247,7 @@ end
 --Setting The Second Melee Weapon's Position And Orientation
 local function meleePosRot2(changeName, holsteredRot, holsteredPos, holdingRot, holdingPos)
     if changeName == true then
-        sword:FindFirstChildWhichIsA("Attachment").Name = "BodyBackAttachment"
+        sword2:FindFirstChildWhichIsA("Attachment").Name = "BodyBackAttachment"
     end
     
     sword2.BodyBackAttachment.Orientation = holsteredRot --Orientation
@@ -1271,7 +1286,7 @@ if _G.leftHand == false or _G.dualWieldGuns == true or _G.dualWieldMelee == true
             gunPosRot(false, Vector3.new(0, 0, 0), Vector3.new(-0.08, -0.18, -0.53), Vector3.new(40, 90, 0), Vector3.new(1, 0.2, -0.3))
         elseif gun.Parent.Name == "Blox Rifle 5000" then --Blox Rifle 5000
             gunPosRot(false, Vector3.new(-0, -90, -90), Vector3.new(0.2, -0.14, 0.0009), Vector3.new(45, 180, 180), Vector3.new(0, -1.3, 0.5))
-        elseif gun.Parent.Name == "Meshes/1911RightAccessory" then --Sidearms
+        elseif gun.Parent.Name == "Meshes/1911RightAccessory" or gun.Parent.Name == "Meshes/1911RightAccessory 1" then --Sidearms
             --LEO Mk.45 [Right Hip]
             if gun:FindFirstChildWhichIsA("SpecialMesh").MeshId == "rbxassetid://6995200499" then
                 gunPosRot(true, Vector3.new(-180, 0, -180), Vector3.new(1.10212, 1.1, -0.5), Vector3.new(-180, 0, -180), Vector3.new(0, 0.45, -0.25))
@@ -1363,7 +1378,7 @@ if _G.leftHand == true or _G.dualWieldGuns == true or _G.dualWieldMelee == true 
                 gunPosRot(false, Vector3.new(0, 180, 0), Vector3.new(-0.08, -0.18, -0.05), Vector3.new(40, 90, 0), Vector3.new(1, 0.2, -0.3))
             elseif gun.Parent.Name == "Blox Rifle 5000" then --Blox Rifle 5000
                 gunPosRot(false, Vector3.new(-0, 90, 90), Vector3.new(-0.24, -0.14, 0.0009), Vector3.new(45, 180, 180), Vector3.new(0, -1.3, 0.5))
-            elseif gun.Parent.Name == "Meshes/1911RightAccessory" then --Sidearms
+            elseif gun.Parent.Name == "Meshes/1911RightAccessory" or gun.Parent.Name == "Meshes/1911RightAccessory 1" then --Sidearms
                 --LEO Mk.45 [Right Hip]
                 if gun:FindFirstChildWhichIsA("SpecialMesh").MeshId == "rbxassetid://6995200499" then
                     gunPosRot(true, Vector3.new(-180, 0, -180), Vector3.new(-1.10212, 1.1, -0.5), Vector3.new(-180, 0, -180), Vector3.new(0, 0.45, -0.25))
@@ -1394,7 +1409,7 @@ if _G.leftHand == true or _G.dualWieldGuns == true or _G.dualWieldMelee == true 
                     gunPosRot2(false, Vector3.new(0, 180, 0), Vector3.new(-0.08, -0.18, -0.05), Vector3.new(40, 90, 0), Vector3.new(1, 0.2, -0.3))
                 elseif gun2.Parent.Name == "Blox Rifle 5000" then --Blox Rifle 5000
                     gunPosRot2(false, Vector3.new(-0, 90, 90), Vector3.new(-0.24, -0.14, 0.0009), Vector3.new(45, 180, 180), Vector3.new(0, -1.3, 0.5))
-                elseif gun2.Parent.Name == "Meshes/1911RightAccessory" then --Sidearms
+                elseif gun2.Parent.Name == "Meshes/1911RightAccessory" or gun.Parent.Name == "Meshes/1911RightAccessory 1" then --Sidearms
                     --LEO Mk.45 [Right Hip]
                     if gun2:FindFirstChildWhichIsA("SpecialMesh").MeshId == "rbxassetid://6995200499" then
                         gunPosRot2(true, Vector3.new(-180, 0, -180), Vector3.new(-1.10212, 1.1, -0.5), Vector3.new(-180, 0, -180), Vector3.new(0, 0.45, -0.25))
@@ -2381,8 +2396,10 @@ Script = function()
     --
     Camera.CameraSubject = VirtualBody.Humanoid
 
-    if _G.hideCharacter == true then
-        if _G.hatCLOVR == true then
+    if _G.hatCLOVR == true then
+        character1.Humanoid:ChangeState(16)
+        character1.Torso["Left Hip"]:Destroy()
+        if _G.hideCharacter == true then
             character1.Torso.CFrame = CFrame.new(_G.hideCharacterPosition[1], _G.hideCharacterPosition[2], _G.hideCharacterPosition[3])
             wait(0.1) 
             character1.Torso.Anchored = true
@@ -2391,10 +2408,10 @@ Script = function()
                     v.Transparency = 1
                 end
             end
+        else
+            character1.Torso.Anchored = true
+            hrp:FindFirstChildWhichIsA("Motor6D"):Destroy()
         end
-    else
-        character1.Torso.Anchored = true
-        hrp:FindFirstChildWhichIsA("Motor6D"):Destroy()
     end
     
     Character.Humanoid.WalkSpeed = 0
@@ -2438,20 +2455,26 @@ Script = function()
     if RagdollEnabled then
         for _, Part in pairs(Character:GetDescendants()) do
             if Part:IsA("BasePart") and Part.Name == "Handle" and Part.Parent:IsA("Accessory") then
-                Part.LocalTransparencyModifier = 0
+                Part.LocalTransparencyModifier = _G.hatTransparency
                 
                 if Part:FindFirstChild("HatAttachment") or Part:FindFirstChild("HairAttachment") or Part:FindFirstChild("FaceFrontAttachment") or Part:FindFirstChild("FaceCenterAttachment") then
                     if _G.hatCLOVR == false then
                         Part.LocalTransparencyModifier = 1
                     elseif not table.find(hats, Part.Parent.Name) then
                         Part.LocalTransparencyModifier = 1
+                    else
+                        Part.LocalTransparencyModifier = _G.bodyTransparency
                     end
                 end
                 
             elseif Part:IsA("BasePart") and Part.Transparency < 0.5 and Part.Name ~= "Head" then
-                Part.LocalTransparencyModifier = bodyTransparency
-            elseif Part:IsA("BasePart") and Part.Name == "Head" and _G.hatCLOVR == false then
-                Part.LocalTransparencyModifier = 1
+                if _G.hatCLOVR == false then
+                    Part.LocalTransparencyModifier = _G.bodyTransparency
+                end
+            elseif Part:IsA("BasePart") and Part.Name == "Head" then
+                if _G.hatCLOVR == false then
+                    Part.LocalTransparencyModifier = 1
+                end
             end
             if not Part:IsA("BasePart") and not Part:IsA("AlignPosition") and not Part:IsA("AlignOrientation") then
                 pcall(
@@ -3556,8 +3579,13 @@ ViewHUDFunc = function()
             end
             
             --HumanoidRootPart
-            if v.Name == "HumanoidRootPart" then
-                v.Velocity = Vector3.new(_G.hrpVelocity[1], _G.hrpVelocity[2], _G.hrpVelocity[3])
+            if (v.Name == "HumanoidRootPart" or v.Name == "Left Leg") and v:IsA("BasePart") then
+                if v.Name == "HumanoidRootPart" then
+                    v.Velocity = Vector3.new(_G.flingPartVelocity[1], _G.flingPartVelocity[2], _G.flingPartVelocity[3])
+                end
+                if _G.hatCLOVR == true and v.Name == "Left Leg" then
+                    v.Velocity = Vector3.new(_G.flingPartVelocity[1], _G.flingPartVelocity[2], _G.flingPartVelocity[3])
+                end
             end
             
             --Accessories
@@ -3619,40 +3647,47 @@ ViewHUDFunc = function()
     scriptLoaded = true
     
     while character1.Parent == game.Workspace do
-        if _G.hatCLOVR == false then
-            if not hrp:FindFirstChild("AlignPosition") then
-                hrp.Position = reanimation.Torso.Position
-                if hrp.Transparency ~= 1 then
-                    hrp.Transparency = 1
-                end
-                if flinger.AngularVelocity == flingVelocity and _G.flinging == true then
-                    flinger.AngularVelocity = Vector3.new(0, 0, 0)
-                end
+        if not flingPart:FindFirstChild("AlignPosition") then
+            if flingPart == hrp then
+                flingPart.Position = reanimation.Torso.Position
             else
-                if hrp.Transparency ~= 0 then
-                    hrp.Transparency = 0
-                end
-                if flinger.AngularVelocity == Vector3.new(0, 0, 0) and _G.flinging == true then
-                    flinger.AngularVelocity = flingVelocity
-                end
+                flingPart.Position = Vector3.new(0, -50, 0)
             end
-            if shooting == true or shooting2 == true then
-                if _G.primaryWeapon == true then
-                    if table.find(automaticGuns, gun.Parent.Name) and shooting == true and _G.primaryWeapon == true then
-                        GunShot(1583819337, 1, math.random(90,110)/100)
-                        Bullet(_G.automaticLifetime, gun)
-                        wait(0.1)
-                    end
-                    if _G.dualWieldGuns == true then
-                        if table.find(automaticGuns, gun2.Parent.Name) and shooting2 == true then
-                            GunShot(1583819337, 1, math.random(90,110)/100)
-                            Bullet(_G.automaticLifetime, gun2)
-                            wait(0.1)
-                        end
-                    end
-                end
+            
+            if hrp.Transparency ~= 1 and flingPart == hrp then
+                hrp.Transparency = 1
+            end
+            
+            if flinger.AngularVelocity == flingVelocity and _G.flinging == true then
+                flinger.AngularVelocity = Vector3.new(0, 0, 0)
             end
         else
+            if hrp.Transparency ~= 0 and flingPart == hrp then
+                hrp.Transparency = 0
+            end
+            
+            if flinger.AngularVelocity == Vector3.new(0, 0, 0) and _G.flinging == true then
+                flinger.AngularVelocity = flingVelocity
+            end
+        end
+        if shooting == true or shooting2 == true then
+            if _G.primaryWeapon == true then
+                if table.find(automaticGuns, gun.Parent.Name) and shooting == true and _G.primaryWeapon == true then
+                    GunShot(1583819337, 1, math.random(90,110)/100)
+                    Bullet(_G.automaticLifetime, gun)
+                    wait(0.1)
+                end
+                if _G.dualWieldGuns == true then
+                    if table.find(automaticGuns, gun2.Parent.Name) and shooting2 == true then
+                        GunShot(1583819337, 1, math.random(90,110)/100)
+                        Bullet(_G.automaticLifetime, gun2)
+                        wait(0.1)
+                    end
+                end
+            end
+        end
+        
+        if _G.hatCLOVR == true then
             hrp.CFrame = reanimation.Torso.CFrame
         end
         game:GetService("RunService").Heartbeat:wait()
