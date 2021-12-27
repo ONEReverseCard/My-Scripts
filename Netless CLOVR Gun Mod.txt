@@ -1713,8 +1713,8 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
     if character1.Parent == game.Workspace then
         --No VR-------------------------------------------------------------------------------
         --Gun
-        if key.KeyCode == Enum.KeyCode.F and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent then
-            if _G.dualWieldMelee == false and _G.primaryWeapon == true then
+        if key.KeyCode == Enum.KeyCode.F and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent and _G.primaryWeapon == true then
+            if _G.dualWieldMelee == false then
                 if holdingGun == false then
                     EquipGun()
                 else
@@ -1845,23 +1845,21 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
         end
         
         --Left Hand
-        if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true then
+        if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true and _G.primaryWeapon == true then
             --Gun
             if _G.dualWieldGuns == false then
-                if _G.primaryWeapon == true then
-                    if holdingGun == false and _G.leftHand == true then
-                        EquipGun()
-                    else
-                        if holdingGun == true and _G.gunAutoEquip == true and _G.leftHand == true then
-                            UnequipGun()
-                        end
+                if holdingGun == false and _G.leftHand == true then
+                    EquipGun()
+                else
+                    if holdingGun == true and _G.gunAutoEquip == true and _G.leftHand == true then
+                        UnequipGun()
                     end
                 end
             else
                 if holdingGun2 == false then
                     EquipGun2()
                 else
-                    if holdingGun2 == true and _G.gunAutoEquip == true and _G.leftHand == true then
+                    if holdingGun2 == true and _G.gunAutoEquip == true then
                         UnequipGun2()
                     end
                 end
@@ -1974,10 +1972,10 @@ userInputService.InputEnded:Connect(function(key)
         
         --Unequip
         --Left Hand
-        if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true then
+        if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true and _G.primaryWeapon == true then
             --Gun
             if _G.dualWieldGuns == false then
-                if holdingGun == true and _G.gunAutoEquip == false and _G.leftHand == true and _G.primaryWeapon == true then
+                if holdingGun == true and _G.gunAutoEquip == false and _G.leftHand == true then
                     UnequipGun()
                 end
             elseif holdingGun2 == true and _G.gunAutoEquip == false then
@@ -2000,7 +1998,7 @@ userInputService.InputEnded:Connect(function(key)
                 shooting = false 
             end
         else
-            if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting2 == true and scriptLoaded == true and table.find(automaticGuns, gun2.Parent.Name) then
+            if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting2 == true and scriptLoaded == true and table.find(automaticGuns, gun2.Parent.Name) and _G.primaryWeapon == true then
                 shooting2 = false 
             end
         end
