@@ -33,7 +33,9 @@
  /__________/ /_________/ /_/          \__/       /_/                      \_\ \____________/ /_____________/
  -----------------------------------------------------------------------------------------------------------
 
------------Settings-----------
+]]
+
+--[[---------Settings---------]]--
 --[--VR Only--]--
 _G.gunAutoEquip = false --If this is true, instead of holding down the grip button to hold the gun, you just have to press it to equip and unequip it.
 _G.swordAutoEquip = false --If this is true, instead of holding down the grip button to hold the sword, you just have to press it to equip and unequip it.
@@ -84,9 +86,7 @@ _G.flingPartVelocity = {-17.7, 0, -17.7} --Change your hrp's velocity. First num
 _G.hatVelocity = {-17.7, 0, -17.7} --Change all of your accessories' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
 _G.toolVelocity = {-17.7, 0, -17.7} --Change all of your tools' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
 --Velocity is not recommended to be (-17.7, 0, -17.7) in R15 since body parts often fall in R15.
-------------------------------
-
-]]
+--[[--------------------------]]--
 
 --[[------Hats Supported------]]--
 -- --[--Guns--]-- (Primary Weapons)
@@ -1542,170 +1542,186 @@ end
 --Functions for Holding and Holstering Weaopons--
 --Gun
 local function EquipGun()
-    --Start Flinging
-    local hatGrip = gun.BodyBackAttachment
-    
-    --Orientation
-    if _G.leftHand == true then
-        hatGrip.Name = lGrip1.Name
-        hatGrip = gun.LeftGripAttachment
-    else
-        hatGrip.Name = rGrip1.Name
-        hatGrip = gun.RightGripAttachment
+    if _G.primaryWeapon == true then
+        --Start Flinging
+        local hatGrip = gun.BodyBackAttachment
+        
+        --Orientation
+        if _G.leftHand == true then
+            hatGrip.Name = lGrip1.Name
+            hatGrip = gun.LeftGripAttachment
+        else
+            hatGrip.Name = rGrip1.Name
+            hatGrip = gun.RightGripAttachment
+        end
+        
+        hatGrip.Orientation = gHoldRot
+        hatGrip.Position = gHoldPos
+        
+        --Function
+        Hats(gun)
+        
+        holdingGun = true
     end
-    
-    hatGrip.Orientation = gHoldRot
-    hatGrip.Position = gHoldPos
-    
-    --Function
-    Hats(gun)
-    
-    holdingGun = true
 end
 
 local function UnequipGun()
-    --Stop Flinging
-    if _G.leftHand == true then
-        gun.LeftGripAttachment.Name = "BodyBackAttachment"
-    else
-        gun.RightGripAttachment.Name = "BodyBackAttachment"
+    if _G.primaryWeapon == true then
+        --Stop Flinging
+        if _G.leftHand == true then
+            gun.LeftGripAttachment.Name = "BodyBackAttachment"
+        else
+            gun.RightGripAttachment.Name = "BodyBackAttachment"
+        end
+        
+        local hatGrip = gun.BodyBackAttachment
+        
+        hatGrip.Orientation = gHolstRot
+        hatGrip.Position = gHolstPos
+        
+        --Function
+        Hats(gun)
+        
+        holdingGun = false
     end
-    
-    local hatGrip = gun.BodyBackAttachment
-    
-    hatGrip.Orientation = gHolstRot
-    hatGrip.Position = gHolstPos
-    
-    --Function
-    Hats(gun)
-    
-    holdingGun = false
 end
 
 --Gun2
 local function EquipGun2()
-    --Start Flinging
-    local hatGrip = gun2.BodyBackAttachment
-    
-    --Orientation
-    if _G.leftHand == true then
-        hatGrip.Name = rGrip1.Name
-        hatGrip = gun2.RightGripAttachment
-    else
-        hatGrip.Name = lGrip1.Name
-        hatGrip = gun2.LeftGripAttachment
+    if _G.primaryWeapon == true then
+        --Start Flinging
+        local hatGrip = gun2.BodyBackAttachment
+        
+        --Orientation
+        if _G.leftHand == true then
+            hatGrip.Name = rGrip1.Name
+            hatGrip = gun2.RightGripAttachment
+        else
+            hatGrip.Name = lGrip1.Name
+            hatGrip = gun2.LeftGripAttachment
+        end
+        
+        hatGrip.Orientation = gHoldRot2
+        hatGrip.Position = gHoldPos2
+        
+        --Function
+        Hats(gun2)
+        
+        holdingGun2 = true
     end
-    
-    hatGrip.Orientation = gHoldRot2
-    hatGrip.Position = gHoldPos2
-    
-    --Function
-    Hats(gun2)
-    
-    holdingGun2 = true
 end
 
 local function UnequipGun2()
-    --Stop Flinging
-    if _G.leftHand == true then
-        gun2.RightGripAttachment.Name = "BodyBackAttachment"
-    else
-        gun2.LeftGripAttachment.Name = "BodyBackAttachment"
+    if _G.primaryWeapon == true then
+        --Stop Flinging
+        if _G.leftHand == true then
+            gun2.RightGripAttachment.Name = "BodyBackAttachment"
+        else
+            gun2.LeftGripAttachment.Name = "BodyBackAttachment"
+        end
+        
+        local hatGrip = gun2.BodyBackAttachment
+        
+        hatGrip.Orientation = gHolstRot2
+        hatGrip.Position = gHolstPos2
+        
+        --Function
+        Hats(gun2)
+        
+        holdingGun2 = false
     end
-    
-    local hatGrip = gun2.BodyBackAttachment
-    
-    hatGrip.Orientation = gHolstRot2
-    hatGrip.Position = gHolstPos2
-    
-    --Function
-    Hats(gun2)
-    
-    holdingGun2 = false
 end
 
 --Sword
 local function EquipSword()
-    --Start Holding
-    local hatGrip = sword.BodyBackAttachment
-    
-    --Orientation
-    if _G.leftHand == true then
-        hatGrip.Name = rGrip1.Name
-        hatGrip = sword.RightGripAttachment
-    else
-        hatGrip.Name = lGrip1.Name
-        hatGrip = sword.LeftGripAttachment
+    if _G.secondaryWeapon == true then
+        --Start Holding
+        local hatGrip = sword.BodyBackAttachment
+        
+        --Orientation
+        if _G.leftHand == true then
+            hatGrip.Name = rGrip1.Name
+            hatGrip = sword.RightGripAttachment
+        else
+            hatGrip.Name = lGrip1.Name
+            hatGrip = sword.LeftGripAttachment
+        end
+        
+        hatGrip.Orientation = sHoldRot
+        hatGrip.Position = sHoldPos
+        
+        --Function
+        Hats(sword)
+        
+        holdingSword = true
     end
-    
-    hatGrip.Orientation = sHoldRot
-    hatGrip.Position = sHoldPos
-    
-    --Function
-    Hats(sword)
-    
-    holdingSword = true
 end
 
 local function UnequipSword()
-    --Stop Holding
-    if _G.leftHand == true then
-        sword.RightGripAttachment.Name = "BodyBackAttachment"
-    else
-        sword.LeftGripAttachment.Name = "BodyBackAttachment"
+    if _G.secondaryWeapon == true then
+        --Stop Holding
+        if _G.leftHand == true then
+            sword.RightGripAttachment.Name = "BodyBackAttachment"
+        else
+            sword.LeftGripAttachment.Name = "BodyBackAttachment"
+        end
+        
+        local hatGrip = sword.BodyBackAttachment
+        
+        hatGrip.Orientation = sHolstRot
+        hatGrip.Position = sHolstPos
+        
+        --Function
+        Hats(sword)
+        
+        holdingSword = false
     end
-    
-    local hatGrip = sword.BodyBackAttachment
-    
-    hatGrip.Orientation = sHolstRot
-    hatGrip.Position = sHolstPos
-    
-    --Function
-    Hats(sword)
-    
-    holdingSword = false
 end
 
 --Sword2
 local function EquipSword2()
-    --Start Holding
-    local hatGrip = sword2.BodyBackAttachment
-    
-    --Orientation
-    if _G.leftHand == true then
-        hatGrip.Name = lGrip1.Name
-        hatGrip = sword2.LeftGripAttachment
-    else
-        hatGrip.Name = rGrip1.Name
-        hatGrip = sword2.RightGripAttachment
+    if _G.secondaryWeapon == true then
+        --Start Holding
+        local hatGrip = sword2.BodyBackAttachment
+        
+        --Orientation
+        if _G.leftHand == true then
+            hatGrip.Name = lGrip1.Name
+            hatGrip = sword2.LeftGripAttachment
+        else
+            hatGrip.Name = rGrip1.Name
+            hatGrip = sword2.RightGripAttachment
+        end
+        
+        hatGrip.Orientation = sHoldRot2
+        hatGrip.Position = sHoldPos2
+        
+        --Function
+        Hats(sword2)
+        
+        holdingSword2 = true
     end
-    
-    hatGrip.Orientation = sHoldRot2
-    hatGrip.Position = sHoldPos2
-    
-    --Function
-    Hats(sword2)
-    
-    holdingSword2 = true
 end
 
 local function UnequipSword2()
-    --Stop Holding
-    if _G.leftHand == true then
-        sword2.LeftGripAttachment.Name = "BodyBackAttachment"
-    else
-        sword2.RightGripAttachment.Name = "BodyBackAttachment"
+    if _G.secondaryWeapon == true then
+        --Stop Holding
+        if _G.leftHand == true then
+            sword2.LeftGripAttachment.Name = "BodyBackAttachment"
+        else
+            sword2.RightGripAttachment.Name = "BodyBackAttachment"
+        end
+        
+        local hatGrip = sword2.BodyBackAttachment
+        
+        hatGrip.Orientation = sHolstRot2
+        hatGrip.Position = sHolstPos2
+        
+        --Function
+        Hats(sword2)
+        
+        holdingSword2 = false
     end
-    
-    local hatGrip = sword2.BodyBackAttachment
-    
-    hatGrip.Orientation = sHolstRot2
-    hatGrip.Position = sHolstPos2
-    
-    --Function
-    Hats(sword2)
-    
-    holdingSword2 = false
 end
 -------------------------------------------------
 
@@ -1713,7 +1729,7 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
     if character1.Parent == game.Workspace then
         --No VR-------------------------------------------------------------------------------
         --Gun
-        if key.KeyCode == Enum.KeyCode.F and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent and _G.primaryWeapon == true then
+        if key.KeyCode == Enum.KeyCode.F and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent then
             if _G.dualWieldMelee == false then
                 if holdingGun == false then
                     EquipGun()
@@ -1779,7 +1795,7 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
         
         --Sword/Kinfe/Dual Wielded Gun
         if key.KeyCode == Enum.KeyCode.G and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent then
-            if _G.dualWieldGuns == false and _G.secondaryWeapon == true then
+            if _G.dualWieldGuns == false then
                 if holdingSword == false then
                     EquipSword()
                 else
@@ -1799,21 +1815,19 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
         --Right Hand
         if key.KeyCode == Enum.KeyCode.ButtonR1 and scriptLoaded == true then
             --Gun
-            if _G.primaryWeapon == true then
-                if holdingGun == false and _G.leftHand == false then
-                    EquipGun()
-                else
-                    if holdingGun == true and _G.gunAutoEquip == true and _G.leftHand == false then
-                        UnequipGun()
-                    end
+            if holdingGun == false and _G.leftHand == false then
+                EquipGun()
+            else
+                if holdingGun == true and _G.gunAutoEquip == true and _G.leftHand == false then
+                    UnequipGun()
                 end
             end
             
             --Sword
-            if holdingSword == false and _G.leftHand == true and _G.secondaryWeapon == true then
+            if holdingSword == false and _G.leftHand == true then
                 EquipSword()
             else
-                if holdingSword == true and _G.leftHand == true and _G.swordAutoEquip == true and _G.secondaryWeapon == true then
+                if holdingSword == true and _G.leftHand == true and _G.swordAutoEquip == true then
                     UnequipSword()
                 end
             end
@@ -1845,7 +1859,7 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
         end
         
         --Left Hand
-        if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true and _G.primaryWeapon == true then
+        if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true then
             --Gun
             if _G.dualWieldGuns == false then
                 if holdingGun == false and _G.leftHand == true then
@@ -1867,13 +1881,11 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
             
             --Sword
             if _G.dualWieldMelee == false then
-                if _G.secondaryWeapon == true then
-                    if holdingSword == false and _G.leftHand == false then
-                        EquipSword()
-                    else
-                        if holdingSword == true and _G.leftHand == false and _G.swordAutoEquip == true and _G.secondaryWeapon == true then
-                            UnequipSword()
-                        end
+                if holdingSword == false and _G.leftHand == false then
+                    EquipSword()
+                else
+                    if holdingSword == true and _G.leftHand == false and _G.swordAutoEquip == true then
+                        UnequipSword()
                     end
                 end
             else
@@ -1955,12 +1967,12 @@ userInputService.InputEnded:Connect(function(key)
         --Right Hand
         if key.KeyCode == Enum.KeyCode.ButtonR1 and scriptLoaded == true then
             --Gun
-            if holdingGun == true and _G.gunAutoEquip == false and _G.leftHand == false and _G.primaryWeapon == true then
+            if holdingGun == true and _G.gunAutoEquip == false and _G.leftHand == false then
                 UnequipGun()
             end
             
             --Sword
-            if holdingSword == true and _G.leftHand == true and _G.swordAutoEquip == false and _G.secondaryWeapon == true then
+            if holdingSword == true and _G.leftHand == true and _G.swordAutoEquip == false then
                UnequipSword()
             end
         end
@@ -1972,7 +1984,7 @@ userInputService.InputEnded:Connect(function(key)
         
         --Unequip
         --Left Hand
-        if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true and _G.primaryWeapon == true then
+        if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true then
             --Gun
             if _G.dualWieldGuns == false then
                 if holdingGun == true and _G.gunAutoEquip == false and _G.leftHand == true then
@@ -1984,7 +1996,7 @@ userInputService.InputEnded:Connect(function(key)
             
             --Sword
             if _G.dualWieldMelee == false then
-                if holdingSword == true and _G.leftHand == false and _G.swordAutoEquip == false and _G.secondaryWeapon == true then
+                if holdingSword == true and _G.leftHand == false and _G.swordAutoEquip == false then
                     UnequipSword()
                 end
             elseif holdingSword2 == true and _G.swordAutoEquip == false then
@@ -3670,7 +3682,7 @@ ViewHUDFunc = function()
         end
         if shooting == true or shooting2 == true then
             if _G.primaryWeapon == true then
-                if table.find(automaticGuns, gun.Parent.Name) and shooting == true and _G.primaryWeapon == true then
+                if table.find(automaticGuns, gun.Parent.Name) and shooting == true then
                     GunShot(1583819337, 1, math.random(90,110)/100)
                     Bullet(_G.automaticLifetime, gun)
                     wait(0.1)
