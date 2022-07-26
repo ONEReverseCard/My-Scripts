@@ -139,9 +139,11 @@ ReanimInfo.BackgroundTransparency = 1.000
 ReanimInfo.Position = UDim2.new(0.0130000096, 0, 0.411194909, 0)
 ReanimInfo.Size = UDim2.new(0, 311, 0, 91)
 ReanimInfo.Font = Enum.Font.SourceSans
-ReanimInfo.Text = [[Have Fun :)]]
+ReanimInfo.Text = [[I accendentally changed the link of this script. But I changed it back. If anything like this happens again, I have a discord server that you can access any of my scripts in the credits tab.]]
+--Have Fun :)
+--
 ReanimInfo.TextColor3 = Color3.fromRGB(255, 255, 255)
-ReanimInfo.TextScaled = false
+ReanimInfo.TextScaled = true
 ReanimInfo.TextSize = 20.000
 ReanimInfo.TextWrapped = true
 
