@@ -139,7 +139,8 @@ ReanimInfo.BackgroundTransparency = 1.000
 ReanimInfo.Position = UDim2.new(0.0130000096, 0, 0.411194909, 0)
 ReanimInfo.Size = UDim2.new(0, 311, 0, 91)
 ReanimInfo.Font = Enum.Font.SourceSans
-ReanimInfo.Text = [[I accendentally changed the link of this script. But I changed it back. If anything like this happens again, I have a discord server that you can access any of my scripts in the credits tab.]]
+ReanimInfo.Text = [[I accendentally changed the link of this script and I didn't notice until months later. But I changed it back. If anything like this happens again, I have a discord server that you can access any of my scripts in the credits tab.
+OneReverseCard - 7/26/22]]
 --Have Fun :)
 --
 ReanimInfo.TextColor3 = Color3.fromRGB(255, 255, 255)
