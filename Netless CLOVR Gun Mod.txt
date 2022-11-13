@@ -68,7 +68,7 @@ _G.hatCLOVR = false --You will use hats instead of your body parts if this is tr
 --Loadout
 _G.primaryWeapon = true --If this is true, you'll be required to have a primary weapon (one of the supported guns).
 _G.secondaryWeapon = true --If this is true, you'll be required to have a secondary weapon (one of the supported swords/knives).
-_G.dualWieldGuns = false --If this is true, you'll be able to dual wield guns.
+_G.dualWieldGuns = true --If this is true, you'll be able to dual wield guns.
 _G.dualWieldMelee = false --If this is true, you'll be able to dual wield swords/knives.
 --Cooldown
 _G.sniperShootCooldown = 0.5 --How much time do you want to wait after shooting to shoot again (snipers only).
@@ -81,6 +81,10 @@ _G.pistolLifetime = 2.5 --The amount of time the bullet will last before getting
 --Recoil
 _G.recoil = true --If this is true, your gun will recoil when shot.
 _G.recoilMultiplier = 1 --How powerful you want the recoil to be (the bigger the number, the more powerful the recoil).
+--Gunshot Sounds
+_G.sniperSound = 680140087 --Sound ID for the sniper gunshot sound.
+_G.automaticSound = 1583819337 --Sound ID for the automatic guns gunshot sound.
+_G.pistolSound = 2834289304 --Sound ID for the pistol gunshot sound.
 --Fisticuffs
 _G.fisticuffs = false --If this is true, you will be able to fling with your fists.
 _G.maxParticleRate = 150 --The maximum rate at which particles are created. (The higher the value, the more particles.)
@@ -1967,7 +1971,7 @@ local inputBegan = userInputService.InputBegan:Connect(function(key, gameProcess
         
         if table.find(snipers, gun.Parent.Name) then
             --Functions
-            GunShot(680140087, 0.7, 1)
+            GunShot(_G.sniperSound, 0.7, 1)
             Bullet(_G.sniperLifetime, gun, 3)
             
             --Wait
@@ -1976,7 +1980,7 @@ local inputBegan = userInputService.InputBegan:Connect(function(key, gameProcess
             shooting = false 
         elseif table.find(pistols, gun.Parent.Name) then
             --Functions
-            GunShot(2834289304, 1, math.random(90,110)/100)
+            GunShot(_G.pistolSound, 1, math.random(90,110)/100)
             Bullet(_G.pistolLifetime, gun, 1.5)
             
             --Wait
@@ -1990,7 +1994,7 @@ local inputBegan = userInputService.InputBegan:Connect(function(key, gameProcess
         
         if table.find(snipers, gun2.Parent.Name) then
             --Functions
-            GunShot(680140087, 0.7, 1)
+            GunShot(_G.sniperSound, 0.7, 1)
             Bullet(_G.sniperLifetime, gun2, 3)
             
             --Wait
@@ -1999,7 +2003,7 @@ local inputBegan = userInputService.InputBegan:Connect(function(key, gameProcess
             shooting2 = false 
         elseif table.find(pistols, gun2.Parent.Name) then
             --Functions
-            GunShot(2834289304, 1, math.random(90,110)/100)
+            GunShot(_G.pistolSound, 1, math.random(90,110)/100)
             Bullet(_G.pistolLifetime, gun2, 1.5)
             
             --Wait
@@ -2055,7 +2059,7 @@ local inputBegan = userInputService.InputBegan:Connect(function(key, gameProcess
         
         if table.find(snipers, gun.Parent.Name) then
             --Functions
-            GunShot(680140087, 0.7, 1)
+            GunShot(_G.sniperSound, 0.7, 1)
             Bullet(_G.sniperLifetime, gun, 3)
             
             --Wait
@@ -2064,7 +2068,7 @@ local inputBegan = userInputService.InputBegan:Connect(function(key, gameProcess
             shooting = false 
         elseif table.find(pistols, gun.Parent.Name) then
             --Functions
-            GunShot(2834289304, 1, math.random(90,110)/100)
+            GunShot(_G.pistolSound, 1, math.random(90,110)/100)
             Bullet(_G.pistolLifetime, gun, 1.5)
             
             --Wait
@@ -2120,7 +2124,7 @@ local inputBegan = userInputService.InputBegan:Connect(function(key, gameProcess
             
             if table.find(snipers, gun.Parent.Name) then
                 --Functions
-                GunShot(680140087, 0.7, 1)
+                GunShot(_G.sniperSound, 0.7, 1)
                 Bullet(_G.sniperLifetime, gun, 3)
                 
                 --Wait
@@ -2129,7 +2133,7 @@ local inputBegan = userInputService.InputBegan:Connect(function(key, gameProcess
                 shooting = false 
             elseif table.find(pistols, gun.Parent.Name) then
                 --Functions
-                GunShot(2834289304, 1, math.random(90,110)/100)
+                GunShot(_G.pistolSound, 1, math.random(90,110)/100)
                 Bullet(_G.pistolLifetime, gun, 1.5)
                 
                 --Wait
@@ -2144,7 +2148,7 @@ local inputBegan = userInputService.InputBegan:Connect(function(key, gameProcess
             
             if table.find(snipers, gun2.Parent.Name) then
                 --Functions
-                GunShot(680140087, 0.7, 1)
+                GunShot(_G.sniperSound, 0.7, 1)
                 Bullet(_G.sniperLifetime, gun2, 3)
                 
                 --Wait
@@ -2153,7 +2157,7 @@ local inputBegan = userInputService.InputBegan:Connect(function(key, gameProcess
                 shooting2 = false 
             elseif table.find(pistols, gun2.Parent.Name) then
                 --Functions
-                GunShot(2834289304, 1, math.random(90,110)/100)
+                GunShot(_G.pistolSound, 1, math.random(90,110)/100)
                 Bullet(_G.pistolLifetime, gun2, 1.5)
                 
                 --Wait
@@ -4213,13 +4217,13 @@ ViewHUDFunc = function()
         if shooting == true or shooting2 == true then
             if _G.primaryWeapon == true then
                 if table.find(automaticGuns, gun.Parent.Name) and shooting == true then
-                    GunShot(1583819337, 1, math.random(90,110)/100)
+                    GunShot(_G.automaticSound, 1, math.random(90,110)/100)
                     Bullet(_G.automaticLifetime, gun)
                     wait(0.1)
                 end
                 if _G.dualWieldGuns == true then
                     if table.find(automaticGuns, gun2.Parent.Name) and shooting2 == true then
-                        GunShot(1583819337, 1, math.random(90,110)/100)
+                        GunShot(_G.automaticSound, 1, math.random(90,110)/100)
                         Bullet(_G.automaticLifetime, gun2)
                         wait(0.1)
                     end
