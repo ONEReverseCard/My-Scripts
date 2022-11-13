@@ -82,8 +82,8 @@ _G.pistolLifetime = 2.5 --The amount of time the bullet will last before getting
 _G.recoil = true --If this is true, your gun will recoil when shot.
 _G.recoilMultiplier = 1 --How powerful you want the recoil to be (the bigger the number, the more powerful the recoil).
 --Fisticuffs
-_G.fisticuffs = false --If this is true, you will be able to fling with your fists (all Loadout settings must be false).
-_G.maxParticleRate = 150 --The maximum rate at which particles are created. (The higher the value, the more particles.)
+_G.fisticuffs = false --If this is true, you will be able to fling with your fists.
+_G.maxParticleRate = 150 --The maximum rate at which particles are created. (The higher the value, the more particles).
 _G.armEffectColor = {100, 0, 0} --The color of the effects on your arms (in RGB form).
 _G.particleEffectColor = {100, 0, 0} --The color of the particle effects (in RGB form).
 
