@@ -99,8 +99,6 @@ _G.advanceVelocityMultiply = 100 --(BUGGY) The number that multiplies your veloc
 --Velocity is not recommended to be (-17.7, 0, -17.7) in R15 since body parts often fall in R15.
 --[[--------------------------]]--
 
-]]
-
 --[[------Hats Supported------]]--
 -- --[--Guns--]-- (Primary Weapons)
 --   (Works with all cyberpunk snipers)
