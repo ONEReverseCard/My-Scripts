@@ -33,23 +33,24 @@
  /__________/ /_________/ /_/          \__/       /_/                      \_\ \____________/ /_____________/
  -----------------------------------------------------------------------------------------------------------
 
------------Settings-----------
---[--VR Only--]--
-_G.gunAutoEquip --If this is true, instead of holding down the grip button to hold the gun, you just have to press it to equip and unequip it.
-_G.swordAutoEquip --If this is true, instead of holding down the grip button to hold the sword, you just have to press it to equip and unequip it.
-_G.changeSomeStuff --(Recommended to be true if leftHand is true) If this is true, it will lock your camera to first person, change the sprint keybind to the right thumbstick, and change the crouch keybind to the left thumbstick.
-_G.knifeMode --If this is true, you will hold your sword/knife to where the blade is pointing inward towards your body and will be holstered on the side of your body.
+--[[---------Settings---------]]--
+--[--VR Only--]-- (Settings That Only Affect VR Users)
+_G.gunAutoEquip = false --If this is true, instead of holding down the grip button to hold the gun, you just have to press it to equip and unequip it.
+_G.swordAutoEquip = false --If this is true, instead of holding down the grip button to hold the sword, you just have to press it to equip and unequip it.
+_G.changeSomeStuff = true --(Crouching is broken when this is true) (Recommended to be true if leftHand is true) If this is true, it will lock your camera to first person, change the sprint keybind to the left thumbstick, and change the crouch keybind to the right thumbstick.
+_G.knifeMode = true --If this is true, you will hold your sword/knife to where the blade is pointing inward towards your body and will be holstered on the side of your body.
 
---[--Universal--]--
-_G.leftHand --If you're left handed and are using VR, put this to true (or if you want the gun to be held on your left hand). Can also be used to switch which weapon goes on which hand when dual wielding.
-_G.flinging --If this is true, you'll be able to fling people.
-_G.toolHolding --If this is true, you'll be able to hold tools.
-_G.bodyTransparency --How transparent you want your body to be. (Least 0 - 1 Most)
-_G.hatTransparency --How transparent you want your hats to be. (Least 0 - 1 Most)
+--[--Universal--]-- (Settings That Affect Both VR and Non-VR Users)
+_G.leftHand = false --If you're left handed and are using VR, put this to true (or if you want the gun to be held on your left hand). Can also be used to switch which weapon goes on which hand when dual wielding.
+_G.flinging = true --If this is true, you'll be able to fling people.
+_G.toolHolding = true --If this is true, you'll be able to hold tools.
+_G.bodyTransparency = 0 --How transparent you want your body to be. (Least 0 - 1 Most)
+_G.hatTransparency = 0 --How transparent you want your hats to be. (Least 0 - 1 Most)
+_G.useAlignments = true --If this is true, your real character and hats will be attached to your fake character and fake hats using alignments instead of CFrame (you can also see if your body parts/hats fall).
 --Hat CLOVR
-_G.hideCharacter --If this and hatCLOVR is true, then it will hide your character.
-_G.hideCharacterPosition --The position at which your character will be hid at. (X-Value, Y-Value, Z-Value)
-_G.hatCLOVR --You will use hats instead of your body parts if this is true.
+_G.hideCharacter = false --(BUGGY) If this and hatCLOVR is true, then it will hide your character.
+_G.hideCharacterPosition = {50000000, 0, 50000000} --The position at which your character will be hid at. (X-Value, Y-Value, Z-Value)
+_G.hatCLOVR = false --You will use hats instead of your body parts if this is true.
     --HATS REQUIRED FOR HAT CLOVR:
     --  Head:
     --      Any Accessory That Goes On Your Head
@@ -65,26 +66,38 @@ _G.hatCLOVR --You will use hats instead of your body parts if this is true.
     --  Left Leg:
     --      Pal Hair - https://www.roblox.com/catalog/63690008/Pal-Hair
 --Loadout
-_G.primaryWeapon --If this is true, you'll be required to have a primary weapon (one of the supported guns).
-_G.secondaryWeapon --If this is true, you'll be required to have a secondary weapon (one of the supported swords/knives).
-_G.dualWieldGuns --If this is true, you'll be able to dual wield guns.
-_G.dualWieldMelee --If this is true, you'll be able to dual wield swords/knives.
+_G.primaryWeapon = true --If this is true, you'll be required to have a primary weapon (one of the supported guns).
+_G.secondaryWeapon = true --If this is true, you'll be required to have a secondary weapon (one of the supported swords/knives).
+_G.dualWieldGuns = false --If this is true, you'll be able to dual wield guns.
+_G.dualWieldMelee = false --If this is true, you'll be able to dual wield swords/knives.
 --Cooldown
-_G.sniperShootCooldown --How much time do you want to wait after shooting to shoot again (snipers only).
-_G.pistolShootCooldown --How much time do you want to wait after shooting to shoot again (pistols only).
+_G.sniperShootCooldown = 0.5 --How much time do you want to wait after shooting to shoot again (snipers only).
+_G.pistolShootCooldown = 0.25 --How much time do you want to wait after shooting to shoot again (pistols only).
 --Bullet Stuff
-_G.bulletColor --The color of the bullets (in RGB form).
-_G.sniperLifetime --The amount of time the bullet will last before getting deleted (snipers).
-_G.automaticLifetime --The amount of time the bullet will last before getting deleted (automatics).
-_G.pistolLifetime --The amount of time the bullet will last before getting deleted (pistols).
+_G.bulletColor = {255, 255, 255} --The color of the bullets (in RGB form).
+_G.sniperLifetime = 10 --The amount of time the bullet will last before getting deleted (snipers).
+_G.automaticLifetime = 5 --The amount of time the bullet will last before getting deleted (automatics).
+_G.pistolLifetime = 2.5 --The amount of time the bullet will last before getting deleted (pistols).
+--Recoil
+_G.recoil = true --If this is true, your gun will recoil when shot.
+_G.recoilMultiplier = 1 --How powerful you want the recoil to be (the bigger the number, the more powerful the recoil).
+--Fisticuffs
+_G.fisticuffs = false --If this is true, you will be able to fling with your fists (all Loadout settings must be false).
+_G.maxParticleRate = 150 --The maximum rate at which particles are created. (The higher the value, the more particles.)
+_G.armEffectColor = {100, 0, 0} --The color of the effects on your arms (in RGB form).
+_G.particleEffectColor = {100, 0, 0} --The color of the particle effects (in RGB form).
 
---[--Velocity--]--
-_G.bodyVelocity --Change your body parts' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
-_G.flingPartVelocity --Change your hrp's velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
-_G.hatVelocity --Change all of your accessories' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
-_G.toolVelocity --Change all of your tools' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
+--[--Velocity--]-- (Settings To Change Your Velocity)
+_G.bodyVelocity = {-17.7, 0, -17.7} --Change your body parts' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
+_G.flingPartVelocity = {-17.7, 0, -17.7} --Change your hrp's velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
+_G.hatVelocity = {-17.7, 0, -17.7} --Change all of your accessories' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
+_G.toolVelocity = {-17.7, 0, -17.7} --Change all of your tools' velocity. First number value is the X value. Second number value is the Y value. Third number value is the Z value.
+_G.advanceVelocity = false --(BUGGY) If this is true, the velocity implemented on your body parts, flingPart, accessories, and tools will be it's real velocity multiplied instead of a static velocity.
+_G.advanceVelocityMultiply = 100 --(BUGGY) The number that multiplies your velocity by (if _G.advanceVelocity is true).
+--_G.minVelocity = 20 --The minimum velocity
+--If _G.advanceVelocity is true, _G.bodyVelocity, _G.flingPartVelocity, _G.hatVelocity, and _G.toolVelocity will be disabled.
 --Velocity is not recommended to be (-17.7, 0, -17.7) in R15 since body parts often fall in R15.
-------------------------------
+--[[--------------------------]]--
 
 ]]
 
@@ -179,6 +192,13 @@ if _G.dualWieldMelee == true then
     end
 end
 
+if _G.fisticuffs == true then
+    _G.primaryWeapon = false
+    _G.secondaryWeapon = false
+    _G.dualWieldGuns = false
+    _G.dualWieldMelee = false
+end
+
 local player1 = game.Players.LocalPlayer
 local character1 = player1.Character
 local StarterGUI = game:GetService("StarterGui")
@@ -208,6 +228,28 @@ local leftGun = nil
 --Dual Melee
 local rightMelee = nil
 local leftMelee = nil
+
+--Fisticuffs
+local leftParticles = nil
+local rightParticles = nil
+
+local effectFolder = nil
+local leftEffectFolder = nil
+local rightEffectFolder = nil
+
+local leftArm = nil
+local rightArm = nil
+
+local effectsClone = nil
+local leftParticlesClone = nil
+local rightParticlesClone = nil
+
+--CLOVR Stuff
+local clovrModel1 = nil
+local clovrModel2 = nil
+local clovrPart = nil
+local virtualRig = nil
+local virtualBody = nil
 
 
 --Checks to see if you have both dual wield settings on--
@@ -539,12 +581,23 @@ end
 
 -----------------------------------------------------------------------------
 
-if _G.primaryWeapon == false and _G.secondaryWeapon == false then
+if _G.primaryWeapon == false and _G.secondaryWeapon == false and _G.fisticuffs == false then
     _G.flinging = false
 end
 
 if _G.primaryWeapon == false then
     _G.leftHand = not _G.leftHand
+end
+
+if _G.fisticuffs == true then
+    effectFolder = Instance.new("Folder", game.Workspace)
+    effectFolder.Name = "FisticuffsEffects"
+    
+    leftEffectFolder = Instance.new("Folder", effectFolder)
+    leftEffectFolder.Name = "LeftArm"
+    
+    rightEffectFolder = Instance.new("Folder", effectFolder)
+    rightEffectFolder.Name = "RightArm"
 end
 
 --Fake Character--
@@ -823,7 +876,7 @@ local minZoom = player1.CameraMinZoomDistance
 local cameraMode = player1.CameraMode
 
 --Services
-local userInputService = game:GetService("UserInputService")
+--local userInputService = game:GetService("UserInputService")
 local vrService = game:GetService("VRService")
 local debris = game:GetService("Debris")
 
@@ -1041,48 +1094,50 @@ end
 ----------------------------------------------------------------------------
 
 local function hrpAlignment(torso)
-    flingPart.Position = torso.Position
-    
-    --Checking For Other Alignments
-    if flingPart:FindFirstChild("AlignPosition") then
-        flingPart:FindFirstChild("AlignPosition"):Destroy()
+    if flingPart ~= nil then
+        flingPart.Position = torso.Position
+        
+        --Checking For Other Alignments
+        if flingPart:FindFirstChild("AlignPosition") then
+            flingPart:FindFirstChild("AlignPosition"):Destroy()
+        end
+        if flingPart:FindFirstChild("PosAtt0") then
+            flingPart:FindFirstChild("PosAtt0"):Destroy()
+        end
+        
+        --Creating AlignPosition
+        local alignPosition = Instance.new("AlignPosition")
+        
+        --Creating PosAtt0
+        local posAtt0 = Instance.new("Attachment", flingPart)
+        posAtt0.Name = "PosAtt0"
+        
+        --Creating PosAtt1
+        local posAtt1 = Instance.new("Attachment", torso)
+        posAtt1.Name = "PosAtt1"
+        
+        --AlignPosition Properties--
+        alignPosition.Attachment0 = posAtt0
+        alignPosition.Attachment1 = posAtt1
+        alignPosition.RigidityEnabled = false
+        alignPosition.ReactionForceEnabled = false
+        alignPosition.MaxForce = 99999999999999999999999999
+        alignPosition.Responsiveness = 200
+        alignPosition.Parent = flingPart
+        
+        --Debris
+        debris:AddItem(alignPosition, 1)
+        debris:AddItem(posAtt0, 1)
+        debris:AddItem(posAtt1, 1)
     end
-    if flingPart:FindFirstChild("PosAtt0") then
-        flingPart:FindFirstChild("PosAtt0"):Destroy()
-    end
-    
-    --Creating AlignPosition
-    local alignPosition = Instance.new("AlignPosition")
-    
-    --Creating PosAtt0
-    local posAtt0 = Instance.new("Attachment", flingPart)
-    posAtt0.Name = "PosAtt0"
-    
-    --Creating PosAtt1
-    local posAtt1 = Instance.new("Attachment", torso)
-    posAtt1.Name = "PosAtt1"
-    
-    --AlignPosition Properties--
-    alignPosition.Attachment0 = posAtt0
-    alignPosition.Attachment1 = posAtt1
-    alignPosition.RigidityEnabled = false
-    alignPosition.ReactionForceEnabled = false
-    alignPosition.MaxForce = 99999999999999999999999999
-    alignPosition.Responsiveness = 200
-    alignPosition.Parent = flingPart
-    
-    --Debris
-    debris:AddItem(alignPosition, 1)
-    debris:AddItem(posAtt0, 1)
-    debris:AddItem(posAtt1, 1)
 end
 
 local function touchedToFling(touchedPart, touchingPart)
-    if touchedPart.Name ~= "VRAimer" and touchedPart.Name ~= "VRLaser" then
-        if touchedPart.Parent.ClassName == "Model" then
-            if touchedPart.Parent.Name ~= "VirtualRig" and touchedPart.Parent.Name ~= "VirtualBody" and touchedPart.Parent.Name ~= player1.Name and touchedPart.Parent.Name ~= reanimation.Name then
-                if touchedPart.Parent:FindFirstChild("Humanoid") then
-                    if touchedPart.Parent:FindFirstChild("Humanoid").RigType == Enum.HumanoidRigType.R6 then
+    if touchedPart.Name ~= "VRAimer" and touchedPart.Name ~= "VRLaser" and _G.flinging == true then
+        if touchedPart:FindFirstAncestorWhichIsA("Model") then
+            if not touchedPart:IsDescendantOf(virtualRig) and not touchedPart:IsDescendantOf(virtualBody) and not touchedPart:IsDescendantOf(character1) and not touchedPart:IsDescendantOf(reanimation) and touchedPart ~= clovrPart then
+                if touchedPart:FindFirstAncestorWhichIsA("Model"):FindFirstChild("Humanoid") then
+                    if touchedPart:FindFirstAncestorWhichIsA("Model"):FindFirstChild("Humanoid").RigType == Enum.HumanoidRigType.R6 then
                         hrpAlignment(touchedPart.Parent:FindFirstChild("Torso"))
                     else
                         hrpAlignment(touchedPart.Parent:FindFirstChild("UpperTorso"))
@@ -1092,20 +1147,8 @@ local function touchedToFling(touchedPart, touchingPart)
                 if touchingPart.Name == "Bullet" then
                     touchingPart:Destroy()
                 end
-            end
-        elseif touchedPart.ClassName == "Accessory" then
-            if touchedPart.Parent.Parent.Name ~= "VirtualRig" and touchedPart.Parent.Parent.Name ~= "VirtualBody" and touchedPart.Parent.Parent.Name ~= player1.Name and touchedPart.Parent.Parent.Name ~= reanimation.Name then
-                if touchedPart.Parent.Parent:FindFirstChild("Humanoid") then
-                    if touchedPart.Parent.Parent:FindFirstChild("Humanoid").RigType == Enum.HumanoidRigType.R6 then
-                        hrpAlignment(touchedPart.Parent.Parent:FindFirstChild("Torso"))
-                    else
-                        hrpAlignment(touchedPart.Parent.Parent:FindFirstChild("UpperTorso"))
-                    end
-                end
-                --wait(0.1)
-                if touchingPart == "Bullet" then
-                    touchingPart:Destroy()
-                end
+                
+                print("Fling ---> "..touchedPart:FindFirstAncestorWhichIsA("Model").Name.. " ---> "..touchedPart.Name)
             end
         end
         
@@ -1113,11 +1156,21 @@ local function touchedToFling(touchedPart, touchingPart)
             --wait(0.1)
             touchingPart:Destroy()
         end
+        
+        --Fisticuffs Fling
+        if touchingPart.Name == "Effect0" then
+            flinger.AngularVelocity = ((flingVelocity/2)/_G.maxParticleRate) * leftParticles.Rate
+            --print(flinger.AngularVelocity)
+        end
+        if touchingPart.Name == "Effect0" then
+            flinger.AngularVelocity = ((flingVelocity/2)/_G.maxParticleRate) * rightParticles.Rate
+            --print(flinger.AngularVelocity)
+        end
     end
 end
 
 --Making The Bullet
-function Bullet(lifetime, Gun)
+function Bullet(lifetime, Gun, recoilMultiply)
     --Bullet
     local bullet = Instance.new("Part", workspace)
 	bullet.Color = Color3.fromRGB(_G.bulletColor[1], _G.bulletColor[2], _G.bulletColor[3])
@@ -1153,7 +1206,36 @@ function Bullet(lifetime, Gun)
         end
     end
     
-    --[[Recoil
+    --Recoil
+    if _G.recoil == true then
+        local recoilAimer1 = vrAimer.CFrame.LookVector * -50 * _G.recoilMultiplier
+        local recoilAimer2 = nil
+        
+        if vrAimer2 ~= nil then
+            recoilAimer2 = vrAimer2.CFrame.LookVector * -50 * _G.recoilMultiplier
+        end
+        
+        if recoilMultiply ~= nil then
+            recoilAimer1 = recoilAimer1 * recoilMultiply
+            if recoilAimer2 ~= nil then
+                recoilAimer2 = recoilAimer2 * recoilMultiply
+            end
+        end
+        
+        if reanimation.Head:FindFirstChild(Gun.Parent.Name.."'s AlignPos").Attachment1 == reanimation["Right Arm"].RightGripAttachment then
+            reanimation["Right Arm"].Velocity = reanimation["Right Arm"].Velocity + recoilAimer1
+            Gun.Velocity = reanimation["Right Arm"].Velocity
+            --print("Recoil Right")
+        elseif reanimation.Head:FindFirstChild(Gun.Parent.Name.."'s AlignPos").Attachment1 == reanimation["Left Arm"].LeftGripAttachment then
+            if _G.dualWieldGuns == true then
+                reanimation["Left Arm"].Velocity = reanimation["Left Arm"].Velocity + recoilAimer2
+            elseif _G.leftHand == true then
+                reanimation["Left Arm"].Velocity = reanimation["Left Arm"].Velocity + recoilAimer1
+            end
+            Gun.Velocity = reanimation["Left Arm"].Velocity
+        end
+    end
+    --[[
     if _G.leftHand == false then
         local bodyForce = Instance.new("BodyForce", reanimation["Right Arm"])
         bodyForce.Force = vrAimer.CFrame.LookVector * -50
@@ -1161,12 +1243,128 @@ function Bullet(lifetime, Gun)
         --gun.Velocity = (vrAimer.CFrame.LookVector * -50) * reanimation["Right Arm"].Position
     else
         reanimation["Left Arm"].Velocity = -vrAimer.CFrame.LookVector * 10
-    end]]
-	
+    end
+	]]
 	--Touched
 	bullet.Touched:Connect(function(part)
         touchedToFling(part, bullet)
     end)
+end
+
+local function MakeAlignment(part, otherPart, posAtt0Pos, rotAtt0Rot)
+    --Alignments
+    local rotAlingment = Instance.new("AlignOrientation")
+    local posAlignment = Instance.new("AlignPosition")
+    
+    --Position Attachments
+    local posAtt0 = Instance.new("Attachment", part)
+    posAtt0.Name = part.Name.."'s PosAtt0"
+    posAtt0.Position = posAtt0Pos
+    
+    local posAtt1 = Instance.new("Attachment", otherPart)
+    posAtt1.Name = otherPart.Name.."'s PosAtt1"
+    
+    --Orientation Attachments
+    local rotAtt0 = Instance.new("Attachment", part)
+    rotAtt0.Name = part.Name.."'s RotAtt0"
+    rotAtt0.Orientation = rotAtt0Rot
+    
+    local rotAtt1 = Instance.new("Attachment", otherPart)
+    rotAtt1.Name = otherPart.Name.."'s RotAtt1"
+    
+    --Orientation Alignment Properties
+    rotAlingment.Name = part.Name.."'s AlignOrientation"
+    rotAlingment.Attachment0 = rotAtt0
+    rotAlingment.Attachment1 = rotAtt1
+    rotAlingment.RigidityEnabled = true
+    rotAlingment.ReactionTorqueEnabled = false
+    rotAlingment.MaxTorque = 20000
+    rotAlingment.Responsiveness = 200
+    rotAlingment.Parent = part
+    
+    --Position Alignment Properties
+    posAlignment.Name = part.Name.."'s AlignPosition"
+    posAlignment.Attachment0 = posAtt0
+    posAlignment.Attachment1 = posAtt1
+    posAlignment.RigidityEnabled = true
+    posAlignment.ReactionForceEnabled = false
+    posAlignment.MaxForce = 40000
+    posAlignment.Responsiveness = 200
+    posAlignment.Parent = part
+end
+
+--Fisticuffs Functions--
+--Making The Parts That Go On The Arms
+local function MakeEffectPart(parent, name, transparency, anchored)
+    local part = Instance.new("Part")
+    part.Anchored = anchored
+    part.CanCollide = false
+    part.Color = Color3.fromRGB(_G.armEffectColor[1], _G.armEffectColor[2], _G.armEffectColor[3])
+    part.Parent = parent
+    --part.Position = Vector3.new(0, 10, 0)
+    part.Material = Enum.Material.SmoothPlastic
+    part.Name = name
+    part.Size = Vector3.new(1.001, 0.05, 1.001)
+    part.Transparency = transparency
+    
+    return part
+end
+
+--Making The Particle Effects
+local function MakeParticleEffect(parent)
+    local effectParticles = Instance.new("ParticleEmitter")
+    effectParticles.Enabled = false--true
+    effectParticles.Acceleration = Vector3.new(0, -10, -5)
+    effectParticles.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.fromRGB(_G.particleEffectColor[1], _G.particleEffectColor[2], _G.particleEffectColor[3])), ColorSequenceKeypoint.new(1, Color3.fromRGB(_G.particleEffectColor[1] , _G.particleEffectColor[2], _G.particleEffectColor[3]))})
+    effectParticles.Rate = _G.maxParticleRate
+    effectParticles.EmissionDirection = Enum.NormalId.Bottom
+    effectParticles.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0, 0.5, 0), NumberSequenceKeypoint.new(1, 0.5, 0)})
+    effectParticles.VelocityInheritance = 0.25
+    effectParticles.Lifetime = NumberRange.new(1, 3)
+    effectParticles.Parent = parent
+    effectParticles.Speed = NumberRange.new(2.5)
+    effectParticles.Texture = "rbxassetid://10336966873"
+    effectParticles.LightInfluence = 1
+    effectParticles.Size = NumberSequence.new({NumberSequenceKeypoint.new(0, 0.1, 0), NumberSequenceKeypoint.new(1, 0.1, 0)})
+    
+    return effectParticles
+end
+
+--Making The Welds To Weld The Parts Together
+local function MakeWeld(part, part1, cframe0)
+    local weld = Instance.new("Weld", part)
+    weld.Part0 = part
+    weld.Part1 = part1
+    weld.C0 = cframe0
+end
+
+--Making All The Effects And Putting Them Together--
+if _G.fisticuffs == true then
+    for i1 = 0, 1 do
+        for i2 = 0, 9 do
+            local parent = nil
+            local transparencyDivide = 10
+            
+            if i1 == 0 then
+                parent = leftEffectFolder
+            else
+                parent = rightEffectFolder
+            end
+            
+            local part = MakeEffectPart(parent, "Effect"..i2, i2/transparencyDivide, false)
+            MakeWeld(part, parent:FindFirstChild("Effect0"), CFrame.new(0, part.Size.Y * -i2, 0))
+            
+            if i2 == 0 then
+                part.Anchored = true
+                local particles = MakeParticleEffect(part)
+                if i1 == 0 then
+                    leftParticles = particles
+                else
+                    rightParticles = particles
+                end
+            end
+        end
+    end
 end
 
 --Sword Flinging
@@ -1184,6 +1382,23 @@ if _G.secondaryWeapon == true then
             end
         end)
     end
+end
+
+--Fisticuffs Flinging
+if _G.fisticuffs == true then
+    leftEffectFolder.Effect0.Touched:Connect(function(part)
+        if leftParticles.Enabled == true and part.Parent ~= leftEffectFolder then
+            --print("Left Touched ---> "..part.Name)
+            touchedToFling(part, leftEffectFolder.Effect0)
+        end
+    end)
+    
+    rightEffectFolder.Effect0.Touched:Connect(function(part)
+        if rightParticles.Enabled == true and part.Parent ~= rightEffectFolder then
+            --print("Right Touched ---> "..part.Name)
+            touchedToFling(part, rightEffectFolder.Effect0)
+        end
+    end)
 end
 
 --Setting The Gun's Position And Orientation Function
@@ -1263,8 +1478,10 @@ local function meleePosRot2(changeName, holsteredRot, holsteredPos, holdingRot, 
 end
 
 --Setting Camera To First Person (VR)
-if vrService.VREnabled and _G.changeSomeStuff == true then
+if vrService.VREnabled then -- and _G.changeSomeStuff == true
     player1.CameraMode = Enum.CameraMode.LockFirstPerson
+    player1.CameraMaxZoomDistance = 0.5
+    player1.CameraMinZoomDistance = 0.5
 end
 
 if _G.leftHand == false or _G.dualWieldGuns == true or _G.dualWieldMelee == true then --Right Hand
@@ -1725,34 +1942,186 @@ local function UnequipSword2()
 end
 -------------------------------------------------
 
-userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
-    if character1.Parent == game.Workspace then
-        --No VR-------------------------------------------------------------------------------
+local inputBegan = userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
+    --No VR-------------------------------------------------------------------------------
+    --Gun
+    if key.KeyCode == Enum.KeyCode.F and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent then
+        if _G.dualWieldMelee == false then
+            if holdingGun == false then
+                EquipGun()
+            else
+                UnequipGun()
+            end
+        else
+            if holdingSword2 == false then
+                EquipSword2()
+            else
+                UnequipSword2()
+            end
+        end
+    end
+    
+    --Shoot Gun
+    if key.KeyCode == Enum.KeyCode.E and shooting == false and holdingGun == true and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent and _G.primaryWeapon == true then
+        shooting = true 
+        
+        if table.find(snipers, gun.Parent.Name) then
+            --Functions
+            GunShot(680140087, 0.7, 1)
+            Bullet(_G.sniperLifetime, gun, 3)
+            
+            --Wait
+            wait(_G.sniperShootCooldown)
+            
+            shooting = false 
+        elseif table.find(pistols, gun.Parent.Name) then
+            --Functions
+            GunShot(2834289304, 1, math.random(90,110)/100)
+            Bullet(_G.pistolLifetime, gun, 1.5)
+            
+            --Wait
+            wait(_G.pistolShootCooldown)
+            
+            shooting = false
+        end
+    end
+    if key.KeyCode == Enum.KeyCode.Q and shooting2 == false and holdingGun2 == true and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent and _G.dualWieldGuns == true then
+        shooting2 = true 
+        
+        if table.find(snipers, gun2.Parent.Name) then
+            --Functions
+            GunShot(680140087, 0.7, 1)
+            Bullet(_G.sniperLifetime, gun2, 3)
+            
+            --Wait
+            wait(_G.sniperShootCooldown)
+            
+            shooting2 = false 
+        elseif table.find(pistols, gun2.Parent.Name) then
+            --Functions
+            GunShot(2834289304, 1, math.random(90,110)/100)
+            Bullet(_G.pistolLifetime, gun2, 1.5)
+            
+            --Wait
+            wait(_G.pistolShootCooldown)
+            
+            shooting2 = false
+        end
+    end
+    
+    --Sword/Kinfe/Dual Wielded Gun
+    if key.KeyCode == Enum.KeyCode.G and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent then
+        if _G.dualWieldGuns == false then
+            if holdingSword == false then
+                EquipSword()
+            else
+                UnequipSword()
+            end
+        else
+            if holdingGun2 == false then
+                EquipGun2()
+            else
+                UnequipGun2()
+            end
+        end
+    end
+    --------------------------------------------------------------------------------------
+    
+    --VR----------------------------------------------------------------------------------
+    --Right Hand
+    if key.KeyCode == Enum.KeyCode.ButtonR1 and scriptLoaded == true then
         --Gun
-        if key.KeyCode == Enum.KeyCode.F and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent then
-            if _G.dualWieldMelee == false then
-                if holdingGun == false then
-                    EquipGun()
-                else
+        if holdingGun == false and _G.leftHand == false then
+            EquipGun()
+        else
+            if holdingGun == true and _G.gunAutoEquip == true and _G.leftHand == false then
+                UnequipGun()
+            end
+        end
+        
+        --Sword
+        if holdingSword == false and _G.leftHand == true then
+            EquipSword()
+        else
+            if holdingSword == true and _G.leftHand == true and _G.swordAutoEquip == true then
+                UnequipSword()
+            end
+        end
+    end
+    
+    --Shoot Gun
+    if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == false and holdingGun == true and _G.leftHand == false and scriptLoaded == true and _G.primaryWeapon == true then
+        shooting = true 
+        
+        if table.find(snipers, gun.Parent.Name) then
+            --Functions
+            GunShot(680140087, 0.7, 1)
+            Bullet(_G.sniperLifetime, gun, 3)
+            
+            --Wait
+            wait(_G.sniperShootCooldown)
+            
+            shooting = false 
+        elseif table.find(pistols, gun.Parent.Name) then
+            --Functions
+            GunShot(2834289304, 1, math.random(90,110)/100)
+            Bullet(_G.pistolLifetime, gun, 1.5)
+            
+            --Wait
+            wait(_G.pistolShootCooldown)
+            
+            shooting = false
+        end
+    end
+    
+    --Left Hand
+    if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true then
+        --Gun
+        if _G.dualWieldGuns == false then
+            if holdingGun == false and _G.leftHand == true then
+                EquipGun()
+            else
+                if holdingGun == true and _G.gunAutoEquip == true and _G.leftHand == true then
                     UnequipGun()
                 end
+            end
+        else
+            if holdingGun2 == false then
+                EquipGun2()
             else
-                if holdingSword2 == false then
-                    EquipSword2()
-                else
-                    UnequipSword2()
+                if holdingGun2 == true and _G.gunAutoEquip == true then
+                    UnequipGun2()
                 end
             end
         end
         
-        --Shoot Gun
-        if key.KeyCode == Enum.KeyCode.E and shooting == false and holdingGun == true and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent and _G.primaryWeapon == true then
+        --Sword
+        if _G.dualWieldMelee == false then
+            if holdingSword == false and _G.leftHand == false then
+                EquipSword()
+            else
+                if holdingSword == true and _G.leftHand == false and _G.swordAutoEquip == true then
+                    UnequipSword()
+                end
+            end
+        else
+            if holdingSword2 == false then
+                EquipSword2()
+            elseif holdingSword2 == true and _G.swordAutoEquip == true then
+                UnequipSword2()
+            end
+        end
+    end
+    
+    --Shoot Gun
+    if _G.dualWieldGuns == false then
+        if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == false and holdingGun == true and _G.leftHand == true and scriptLoaded == true and _G.primaryWeapon == true then
             shooting = true 
             
             if table.find(snipers, gun.Parent.Name) then
                 --Functions
                 GunShot(680140087, 0.7, 1)
-                Bullet(_G.sniperLifetime, gun)
+                Bullet(_G.sniperLifetime, gun, 3)
                 
                 --Wait
                 wait(_G.sniperShootCooldown)
@@ -1760,8 +2129,8 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
                 shooting = false 
             elseif table.find(pistols, gun.Parent.Name) then
                 --Functions
-                GunShot(5298232020, 1, math.random(90,110)/100)
-                Bullet(_G.pistolLifetime, gun)
+                GunShot(2834289304, 1, math.random(90,110)/100)
+                Bullet(_G.pistolLifetime, gun, 1.5)
                 
                 --Wait
                 wait(_G.pistolShootCooldown)
@@ -1769,13 +2138,14 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
                 shooting = false
             end
         end
-        if key.KeyCode == Enum.KeyCode.Q and shooting2 == false and holdingGun2 == true and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent and _G.dualWieldGuns == true then
+    else
+        if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting2 == false and holdingGun2 == true and scriptLoaded == true then
             shooting2 = true 
             
             if table.find(snipers, gun2.Parent.Name) then
                 --Functions
                 GunShot(680140087, 0.7, 1)
-                Bullet(_G.sniperLifetime, gun2)
+                Bullet(_G.sniperLifetime, gun2, 3)
                 
                 --Wait
                 wait(_G.sniperShootCooldown)
@@ -1783,8 +2153,8 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
                 shooting2 = false 
             elseif table.find(pistols, gun2.Parent.Name) then
                 --Functions
-                GunShot(5298232020, 1, math.random(90,110)/100)
-                Bullet(_G.pistolLifetime, gun2)
+                GunShot(2834289304, 1, math.random(90,110)/100)
+                Bullet(_G.pistolLifetime, gun2, 1.5)
                 
                 --Wait
                 wait(_G.pistolShootCooldown)
@@ -1792,229 +2162,129 @@ userInputService.InputBegan:Connect(function(key, gameProcessedEvent)
                 shooting2 = false
             end
         end
-        
-        --Sword/Kinfe/Dual Wielded Gun
-        if key.KeyCode == Enum.KeyCode.G and not vrService.VREnabled and scriptLoaded == true and not gameProcessedEvent then
-            if _G.dualWieldGuns == false then
-                if holdingSword == false then
-                    EquipSword()
-                else
-                    UnequipSword()
-                end
-            else
-                if holdingGun2 == false then
-                    EquipGun2()
-                else
-                    UnequipGun2()
-                end
-            end
-        end
-        --------------------------------------------------------------------------------------
-        
-        --VR----------------------------------------------------------------------------------
-        --Right Hand
-        if key.KeyCode == Enum.KeyCode.ButtonR1 and scriptLoaded == true then
-            --Gun
-            if holdingGun == false and _G.leftHand == false then
-                EquipGun()
-            else
-                if holdingGun == true and _G.gunAutoEquip == true and _G.leftHand == false then
-                    UnequipGun()
-                end
-            end
-            
-            --Sword
-            if holdingSword == false and _G.leftHand == true then
-                EquipSword()
-            else
-                if holdingSword == true and _G.leftHand == true and _G.swordAutoEquip == true then
-                    UnequipSword()
-                end
-            end
-        end
-        
-        --Shoot Gun
-        if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == false and holdingGun == true and _G.leftHand == false and scriptLoaded == true and _G.primaryWeapon == true then
-            shooting = true 
-            
-            if table.find(snipers, gun.Parent.Name) then
-                --Functions
-                GunShot(680140087, 0.7, 1)
-                Bullet(_G.sniperLifetime, gun)
-                
-                --Wait
-                wait(_G.sniperShootCooldown)
-                
-                shooting = false 
-            elseif table.find(pistols, gun.Parent.Name) then
-                --Functions
-                GunShot(5298232020, 1, math.random(90,110)/100)
-                Bullet(_G.pistolLifetime, gun)
-                
-                --Wait
-                wait(_G.pistolShootCooldown)
-                
-                shooting = false
-            end
-        end
-        
-        --Left Hand
-        if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true then
-            --Gun
-            if _G.dualWieldGuns == false then
-                if holdingGun == false and _G.leftHand == true then
-                    EquipGun()
-                else
-                    if holdingGun == true and _G.gunAutoEquip == true and _G.leftHand == true then
-                        UnequipGun()
-                    end
-                end
-            else
-                if holdingGun2 == false then
-                    EquipGun2()
-                else
-                    if holdingGun2 == true and _G.gunAutoEquip == true then
-                        UnequipGun2()
-                    end
-                end
-            end
-            
-            --Sword
-            if _G.dualWieldMelee == false then
-                if holdingSword == false and _G.leftHand == false then
-                    EquipSword()
-                else
-                    if holdingSword == true and _G.leftHand == false and _G.swordAutoEquip == true then
-                        UnequipSword()
-                    end
-                end
-            else
-                if holdingSword2 == false then
-                    EquipSword2()
-                elseif holdingSword2 == true and _G.swordAutoEquip == true then
-                    UnequipSword2()
-                end
-            end
-        end
-        
-        --Shoot Gun
-        if _G.dualWieldGuns == false then
-            if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == false and holdingGun == true and _G.leftHand == true and scriptLoaded == true and _G.primaryWeapon == true then
-                shooting = true 
-                
-                if table.find(snipers, gun.Parent.Name) then
-                    --Functions
-                    GunShot(680140087, 0.7, 1)
-                    Bullet(_G.sniperLifetime, gun)
-                    
-                    --Wait
-                    wait(_G.sniperShootCooldown)
-                    
-                    shooting = false 
-                elseif table.find(pistols, gun.Parent.Name) then
-                    --Functions
-                    GunShot(5298232020, 1, math.random(90,110)/100)
-                    Bullet(_G.pistolLifetime, gun)
-                    
-                    --Wait
-                    wait(_G.pistolShootCooldown)
-                    
-                    shooting = false
-                end
-            end
-        else
-            if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting2 == false and holdingGun2 == true and scriptLoaded == true then
-                shooting2 = true 
-                
-                if table.find(snipers, gun2.Parent.Name) then
-                    --Functions
-                    GunShot(680140087, 0.7, 1)
-                    Bullet(_G.sniperLifetime, gun2)
-                    
-                    --Wait
-                    wait(_G.sniperShootCooldown)
-                    
-                    shooting2 = false 
-                elseif table.find(pistols, gun2.Parent.Name) then
-                    --Functions
-                    GunShot(5298232020, 1, math.random(90,110)/100)
-                    Bullet(_G.pistolLifetime, gun2)
-                    
-                    --Wait
-                    wait(_G.pistolShootCooldown)
-                    
-                    shooting2 = false
-                end
-            end
-        end
-        --------------------------------------------------------------------------------------
     end
+    --------------------------------------------------------------------------------------
 end)
 
-userInputService.InputEnded:Connect(function(key)
-    if character1.Parent == game.Workspace then
-        --Non VR Stop Shooting----------------------------------------------------------------
-        if key.KeyCode == Enum.KeyCode.E and shooting == true and scriptLoaded == true and table.find(automaticGuns, gun.Parent.Name) and _G.primaryWeapon == true then
-            shooting = false 
+local inputEnded = userInputService.InputEnded:Connect(function(key)
+    --Non VR Stop Shooting----------------------------------------------------------------
+    if key.KeyCode == Enum.KeyCode.E and shooting == true and scriptLoaded == true and table.find(automaticGuns, gun.Parent.Name) and _G.primaryWeapon == true then
+        shooting = false 
+    end
+    if key.KeyCode == Enum.KeyCode.Q and shooting2 == true and scriptLoaded == true and table.find(automaticGuns, gun2.Parent.Name) and _G.dualWieldGuns == true then
+        shooting2 = false 
+    end
+    --------------------------------------------------------------------------------------
+    
+    --VR----------------------------------------------------------------------------------
+    --Unequip
+    --Right Hand
+    if key.KeyCode == Enum.KeyCode.ButtonR1 and scriptLoaded == true then
+        --Gun
+        if holdingGun == true and _G.gunAutoEquip == false and _G.leftHand == false then
+            UnequipGun()
         end
-        if key.KeyCode == Enum.KeyCode.Q and shooting2 == true and scriptLoaded == true and table.find(automaticGuns, gun2.Parent.Name) and _G.dualWieldGuns == true then
-            shooting2 = false 
-        end
-        --------------------------------------------------------------------------------------
         
-        --VR----------------------------------------------------------------------------------
-        --Unequip
-        --Right Hand
-        if key.KeyCode == Enum.KeyCode.ButtonR1 and scriptLoaded == true then
-            --Gun
-            if holdingGun == true and _G.gunAutoEquip == false and _G.leftHand == false then
+        --Sword
+        if holdingSword == true and _G.leftHand == true and _G.swordAutoEquip == false then
+           UnequipSword()
+        end
+    end
+    
+    --Stop Shooting
+    if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == true and _G.leftHand == false and scriptLoaded == true and table.find(automaticGuns, gun.Parent.Name) and _G.primaryWeapon == true then
+        shooting = false 
+    end
+    
+    --Unequip
+    --Left Hand
+    if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true then
+        --Gun
+        if _G.dualWieldGuns == false then
+            if holdingGun == true and _G.gunAutoEquip == false and _G.leftHand == true then
                 UnequipGun()
             end
-            
-            --Sword
-            if holdingSword == true and _G.leftHand == true and _G.swordAutoEquip == false then
-               UnequipSword()
-            end
+        elseif holdingGun2 == true and _G.gunAutoEquip == false then
+            UnequipGun2()
         end
         
-        --Stop Shooting
-        if key.KeyCode == Enum.KeyCode.ButtonR2 and shooting == true and _G.leftHand == false and scriptLoaded == true and table.find(automaticGuns, gun.Parent.Name) and _G.primaryWeapon == true then
+        --Sword
+        if _G.dualWieldMelee == false then
+            if holdingSword == true and _G.leftHand == false and _G.swordAutoEquip == false then
+                UnequipSword()
+            end
+        elseif holdingSword2 == true and _G.swordAutoEquip == false then
+            UnequipSword2()
+        end
+    end
+    
+    --Stop Shooting
+    if _G.dualWieldGuns == false then
+        if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == true and _G.leftHand == true and scriptLoaded == true and table.find(automaticGuns, gun.Parent.Name) and _G.primaryWeapon == true then
             shooting = false 
         end
-        
-        --Unequip
-        --Left Hand
-        if key.KeyCode == Enum.KeyCode.ButtonL1 and scriptLoaded == true then
-            --Gun
-            if _G.dualWieldGuns == false then
-                if holdingGun == true and _G.gunAutoEquip == false and _G.leftHand == true then
-                    UnequipGun()
+    else
+        if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting2 == true and scriptLoaded == true and table.find(automaticGuns, gun2.Parent.Name) and _G.primaryWeapon == true then
+            shooting2 = false 
+        end
+    end
+    --------------------------------------------------------------------------------------
+end)
+
+--Fisticuffs VR and VR Moving Direction
+local buttonL1Pos = 0
+local buttonL2Pos = 0
+local buttonR1Pos = 0
+local buttonR2Pos = 0
+
+local vrMovingDirection = nil
+
+local inputChanged = userInputService.InputChanged:Connect(function(key)
+    if vrService.VREnabled == true then
+        if _G.fisticuffs == true then
+            --Left Arm
+            if key.KeyCode == Enum.KeyCode.ButtonL1 then
+                buttonL1Pos = key.Position.Z
+            end
+            if key.KeyCode == Enum.KeyCode.ButtonL2 then
+                buttonL2Pos = key.Position.Z
+            end
+            if key.KeyCode == Enum.KeyCode.ButtonL1 or key.KeyCode == Enum.KeyCode.ButtonL2 then
+                if buttonL1Pos >= 0.2 or buttonL2Pos >= 0.2 then
+                    leftParticles.Enabled = true
+                    leftParticles.Rate = (_G.maxParticleRate/2) * (buttonL1Pos + buttonL2Pos)
+                elseif leftParticles.Enabled == true then
+                    leftParticles.Enabled = false
                 end
-            elseif holdingGun2 == true and _G.gunAutoEquip == false then
-                UnequipGun2()
+                --print(leftParticles.Rate.." -- L-Rate")
             end
             
-            --Sword
-            if _G.dualWieldMelee == false then
-                if holdingSword == true and _G.leftHand == false and _G.swordAutoEquip == false then
-                    UnequipSword()
+            --Right Arm
+            if key.KeyCode == Enum.KeyCode.ButtonR1 then
+                buttonR1Pos = key.Position.Z
+            end
+            if key.KeyCode == Enum.KeyCode.ButtonR2 then
+                buttonR2Pos = key.Position.Z
+            end
+            if key.KeyCode == Enum.KeyCode.ButtonR1 or key.KeyCode == Enum.KeyCode.ButtonR2 then
+                if buttonR1Pos >= 0.2 or buttonR2Pos >= 0.2 then
+                    rightParticles.Enabled = true
+                    rightParticles.Rate = (_G.maxParticleRate/2) * (buttonR1Pos + buttonR2Pos)
+                elseif rightParticles.Enabled == true then
+                    rightParticles.Enabled = false
                 end
-            elseif holdingSword2 == true and _G.swordAutoEquip == false then
-                UnequipSword2()
+                --print(rightParticles.Rate.." -- R-Rate")
             end
         end
         
-        --Stop Shooting
-        if _G.dualWieldGuns == false then
-            if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting == true and _G.leftHand == true and scriptLoaded == true and table.find(automaticGuns, gun.Parent.Name) and _G.primaryWeapon == true then
-                shooting = false 
-            end
-        else
-            if key.KeyCode == Enum.KeyCode.ButtonL2 and shooting2 == true and scriptLoaded == true and table.find(automaticGuns, gun2.Parent.Name) and _G.primaryWeapon == true then
-                shooting2 = false 
+        if key.UserInputType == Enum.UserInputType.Gamepad1 then
+            if key.KeyCode == Enum.KeyCode.Thumbstick1 then
+                local cameraPosition = camera.CFrame * vrService:GetUserCFrame(Enum.UserCFrame.Head)
+                local direction = ((cameraPosition.LookVector * key.Position.Y) + (cameraPosition.RightVector * key.Position.X)) * 10
+                local roundedDirection = Vector3.new(math.round(direction.X)/10, math.round(direction.Y)/10, math.round(direction.Z)/10)
+                vrMovingDirection = roundedDirection
             end
         end
-        --------------------------------------------------------------------------------------
     end
 end)
 
@@ -2087,6 +2357,9 @@ Script = function()
     local VirtualRig = game:GetObjects("rbxassetid://4468539481")[1]
     local VirtualBody = game:GetObjects("rbxassetid://4464983829")[1]
     local Anchor = Instance.new("Part")
+    clovrPart = Anchor
+    virtualRig = VirtualRig
+    virtualBody = VirtualBody
     if _G.hatCLOVR == true then
         VirtualRig.Parent = workspace
         VirtualRig.HumanoidRootPart.CFrame = hrp.CFrame
@@ -2119,7 +2392,7 @@ Script = function()
         )
         coroutine.resume(NetworkAccess)
     end
-    StarterGui:SetCore("VRLaserPointerMode", 3)
+    --StarterGui:SetCore("VRLaserPointerMode", 3)
     --[[
  Character Protection
 --]]
@@ -2407,10 +2680,8 @@ Script = function()
     Camera.CameraSubject = VirtualBody.Humanoid
 
     if _G.hatCLOVR == true then
-        character1.Humanoid:ChangeState(16)
-        character1.Torso["Left Hip"]:Destroy()
         if _G.hideCharacter == true then
-            character1.Torso.CFrame = CFrame.new(_G.hideCharacterPosition[1], _G.hideCharacterPosition[2], _G.hideCharacterPosition[3])
+            hrp.CFrame = CFrame.new(_G.hideCharacterPosition[1], _G.hideCharacterPosition[2], _G.hideCharacterPosition[3])
             wait(0.1) 
             character1.Torso.Anchored = true
             for i,v in pairs(character1:GetChildren()) do
@@ -2422,6 +2693,8 @@ Script = function()
             character1.Torso.Anchored = true
             hrp:FindFirstChildWhichIsA("Motor6D"):Destroy()
         end
+        character1.Humanoid:ChangeState(16)
+        character1.Torso["Left Hip"]:Destroy()
     end
     
     Character.Humanoid.WalkSpeed = 0
@@ -2446,7 +2719,12 @@ Script = function()
             local Direction = Character.Humanoid.MoveDirection
             local Start = VirtualBody.HumanoidRootPart.Position
             local Point = Start + Direction * 6
-            VirtualBody.Humanoid:MoveTo(Point)
+            
+            if vrService.VREnabled == false then
+                VirtualBody.Humanoid:MoveTo(Point)
+            else
+                VirtualBody.Humanoid:Move(vrMovingDirection)
+            end
         end
     )
     Character.Humanoid.Jumping:Connect(
@@ -2876,7 +3154,7 @@ Script = function()
                             )
                         end
                     else
-                        if Input.KeyCode == Enum.KeyCode.LeftControl or Input.KeyCode == Enum.KeyCode.ButtonL3 then
+                        if Input.KeyCode == Enum.KeyCode.LeftControl or Input.KeyCode == Enum.KeyCode.ButtonR3 then
                             Tween(
                                 VirtualBody.Humanoid,
                                 "Elastic",
@@ -2913,7 +3191,7 @@ Script = function()
                     )
                 end
             else
-                if Input.KeyCode == Enum.KeyCode.LeftShift or Input.KeyCode == Enum.KeyCode.ButtonR3 then
+                if Input.KeyCode == Enum.KeyCode.LeftShift or Input.KeyCode == Enum.KeyCode.ButtonL3 then
                     Tween(
                         VirtualBody.Humanoid,
                         "Sine",
@@ -2927,18 +3205,24 @@ Script = function()
             end
             if not VRReady and Input.UserInputType == Enum.UserInputType.MouseButton1 then
                 Point1 = true
+                if _G.fisticuffs == true then
+                    leftParticles.Enabled = true
+                end
             end
             if not VRReady and Input.UserInputType == Enum.UserInputType.MouseButton2 then
                 Point2 = true
+                if _G.fisticuffs == true then
+                    rightParticles.Enabled = true
+                end
             end
             if VRReady and Input.KeyCode == Enum.KeyCode.ButtonY then
                 Character:BreakJoints()
                 if RagdollEnabled and RagdollHeadMovement then
-                    if _G.changeSomeStuff == true then
+                    --if _G.changeSomeStuff == true then
                         player1.CameraMaxZoomDistance = maxZoom
                         player1.CameraMinZoomDistance = minZoom
                         player1.CameraMode = cameraMode
-                    end
+                    --end
                     --Network:Unclaim()
                     Respawn()
                 end
@@ -2962,7 +3246,7 @@ Script = function()
                         )
                     end
                 else
-                    if Input.KeyCode == Enum.KeyCode.LeftControl or Input.KeyCode == Enum.KeyCode.ButtonL3 then
+                    if Input.KeyCode == Enum.KeyCode.LeftControl or Input.KeyCode == Enum.KeyCode.ButtonR3 then
                         Tween(
                             VirtualBody.Humanoid,
                             "Elastic",
@@ -2988,7 +3272,7 @@ Script = function()
                     )
                 end
             else
-                if Input.KeyCode == Enum.KeyCode.LeftShift or Input.KeyCode == Enum.KeyCode.ButtonR3 then
+                if Input.KeyCode == Enum.KeyCode.LeftShift or Input.KeyCode == Enum.KeyCode.ButtonL3 then
                     Tween(
                         VirtualBody.Humanoid,
                         "Sine",
@@ -3002,9 +3286,15 @@ Script = function()
             end
             if not VRReady and Input.UserInputType == Enum.UserInputType.MouseButton1 then
                 Point1 = false
+                if _G.fisticuffs == true then
+                    leftParticles.Enabled = false
+                end
             end
             if not VRReady and Input.UserInputType == Enum.UserInputType.MouseButton2 then
                 Point2 = false
+                if _G.fisticuffs == true then
+                    rightParticles.Enabled = false
+                end
             end
         end
     )
@@ -3024,6 +3314,9 @@ Script = function()
             OnInputEnded:Disconnect()
             netlessLoop:Disconnect()
             collisionLoop:Disconnect()
+            inputBegan:Disconnect()
+            inputEnded:Disconnect()
+            inputChanged:Disconnect()
             VirtualRig:Destroy()
             VirtualBody:Destroy()
             if vrAimer ~= nil then
@@ -3034,6 +3327,18 @@ Script = function()
             end
             if workspace:FindFirstChild("VRLaser") then
                 workspace:FindFirstChild("VRLaser"):Destroy()
+            end
+            if effectFolder ~= nil then
+                effectFolder:Destroy()
+            end
+            if clovrModel1 ~= nil then
+                clovrModel1:Destroy()
+            end
+            if clovrModel2 ~= nil then
+                clovrModel2:Destroy()
+            end
+            if clovrPart ~= nil then
+                clovrPart:Destroy()
             end
             if RagdollEnabled then
                 --Network:Unclaim()
@@ -3118,6 +3423,7 @@ Permadeath = function()
     if _G.hatCLOVR == false then
         local ch = game.Players.LocalPlayer.Character
         local prt = Instance.new("Model", workspace)
+        clovrModel1 = prt
         local z1 = Instance.new("Part", prt)
         z1.Name = "Torso"
         z1.CanCollide = false
@@ -3142,6 +3448,7 @@ Respawn = function()
     if _G.hatCLOVR == false then
         local ch = game.Players.LocalPlayer.Character
         local prt = Instance.new("Model", workspace)
+        clovrModel2 = prt
         local z1 = Instance.new("Part", prt)
         z1.Name = "Torso"
         z1.CanCollide = false
@@ -3453,6 +3760,20 @@ ViewHUDFunc = function()
     )
     
     ------------------------Part of modification------------------------
+    --[[Cloning Fisticuffs Effects For ViewHUD
+    if _G.fisticuffs == true then
+        effectsClone = effectFolder:Clone()
+        effectsClone.Parent = game.CoreGui:WaitForChild("ViewHUD").Viewport.Camera
+        effectsClone.LeftArm.FirstArm.ParticleEmitter:Destroy()
+        effectsClone.RightArm.FirstArm.ParticleEmitter:Destroy()
+        
+        for i,v in pairs(effectsClone:GetDescendants()) do
+            if v.Name ~= "FirstArm" and v:IsA("Part") then
+                v.Name = v.Name.." Clone"
+            end
+        end
+    end]]
+    
     if _G.hatCLOVR == false then
         for i,v in pairs(character1:GetDescendants()) do
             if v:IsA("Motor6D") then
@@ -3478,8 +3799,6 @@ ViewHUDFunc = function()
     if _G.hatCLOVR == true then
         for i,v in pairs(character1:GetChildren()) do
             if v:IsA("Accessory") then
-                v.Handle:FindFirstChildWhichIsA("Weld"):Destroy()
-                
                 if table.find(originalHats, v.Name) then
                     v.Handle:FindFirstChildWhichIsA("SpecialMesh"):Destroy()
                     if v.Name == "Robloxclassicred" then
@@ -3505,12 +3824,21 @@ ViewHUDFunc = function()
             end
         end
         --player1.Character = reanimation
+        for i,v in pairs(character1:GetChildren()) do
+            if v:IsA("Accessory") then
+                if v.Name == "Left Arm" then
+                    leftArm = v.Handle
+                elseif v.Name == "Right Arm" then
+                    rightArm = v.Handle
+                end
+            end
+        end
     end
     --wait()
     --print(hats[1], ",", hats[2], ",", hats[3], ",", hats[4], ",", hats[5], ",", hats[6])
     --Netless
-    netlessLoop = game:GetService("RunService").Heartbeat:Connect(function()
-        if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 and _G.hatCLOVR == false then
+    local function NetlessLoop()
+        if character1.Humanoid.RigType == Enum.HumanoidRigType.R15 and _G.hatCLOVR == false and _G.useAlignments == false then
             --Head
             if character1:FindFirstChild("Head") then
                 character1.Head.CFrame = reanimation.Head.CFrame
@@ -3579,8 +3907,18 @@ ViewHUDFunc = function()
             --Body Parts
             if v:IsA("BasePart") and v.Name ~= "HumanoidRootPart" and v.Name ~= "fake" and reanimation:FindFirstChild(v.Name) then
                 if _G.hatCLOVR == false then
-                    v.Velocity = Vector3.new(_G.bodyVelocity[1], _G.bodyVelocity[2], _G.bodyVelocity[3])
-                    if character1.Humanoid.RigType == Enum.HumanoidRigType.R6 then
+                    --Velocity
+                    if _G.advanceVelocity == false then
+                        v.Velocity = Vector3.new(_G.bodyVelocity[1], _G.bodyVelocity[2], _G.bodyVelocity[3])
+                    elseif scriptLoaded == true then
+                        if v.Velocity ~= 0 then
+                            v.Velocity = reanimation:FindFirstChild(v.Name).Velocity * _G.advanceVelocityMultiply
+                        else
+                            v.Velocity = _G.advanceVelocityMultiply
+                        end
+                    end
+                    --CFrame
+                    if character1.Humanoid.RigType == Enum.HumanoidRigType.R6 and _G.useAlignments == false then
                         v.CFrame = reanimation:FindFirstChild(v.Name).CFrame
                     end
                 elseif v.Name == "Torso" and v.Anchored == true and _G.hideCharacter == true then
@@ -3591,37 +3929,66 @@ ViewHUDFunc = function()
             --HumanoidRootPart
             if (v.Name == "HumanoidRootPart" or v.Name == "Left Leg") and v:IsA("BasePart") then
                 if v.Name == "HumanoidRootPart" then
-                    v.Velocity = Vector3.new(_G.flingPartVelocity[1], _G.flingPartVelocity[2], _G.flingPartVelocity[3])
+                    if _G.advanceVelocity == false then
+                        v.Velocity = Vector3.new(_G.flingPartVelocity[1], _G.flingPartVelocity[2], _G.flingPartVelocity[3])
+                    elseif scriptLoaded == true then
+                        if v.Velocity ~= 0 then
+                            v.Velocity = reanimation:FindFirstChild(v.Name).Velocity * _G.advanceVelocityMultiply
+                        else
+                            v.Velocity = _G.advanceVelocityMultiply
+                        end
+                    end
                 end
                 if _G.hatCLOVR == true and v.Name == "Left Leg" then
-                    v.Velocity = Vector3.new(_G.flingPartVelocity[1], _G.flingPartVelocity[2], _G.flingPartVelocity[3])
+                    if _G.advanceVelocity == false then
+                        v.Velocity = Vector3.new(_G.flingPartVelocity[1], _G.flingPartVelocity[2], _G.flingPartVelocity[3])
+                    elseif scriptLoaded == true then
+                        if v.Velocity ~= 0 then
+                            v.Velocity = reanimation:FindFirstChild(v.Name).Velocity * _G.advanceVelocityMultiply
+                        else
+                            v.Velocity = _G.advanceVelocityMultiply
+                        end
+                    end
                 end
             end
             
             --Accessories
             if v:IsA("Accessory") then
-                v.Handle.Velocity = Vector3.new(_G.hatVelocity[1], _G.hatVelocity[2], _G.hatVelocity[3])
-                if _G.hatCLOVR == false then
-                    v.Handle.CFrame = reanimation:FindFirstChild(v.Name).Handle.CFrame
-                else
-                    if not table.find(hats, v.Name) then
-                        --print(v.Name)
+                if _G.advanceVelocity == false then
+                    v.Handle.Velocity = Vector3.new(_G.hatVelocity[1], _G.hatVelocity[2], _G.hatVelocity[3])
+                elseif scriptLoaded == true then
+                    if v.Handle.Velocity ~= 0 then
+                        v.Handle.Velocity = reanimation:FindFirstChild(v.Name).Handle.Velocity * _G.advanceVelocityMultiply
+                    else
+                        v.Handle.Velocity = _G.advanceVelocityMultiply
+                    end
+                end
+                if v.Handle:FindFirstChildWhichIsA("Weld") then
+                    v.Handle:FindFirstChildWhichIsA("Weld"):Destroy()
+                end
+                if _G.useAlignments == false then
+                    if _G.hatCLOVR == false then
                         v.Handle.CFrame = reanimation:FindFirstChild(v.Name).Handle.CFrame
                     else
-                        --Positioning The Body Hats
-                        --Arms and Legs
-                        if reanimation:FindFirstChild(v.Name) then
-                            v.Handle.CFrame = reanimation:FindFirstChild(v.Name).CFrame * CFrame.Angles(1.5708, 0, 0)
-                        end
-                        
-                        --Left Half Of The Torso
-                        if v.Name == "Torso1" then
-                            v.Handle.CFrame = reanimation.Torso.CFrame * CFrame.new(-0.5, 0, 0) * CFrame.Angles(math.rad(90), 0, 0)
-                        end
-                        
-                        --Right Half Of The Torso
-                        if v.Name == "Torso2" then
-                            v.Handle.CFrame = reanimation.Torso.CFrame * CFrame.new(0.5, 0, 0) * CFrame.Angles(math.rad(90), 0, 0)
+                        if not table.find(hats, v.Name) then
+                            --print(v.Name)
+                            v.Handle.CFrame = reanimation:FindFirstChild(v.Name).Handle.CFrame
+                        else
+                            --Positioning The Body Hats
+                            --Arms and Legs
+                            if reanimation:FindFirstChild(v.Name) then
+                                v.Handle.CFrame = reanimation:FindFirstChild(v.Name).CFrame * CFrame.Angles(math.rad(90), 0, 0)
+                            end
+                            
+                            --Left Half Of The Torso
+                            if v.Name == "Torso1" then
+                                v.Handle.CFrame = reanimation.Torso.CFrame * CFrame.new(-0.5, 0, 0) * CFrame.Angles(math.rad(90), 0, 0)
+                            end
+                            
+                            --Right Half Of The Torso
+                            if v.Name == "Torso2" then
+                                v.Handle.CFrame = reanimation.Torso.CFrame * CFrame.new(0.5, 0, 0) * CFrame.Angles(math.rad(90), 0, 0)
+                            end
                         end
                     end
                 end
@@ -3634,15 +4001,55 @@ ViewHUDFunc = function()
             
             --Tools
             if v:IsA("Tool") and _G.toolHolding == true then
-                v.Handle.Velocity = Vector3.new(_G.toolVelocity[1], _G.toolVelocity[2], _G.toolVelocity[3])
+                if _G.advanceVelocity == false then
+                    v.Handle.Velocity = Vector3.new(_G.toolVelocity[1], _G.toolVelocity[2], _G.toolVelocity[3])
+                elseif scriptLoaded == true then
+                    if v.Handle.Velocity ~= 0 then
+                        v.Handle.Velocity = v.Handle.Velocity * _G.advanceVelocityMultiply
+                    else
+                        v.Handle.Velocity = v.Handle.Velocity + _G.advanceVelocityMultiply
+                    end
+                end
                 if v.Handle.CanCollide == true then
                     v.Handle.CanCollide = false
                 end
-                if character1:FindFirstChild("fake") then
+                if character1:FindFirstChild("fake") and _G.useAlignments == false then
                     v.Handle.CFrame = character1.fake.CFrame
                 end
             end
         end
+        
+        --Fisticuffs
+        if _G.fisticuffs == true then
+            
+            if _G.hatCLOVR == false then
+                leftArm = character1["Left Arm"]
+                rightArm = character1["Right Arm"]
+            end
+            --Real Effects
+        	leftParticles.Acceleration = Vector3.new(-leftEffectFolder.Effect0.CFrame.UpVector.X * 5, -10, -leftEffectFolder.Effect0.CFrame.UpVector.Z * 5)
+        	rightParticles.Acceleration = Vector3.new(-rightEffectFolder.Effect0.CFrame.UpVector.X * 5, -10, -rightEffectFolder.Effect0.CFrame.UpVector.Z * 5)
+        	
+        	if _G.hatCLOVR == false then
+            	leftEffectFolder.Effect0.CFrame = leftArm.CFrame * CFrame.new(0, -0.976, 0)
+            	rightEffectFolder.Effect0.CFrame = rightArm.CFrame * CFrame.new(0, -0.976, 0)
+            else
+            	leftEffectFolder.Effect0.CFrame = leftArm.CFrame * CFrame.new(0, 0, -0.976) * CFrame.Angles(math.rad(90), 0, 0)
+            	rightEffectFolder.Effect0.CFrame = rightArm.CFrame * CFrame.new(0, 0, -0.976) * CFrame.Angles(math.rad(90), 0, 0)
+            end
+        	
+        	--Viewport Effects
+        	--leftParticlesClone.Acceleration = Vector3.new(-leftEffectFolder.FirstArm.CFrame.UpVector.X * 5, -10, -leftEffectFolder.FirstArm.CFrame.UpVector.Z * 5)
+        	--rightParticlesClone.Acceleration = Vector3.new(-rightEffectFolder.FirstArm.CFrame.UpVector.X * 5, -10, -rightEffectFolder.FirstArm.CFrame.UpVector.Z * 5)
+        	
+        	--effectsClone.LeftArm.FirstArm.CFrame = character["Left Arm"].CFrame * CFrame.new(0, -0.976, 0)
+        	--effectsClone.RightArm.FirstArm.CFrame = character["Right Arm"].CFrame * CFrame.new(0, -0.976, 0)
+        end
+    end
+    
+    netlessLoop = game:GetService("RunService").Heartbeat:Connect(function()
+        local netlessLoopTask = coroutine.create(NetlessLoop)
+        coroutine.resume(netlessLoopTask)
     end)
     
     --Collision
@@ -3654,12 +4061,124 @@ ViewHUDFunc = function()
         end
     end)
     
+    --Alignments For Body And Hats
+    if _G.useAlignments == true then
+        if character1.Humanoid.RigType == Enum.HumanoidRigType.R6 then
+            for i,v in pairs(character1:GetChildren()) do
+                if _G.hatCLOVR == false then
+                    --Body
+                    if v:IsA("Part") and v.Name ~= hrp.Name then
+                        MakeAlignment(v, reanimation:FindFirstChild(v.Name), Vector3.new(0, 0, 0), Vector3.new(0, 0, 0))
+                    end
+                    
+                    --Accessories
+                    if v:IsA("Accessory") then
+                        MakeAlignment(v.Handle, reanimation:FindFirstChild(v.Name).Handle, Vector3.new(0, 0, 0), Vector3.new(0, 0, 0))
+                    end
+                else
+                    --Hat CLOVR
+                    if v:IsA("Accessory") then
+                        if not table.find(hats, v.Name) then
+                            --Accessories
+                            MakeAlignment(v.Handle, reanimation:FindFirstChild(v.Name).Handle, Vector3.new(0, 0, 0), Vector3.new(0, 0, 0))
+                        else
+                            --Positioning The Body Hats
+                            --Arms and Legs
+                            if reanimation:FindFirstChild(v.Name) then
+                                MakeAlignment(v.Handle, reanimation:FindFirstChild(v.Name), Vector3.new(0, 0, 0), Vector3.new(90, 0, 0))
+                            end
+                            
+                            --Left Half Of The Torso
+                            if v.Name == "Torso1" then
+                                MakeAlignment(v.Handle, reanimation.Torso, Vector3.new(-0.5, 0, 0), Vector3.new(90, 0, 0))
+                            end
+                            
+                            --Right Half Of The Torso
+                            if v.Name == "Torso2" then
+                                MakeAlignment(v.Handle, reanimation.Torso, Vector3.new(0.5, 0, 0), Vector3.new(90, 0, 0))
+                            end
+                        end
+                    end
+                end
+            end
+        else
+            for i,v in pairs(character1:GetChildren()) do
+                --Body
+                if v:IsA("BasePart") then
+                    --Head
+                    if v.Name == "Head" then
+                        MakeAlignment(v, reanimation.Head, Vector3.new(0, 0, 0), Vector3.new(0, 0, 0))
+                    end
+                    
+                    --Torso
+                    if v.Name == "UpperTorso" then
+                        MakeAlignment(v, reanimation.Torso, Vector3.new(0, -0.185, 0), Vector3.new(0, 0, 0))
+                    end
+                    if v.Name == "LowerTorso" then
+                        MakeAlignment(v, reanimation.Torso, Vector3.new(0, 0.8, 0), Vector3.new(0, 0, 0))
+                    end
+                    
+                    --Left Arm
+                    if v.Name == "LeftUpperArm" then
+                        MakeAlignment(v, reanimation["Left Arm"], Vector3.new(0, -0.4, 0), Vector3.new(0, 0, 0))
+                    end
+                    if v.Name == "LeftLowerArm" then
+                        MakeAlignment(v, reanimation["Left Arm"], Vector3.new(0, 0.19, 0), Vector3.new(0, 0, 0))
+                    end
+                    if v.Name == "LeftHand" then
+                        MakeAlignment(v, reanimation["Left Arm"], Vector3.new(0, 0.84, 0), Vector3.new(0, 0, 0))
+                    end
+                    
+                    --Right Arm
+                    if v.Name == "RightUpperArm" then
+                        MakeAlignment(v, reanimation["Right Arm"], Vector3.new(0, -0.4, 0), Vector3.new(0, 0, 0))
+                    end
+                    if v.Name == "RightLowerArm" then
+                        MakeAlignment(v, reanimation["Right Arm"], Vector3.new(0, 0.19, 0), Vector3.new(0, 0, 0))
+                    end
+                    if v.Name == "RightHand" then
+                        MakeAlignment(v, reanimation["Right Arm"], Vector3.new(0, 0.84, 0), Vector3.new(0, 0, 0))
+                    end
+                    
+                    --Left Leg
+                    if v.Name == "LeftUpperLeg" then
+                        MakeAlignment(v, reanimation["Left Leg"], Vector3.new(0, -0.55, 0), Vector3.new(0, 0, 0))
+                    end
+                    if v.Name == "LeftLowerLeg" then
+                        MakeAlignment(v, reanimation["Left Leg"], Vector3.new(0, 0.19, 0), Vector3.new(0, 0, 0))
+                    end
+                    if v.Name == "LeftFoot" then
+                        MakeAlignment(v, reanimation["Left Leg"], Vector3.new(0, 0.85, 0), Vector3.new(0, 0, 0))
+                    end
+                    
+                    --Right Leg
+                    if v.Name == "RightUpperLeg" then
+                        MakeAlignment(v, reanimation["Right Leg"], Vector3.new(0, -0.55, 0), Vector3.new(0, 0, 0))
+                    end
+                    if v.Name == "RightLowerLeg" then
+                        MakeAlignment(v, reanimation["Right Leg"], Vector3.new(0, 0.19, 0), Vector3.new(0, 0, 0))
+                    end
+                    if v.Name == "RightFoot" then
+                        MakeAlignment(v, reanimation["Right Leg"], Vector3.new(0, 0.85, 0), Vector3.new(0, 0, 0))
+                    end
+                end
+                
+                --Accessories
+                if v:IsA("Accessory") then
+                    MakeAlignment(v.Handle, reanimation:FindFirstChild(v.Name).Handle, Vector3.new(0, 0, 0), Vector3.new(0, 0, 0))
+                end
+            end
+        end
+    end
+    
     scriptLoaded = true
     
     while character1.Parent == game.Workspace do
-        if not flingPart:FindFirstChild("AlignPosition") then
+        if not flingPart:FindFirstChild("AlignPosition") or _G.flinging == false then
             if flingPart == hrp then
-                flingPart.Position = reanimation.Torso.Position
+                --if _G.useAlignments == false then
+                    flingPart.Position = reanimation.Torso.Position
+                --end
             else
                 flingPart.Position = Vector3.new(0, -50, 0)
             end
@@ -3668,8 +4187,12 @@ ViewHUDFunc = function()
                 hrp.Transparency = 1
             end
             
-            if flinger.AngularVelocity == flingVelocity and _G.flinging == true then
+            if flinger.AngularVelocity ~= Vector3.new(0, 0, 0) and _G.flinging == true then
                 flinger.AngularVelocity = Vector3.new(0, 0, 0)
+            end
+            
+            if _G.hatCLOVR == true then
+                hrp.CFrame = reanimation.Torso.CFrame
             end
         else
             if hrp.Transparency ~= 0 and flingPart == hrp then
@@ -3677,9 +4200,16 @@ ViewHUDFunc = function()
             end
             
             if flinger.AngularVelocity == Vector3.new(0, 0, 0) and _G.flinging == true then
-                flinger.AngularVelocity = flingVelocity
+                if _G.fisticuffs == false then
+                    flinger.AngularVelocity = flingVelocity
+                end
+            end
+            
+            if _G.hatCLOVR == true then
+                hrp.Position = character1["Left Leg"].Position
             end
         end
+        
         if shooting == true or shooting2 == true then
             if _G.primaryWeapon == true then
                 if table.find(automaticGuns, gun.Parent.Name) and shooting == true then
@@ -3695,10 +4225,6 @@ ViewHUDFunc = function()
                     end
                 end
             end
-        end
-        
-        if _G.hatCLOVR == true then
-            hrp.CFrame = reanimation.Torso.CFrame
         end
         game:GetService("RunService").Heartbeat:wait()
     end
@@ -3758,10 +4284,12 @@ if _G.toolHolding == true then
         weld.Part0 = cRArm
         weld.Part1 = fake
         
-        for i,v in pairs(v.Handle:GetChildren()) do 
-            if v:IsA("AlignPosition") or v:IsA("AlignOrientation") or v:IsA("Attachment") then
-                v:remove() 
-            end 
+        if _G.useAlignments == false then
+            for i,v in pairs(v.Handle:GetChildren()) do 
+                if v:IsA("AlignPosition") or v:IsA("AlignOrientation") or v:IsA("Attachment") then
+                    v:remove() 
+                end 
+            end
         end
         
         --Align(v.Handle, fake, CFrame.new(0,0,0))
@@ -3769,6 +4297,10 @@ if _G.toolHolding == true then
         v.AncestryChanged:Connect(function()
             fake:remove()
         end)
+        
+        if _G.useAlignments == true then
+            MakeAlignment(v.Handle, fake, Vector3.new(0, 0, 0), Vector3.new(0, 0, 0))
+        end
     end)
     
     cRArm.Touched:Connect(function(t)
